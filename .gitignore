@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments
+.env
+.venv/
+venv/
+env/
+
+# Datasets, pretrained weights, checkpoints, and generated outputs
+checkpoints/
+dataset/
+datasets/
+glove/
+glove.zip
+editing/
+generation/
+log/
+logs/
+run_logs/
+wandb/
+outputs/
+results/
+*.pt
+*.pth
+*.tar
+*.ckpt
+*.safetensors
+*.bin
+*.npy
+*.npz
+*.pkl
+*.zip
+*.rar
+*.7z
+*.mp4
+*.bvh
+
+# Local experiment notes and handoff files
+MEMORY.md
+MANIFEST.md
+research_handoff_*.md
+CODEFLOW_EXPERIMENT_LOG.md
+CODEFLOW_WRITING_CONTEXT_SUMMARY_*.txt
+motion_code_flow_plan_summary.txt
+PROJECT_DIRECTION_LOCK.md
+refine-logs/
+geometry_diagnostics/
+.codex-control/
+
+# OS/editor files
+.DS_Store
+*.swp
