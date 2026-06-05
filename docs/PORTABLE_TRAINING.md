@@ -56,6 +56,38 @@ The default script uses:
 - Test-split full evaluation every 10 epochs.
 - Top-3 checkpoint retention by full-eval FID and Top3.
 
+## Pretrained Release Layout
+
+The public HumanML3D release is expected at:
+
+```text
+checkpoints/codeflow_hml3d_release/
+  codeflow/codeflow_hml3d_best_top3_ema.pt
+  rvq/part_vq_hml3d_overlap_best_top3.pth
+  rvq/skeleton_partition.json
+  stats/mean.npy
+  stats/std.npy
+  metadata/
+```
+
+Download with:
+
+```bash
+huggingface-cli download AmberJar/CodeFlow-HumanML3D \
+  --local-dir checkpoints/codeflow_hml3d_release
+```
+
+Run inference:
+
+```bash
+python gen_codeflow_t2m.py \
+  --local_dir checkpoints/codeflow_hml3d_release \
+  --text_prompt "A person walks forward and waves with the right hand." \
+  --motion_length 196 \
+  --output_dir generation/codeflow_hml3d \
+  --gpu_id 0
+```
+
 ## Git Policy
 
 Do not commit:

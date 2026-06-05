@@ -67,6 +67,61 @@ glove/
 Large files are ignored by git: datasets, checkpoints, generated motions,
 evaluation outputs, logs, and pretrained weights.
 
+## Pretrained Weights
+
+The released HumanML3D checkpoint bundle is hosted on Hugging Face:
+
+```text
+AmberJar/CodeFlow-HumanML3D
+```
+
+It contains:
+
+- `codeflow/codeflow_hml3d_best_top3_ema.pt`: inference-only EMA CodeFlow checkpoint.
+- `rvq/part_vq_hml3d_overlap_best_top3.pth`: frozen part-aware RVQ tokenizer.
+- `rvq/skeleton_partition.json`: six-part overlap partition.
+- `stats/mean.npy`, `stats/std.npy`: RVQ normalization statistics.
+
+The released CodeFlow checkpoint is the training-time HumanML3D best-Top3
+model: Top3 `0.873060`, FID `0.058190`, epoch `290`, step `111070`. Its
+architecture is `part_hidden_dim=192`, `hidden_size=1152`, `dropout=0.05`.
+This is the strongest released checkpoint; the standard training recipe below
+keeps `part_hidden_dim=128` and `hidden_size=768` as the baseline setting.
+
+Download once if you want a local copy:
+
+```bash
+huggingface-cli download AmberJar/CodeFlow-HumanML3D \
+  --local-dir checkpoints/codeflow_hml3d_release
+```
+
+## Inference
+
+Generate from a single prompt with automatic Hugging Face download:
+
+```bash
+python gen_codeflow_t2m.py \
+  --text_prompt "A person walks forward and waves with the right hand." \
+  --motion_length 196 \
+  --output_dir generation/codeflow_hml3d \
+  --gpu_id 0
+```
+
+Or use a downloaded local weight directory:
+
+```bash
+python gen_codeflow_t2m.py \
+  --local_dir checkpoints/codeflow_hml3d_release \
+  --text_prompt "A person walks forward and waves with the right hand." \
+  --motion_length 196 \
+  --output_dir generation/codeflow_hml3d \
+  --gpu_id 0
+```
+
+The script saves HumanML3D features, normalized features, RVQ ids, recovered
+joint arrays, and `results.json`. To render simple MP4 stick figures, add
+`--save_mp4`.
+
 ## Standard PS-CF Training
 
 The standard HumanML3D setting is:
@@ -120,13 +175,13 @@ Evaluate a saved CodeFlow checkpoint on HumanML3D test:
 
 ```bash
 python eval_codeflow_part_structured_t2m.py \
-  --checkpoint checkpoints/t2m/codeflow_part_structured_pscf_hml3d_standard/model/best_top3.pt \
+  --checkpoint checkpoints/codeflow_hml3d_release/codeflow/codeflow_hml3d_best_top3_ema.pt \
   --dataset_opt_path checkpoints/t2m/Comp_v6_KLD005/opt.txt \
   --data_root dataset/HumanML3D \
-  --vq_checkpoint /path/to/part_vq_best_top3.pth \
-  --vq_partition /path/to/skeleton_partition.json \
-  --mean_path /path/to/mean.npy \
-  --std_path /path/to/std.npy \
+  --vq_checkpoint checkpoints/codeflow_hml3d_release/rvq/part_vq_hml3d_overlap_best_top3.pth \
+  --vq_partition checkpoints/codeflow_hml3d_release/rvq/skeleton_partition.json \
+  --mean_path checkpoints/codeflow_hml3d_release/stats/mean.npy \
+  --std_path checkpoints/codeflow_hml3d_release/stats/std.npy \
   --clip_path /path/to/ViT-B-32.pt \
   --repeat_times 20 \
   --steps 96 \
@@ -139,6 +194,7 @@ unless `--eval_dir` is provided.
 
 ## Repository Notes
 
+- `gen_codeflow_t2m.py` is the public text-to-motion inference entry.
 - `train_codeflow_part_structured.py` is the canonical PS-CF training entry.
 - `train_codeflow.py` contains the shared training loop, checkpoint selection,
   full-eval scheduling, and optimizer logic.
