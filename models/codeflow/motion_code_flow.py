@@ -9,15 +9,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .dit_blocks import MotionTextDiT, TimestepEmbedder
-from .kv_vq import PartVQTokenizer
 from .text_encoder import FrozenCLIPTextEncoder, TextCondition
+from .vq_tokenizers import build_codeflow_tokenizer
 
 
 @dataclass
 class MotionCodeFlowConfig:
     kv_root: str = "."
+    vq_backend: str = "kv_part"
     vq_checkpoint: Optional[str] = None
     vq_partition: Optional[str] = None
+    vq_opt_path: Optional[str] = None
     clip_version: str = "ViT-B/32"
     clip_path: Optional[str] = None
 
@@ -25,6 +27,7 @@ class MotionCodeFlowConfig:
     code_dim: int = 128
     num_parts: int = 6
     num_codes: int = 128
+    part_hidden_dim: int = 0
     max_motion_tokens: int = 49
     time_patch: int = 1
     coupling_mode: str = "holder_query"
@@ -129,10 +132,12 @@ class MotionCodeFlow(nn.Module):
             raise ValueError(f"holder_depth must be positive, got {config.holder_depth}")
         self.config = config
 
-        self.tokenizer = PartVQTokenizer(
+        self.tokenizer = build_codeflow_tokenizer(
+            backend=config.vq_backend,
             kv_root=config.kv_root,
             checkpoint_path=config.vq_checkpoint,
             partition_path=config.vq_partition,
+            opt_path=config.vq_opt_path,
         )
         if self.tokenizer.num_parts != config.num_parts:
             raise ValueError(f"Config num_parts={config.num_parts}, tokenizer has {self.tokenizer.num_parts}")

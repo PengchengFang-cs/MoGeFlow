@@ -1,13 +1,16 @@
 # Portable Training Notes
 
-This repository is prepared for code-only transfer. Large or generated files are intentionally ignored by git: datasets, evaluator checkpoints, model checkpoints, logs, run outputs, GloVe files, and videos.
+This repository is prepared for code-only transfer. Large or generated files are
+intentionally ignored by git: datasets, evaluator checkpoints, model
+checkpoints, logs, run outputs, GloVe files, generated videos, and internal
+reports.
 
-## KIT Part-VQ Training
+## HumanML3D Layout
 
-Prepare KIT-ML in the usual MoMask/HumanML3D layout:
+Prepare HumanML3D in the standard text-to-motion layout:
 
 ```text
-KIT-ML/
+HumanML3D/
   Mean.npy
   Std.npy
   train.txt
@@ -17,47 +20,51 @@ KIT-ML/
   texts/
 ```
 
-Then run:
-
-```bash
-DATA_ROOT=/path/to/KIT-ML \
-OUTPUT_DIR=/path/to/output/vqvae_kit_pscf \
-bash scripts/launch/train_kit_part_vq.sh
-```
-
-The part-aware VQ implementation is vendored under `kvctrl/`, so an external KV-Control checkout is not required. If you want to compare against a separate KV-Control checkout, pass `--kv_root /path/to/KV-Control` to `tools/train_kv_part_vq.py`.
-
-The trainer uses the KV-Control VQ configuration:
-
-- 6 body parts
-- 128 codes per part
-- code dim 128
-- EMA-reset quantizer with `mu=0.99`
-- smooth-L1 reconstruction loss
-- commitment weight `0.02`
-- explicit local-position loss weight `0.5`
-- 300k iterations
-
-## Evaluation Assets
-
-Full text-motion evaluation uses files that are not committed:
+Full evaluation also needs:
 
 ```text
-checkpoints/kit/Comp_v6_KLD005/
-checkpoints/kit/text_mot_match/model/finest.tar
+checkpoints/t2m/Comp_v6_KLD005/
+checkpoints/t2m/text_mot_match/model/finest.tar
 glove/
 ```
 
-Place those assets in the same relative paths before running with `--eval_iter > 0`. For train-only smoke tests, pass `--disable_eval`.
+## Standard CodeFlow Training
+
+The canonical public launch script is:
+
+```bash
+DATA_ROOT=/path/to/HumanML3D \
+KV_ROOT=/path/to/KV-Control \
+VQ_CHECKPOINT=/path/to/part_vq_best_top3.pth \
+VQ_PARTITION=/path/to/skeleton_partition.json \
+MEAN_PATH=/path/to/mean.npy \
+STD_PATH=/path/to/std.npy \
+CLIP_PATH=/path/to/ViT-B-32.pt \
+bash scripts/launch/train_humanml3d_pscf_standard.sh
+```
+
+The default script uses:
+
+- HumanML3D/T2M data.
+- Part-Structured CodeFlow.
+- 6 tokenizer groups with 128-dim code embeddings.
+- `part_hidden_dim=128` and `hidden_size=768`.
+- Dropout `0.05`.
+- Batch size `64`.
+- 600 epochs.
+- Half-cosine LR schedule from `1e-4`.
+- Test-split full evaluation every 10 epochs.
+- Top-3 checkpoint retention by full-eval FID and Top3.
 
 ## Git Policy
 
 Do not commit:
 
 - `checkpoints/`
-- `dataset/`
+- `dataset/` or `datasets/`
 - `glove/`
 - `log/`, `logs/`, `run_logs/`
-- `*.pt`, `*.pth`, `*.tar`, `*.npy`, `*.pkl`, `*.zip`
+- internal narrative or handoff reports
+- `*.pt`, `*.pth`, `*.tar`, `*.ckpt`, `*.npy`, `*.npz`, `*.pkl`, `*.zip`
 
-The `.gitignore` already covers these patterns.
+The `.gitignore` covers these patterns.

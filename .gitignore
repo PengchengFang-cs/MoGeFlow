@@ -26,6 +26,11 @@ run_logs/
 wandb/
 outputs/
 results/
+slurm-*.out
+*.out
+*.err
+nohup.out
+*.tmp
 *.pt
 *.pth
 *.tar
@@ -44,6 +49,7 @@ results/
 # Local experiment notes and handoff files
 MEMORY.md
 MANIFEST.md
+NARRATIVE_REPORT*.md
 research_handoff_*.md
 CODEFLOW_EXPERIMENT_LOG.md
 CODEFLOW_WRITING_CONTEXT_SUMMARY_*.txt

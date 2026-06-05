@@ -43,6 +43,7 @@ SCALAR_METRICS = (
     "nb_sample",
 )
 VECTOR_METRICS = ("r_precision", "r_precision_real")
+EVAL_SPLIT = "test"
 
 
 def parse_args(defaults: Dict[str, object] = None) -> argparse.Namespace:
@@ -53,7 +54,6 @@ def parse_args(defaults: Dict[str, object] = None) -> argparse.Namespace:
     parser.add_argument("--eval_dir", type=str, default="")
 
     parser.add_argument("--dataset_opt_path", type=str, default="./checkpoints/t2m/Comp_v6_KLD005/opt.txt")
-    parser.add_argument("--split", type=str, default="test")
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--num_workers", type=int, default=4)
     parser.add_argument("--repeat_times", type=int, default=20)
@@ -200,7 +200,7 @@ def build_eval_loader(
 
     mean = np.load(str(Path(eval_opt.meta_dir) / "mean.npy")).astype(np.float32)
     std = np.load(str(Path(eval_opt.meta_dir) / "std.npy")).astype(np.float32)
-    split_file = str(Path(eval_opt.data_root) / f"{args.split}.txt")
+    split_file = str(Path(eval_opt.data_root) / f"{EVAL_SPLIT}.txt")
     w_vectorizer = WordVectorizer(args.glove_dir, "our_vab")
     dataset = Text2MotionDatasetEval(eval_opt, mean, std, split_file, w_vectorizer)
     loader = DataLoader(
@@ -263,10 +263,11 @@ def write_results(
     eval_dir.mkdir(parents=True, exist_ok=True)
     terminal = eval_cfg.terminal_mode or getattr(opt, "terminal_mode", "checkpoint")
     decode = eval_cfg.decode_mode or getattr(opt, "decode_mode", "nearest")
-    stem = f"{checkpoint_path.stem}_{args.split}_s{eval_cfg.steps}_cfg{eval_cfg.cond_scale:g}_{terminal}_{decode}"
+    stem = f"{checkpoint_path.stem}_{EVAL_SPLIT}_s{eval_cfg.steps}_cfg{eval_cfg.cond_scale:g}_{terminal}_{decode}"
     path = eval_dir / f"{stem}.json"
     payload = {
         "checkpoint": str(checkpoint_path),
+        "split": EVAL_SPLIT,
         "weight_source": weight_source,
         "repeat_times": len(repeat_metrics),
         "args": vars(args),
@@ -334,7 +335,7 @@ def main(
     )
 
     print(
-        f"Evaluating {checkpoint_path} on {args.split} with {weight_source} weights, "
+        f"Evaluating {checkpoint_path} on {EVAL_SPLIT} with {weight_source} weights, "
         f"device={device}, dataset_size={len(dataset)}, repeats={args.repeat_times}"
     )
 

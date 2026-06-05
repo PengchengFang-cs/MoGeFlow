@@ -13,9 +13,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .dit_blocks import FinalLayer, FrameMotionTextDiT, TimestepEmbedder
-from .kv_vq import PartVQTokenizer
 from .motion_code_flow import MotionCodeFlow, MotionCodeFlowConfig, lengths_to_mask, sample_timesteps
 from .text_encoder import FrozenCLIPTextEncoder, TextCondition
+from .vq_tokenizers import build_codeflow_tokenizer
 
 
 class PartStructuredMotionCodeFlow(MotionCodeFlow):
@@ -33,10 +33,11 @@ class PartStructuredMotionCodeFlow(MotionCodeFlow):
             raise ValueError("PartStructuredMotionCodeFlow canonical path disables self-conditioning")
         if float(config.clean_loss_weight) != 0.0:
             raise ValueError("PartStructuredMotionCodeFlow canonical objective uses clean_loss_weight=0")
-        if config.hidden_size != config.num_parts * config.code_dim:
+        part_dim = int(config.part_hidden_dim) if int(config.part_hidden_dim) > 0 else int(config.code_dim)
+        if config.hidden_size != config.num_parts * part_dim:
             raise ValueError(
-                "PartStructuredMotionCodeFlow does not compress part channels: "
-                f"hidden_size must be num_parts*code_dim={config.num_parts * config.code_dim}, "
+                "PartStructuredMotionCodeFlow hidden size must match the grouped latent width: "
+                f"hidden_size must be num_parts*part_hidden_dim={config.num_parts * part_dim}, "
                 f"got {config.hidden_size}"
             )
         if config.hidden_size % config.num_heads != 0:
@@ -57,10 +58,12 @@ class PartStructuredMotionCodeFlow(MotionCodeFlow):
             raise ValueError(f"Unsupported terminal_tau_mode: {config.terminal_tau_mode}")
         self.config = config
 
-        self.tokenizer = PartVQTokenizer(
+        self.tokenizer = build_codeflow_tokenizer(
+            backend=config.vq_backend,
             kv_root=config.kv_root,
             checkpoint_path=config.vq_checkpoint,
             partition_path=config.vq_partition,
+            opt_path=config.vq_opt_path,
         )
         if self.tokenizer.num_parts != config.num_parts:
             raise ValueError(f"Config num_parts={config.num_parts}, tokenizer has {self.tokenizer.num_parts}")
@@ -77,7 +80,6 @@ class PartStructuredMotionCodeFlow(MotionCodeFlow):
             kv_root=config.kv_root,
         )
 
-        part_dim = config.code_dim
         self.part_input_norms = nn.ModuleList([
             nn.LayerNorm(config.code_dim, elementwise_affine=True, eps=1e-6)
             for _ in range(config.num_parts)

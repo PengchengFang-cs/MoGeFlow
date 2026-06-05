@@ -26,6 +26,31 @@ from utils.word_vectorizer import WordVectorizer
 
 
 DEFAULT_BEST_CHECKPOINT_LIMIT = 5
+FULL_EVAL_SPLIT = "test"
+
+
+def normalized_dataset_name(dataset_name: str) -> str:
+    name = str(dataset_name).lower()
+    if name in {"humanml", "humanml3d"}:
+        return "t2m"
+    return name
+
+
+def expected_motion_dim(dataset_name: str) -> int:
+    name = normalized_dataset_name(dataset_name)
+    if name == "kit":
+        return 251
+    if name == "t2m":
+        return 263
+    raise ValueError(f"Unsupported dataset_name: {dataset_name}")
+
+
+def dataset_opt_path(opt) -> Path:
+    override = getattr(opt, "dataset_opt_path", "")
+    if override:
+        return Path(override).expanduser()
+    name = normalized_dataset_name(getattr(opt, "dataset_name", "t2m"))
+    return Path("./checkpoints") / name / "Comp_v6_KLD005" / "opt.txt"
 
 
 class CodeFlowLossModule(nn.Module):
@@ -89,7 +114,7 @@ def master_print(rank: int, msg: str) -> None:
         print(msg, flush=True)
 
 
-def build_dataset(opt, split: str):
+def build_train_dataset(opt):
     data_root = Path(opt.data_root).expanduser().resolve()
     mean = np.load(opt.mean_path).astype(np.float32)
     std = np.load(opt.std_path).astype(np.float32)
@@ -100,7 +125,7 @@ def build_dataset(opt, split: str):
         motion_dir=str(data_root / "new_joint_vecs"),
         text_dir=str(data_root / "texts"),
     )
-    split_file = data_root / f"{split}.txt"
+    split_file = data_root / "train.txt"
     return Text2MotionDataset(ds_opt, mean, std, str(split_file))
 
 
@@ -113,8 +138,11 @@ def validate_stats_contract(opt) -> Dict[str, object]:
         raise FileNotFoundError(f"std_path not found: {std_path}")
     mean = np.load(mean_path)
     std = np.load(std_path)
-    if mean.shape != (263,) or std.shape != (263,):
-        raise RuntimeError(f"Expected HumanML3D stats shape (263,), got mean={mean.shape} std={std.shape}")
+    dataset_name = normalized_dataset_name(getattr(opt, "dataset_name", "t2m"))
+    expected_dim = expected_motion_dim(dataset_name)
+    expected_shape = (expected_dim,)
+    if mean.shape != expected_shape or std.shape != expected_shape:
+        raise RuntimeError(f"Expected {dataset_name} stats shape {expected_shape}, got mean={mean.shape} std={std.shape}")
     if not np.isfinite(mean).all() or not np.isfinite(std).all():
         raise RuntimeError("Normalization stats contain non-finite values")
     if np.min(std) <= 0:
@@ -124,7 +152,7 @@ def validate_stats_contract(opt) -> Dict[str, object]:
     ref_mean_path = kv_root / "checkpoints" / "stats" / "mean.npy"
     ref_std_path = kv_root / "checkpoints" / "stats" / "std.npy"
     matched_released_vq_stats = False
-    if ref_mean_path.is_file() and ref_std_path.is_file():
+    if dataset_name == "t2m" and ref_mean_path.is_file() and ref_std_path.is_file():
         ref_mean = np.load(ref_mean_path)
         ref_std = np.load(ref_std_path)
         matched_released_vq_stats = bool(
@@ -135,12 +163,13 @@ def validate_stats_contract(opt) -> Dict[str, object]:
         )
     if not opt.allow_non_vq_stats and not matched_released_vq_stats:
         raise RuntimeError(
-            "mean/std do not match the released KV-Control VQ stats. "
+            f"{dataset_name} mean/std do not match the released KV-Control VQ stats. "
             "Pass --allow_non_vq_stats only if this is an intentional tokenizer/stat swap."
         )
     return {
         "mean_path": str(mean_path),
         "std_path": str(std_path),
+        "dataset_name": dataset_name,
         "mean_shape": list(mean.shape),
         "std_shape": list(std.shape),
         "std_min": float(np.min(std)),
@@ -152,11 +181,17 @@ def validate_stats_contract(opt) -> Dict[str, object]:
 def make_config(opt) -> MotionCodeFlowConfig:
     return MotionCodeFlowConfig(
         kv_root=opt.kv_root,
+        vq_backend=opt.vq_backend,
         vq_checkpoint=opt.vq_checkpoint,
         vq_partition=opt.vq_partition,
+        vq_opt_path=opt.vq_opt_path,
         clip_version=opt.clip_version,
         clip_path=opt.clip_path,
         representation=opt.representation,
+        code_dim=opt.code_dim,
+        num_parts=opt.num_parts,
+        num_codes=opt.num_codes,
+        part_hidden_dim=opt.part_hidden_dim,
         coupling_mode=opt.coupling_mode,
         holder_depth=opt.holder_depth,
         holder_mlp_ratio=opt.holder_mlp_ratio,
@@ -446,43 +481,6 @@ def encode_batch(model: MotionCodeFlow, motions: torch.Tensor, lengths: torch.Te
     return ids, embeddings, token_lengths
 
 
-@torch.no_grad()
-def validate(model: MotionCodeFlow, loader, device, opt, max_batches: int) -> Dict[str, float]:
-    model.eval()
-    sums: Dict[str, float] = {}
-    count = 0
-    for batch_id, batch in enumerate(loader):
-        if batch_id >= max_batches:
-            break
-        captions, motions, lengths = batch
-        motions = motions.float().to(device, non_blocking=True)
-        lengths = lengths.to(device, non_blocking=True)
-        ids, embeddings, token_lengths = encode_batch(model, motions, lengths, opt.unit_length)
-        losses = model.compute_losses(
-            embeddings,
-            ids,
-            list(captions),
-            token_lengths,
-            include_geometry_metrics=not opt.disable_val_geometry_metrics,
-            geometry_severe_quantile=opt.geometry_severe_quantile,
-        )
-        for key, value in losses.items():
-            sums[key] = sums.get(key, 0.0) + float(value.detach().cpu())
-        count += 1
-    model.train()
-    denom = max(count, 1)
-    local = torch.tensor(
-        [sums.get(key, 0.0) for key in sorted(sums)] + [float(count)],
-        device=device,
-        dtype=torch.float64,
-    )
-    keys = sorted(sums)
-    if is_dist():
-        dist.all_reduce(local, op=dist.ReduceOp.SUM)
-    total_count = max(float(local[-1].item()), 1.0)
-    return {key: float(local[idx].item() / total_count) for idx, key in enumerate(keys)}
-
-
 def append_jsonl(path: Path, payload: Dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as f:
@@ -495,7 +493,7 @@ def write_json(path: Path, payload: Dict) -> None:
 
 
 def build_full_eval_components(opt, device):
-    eval_opt = get_opt("./checkpoints/t2m/Comp_v6_KLD005/opt.txt", device)
+    eval_opt = get_opt(str(dataset_opt_path(opt)), device)
     eval_opt.checkpoints_dir = "./checkpoints"
     eval_opt.save_root = str(Path(eval_opt.checkpoints_dir) / eval_opt.dataset_name / eval_opt.name)
     eval_opt.model_dir = str(Path(eval_opt.save_root) / "model")
@@ -507,7 +505,7 @@ def build_full_eval_components(opt, device):
 
     mean = np.load(str(Path(eval_opt.meta_dir) / "mean.npy")).astype(np.float32)
     std = np.load(str(Path(eval_opt.meta_dir) / "std.npy")).astype(np.float32)
-    split_file = str(Path(opt.data_root) / f"{opt.full_eval_split}.txt")
+    split_file = str(Path(opt.data_root) / f"{FULL_EVAL_SPLIT}.txt")
     w_vectorizer = WordVectorizer("./glove", "our_vab")
     dataset = Text2MotionDatasetEval(eval_opt, mean, std, split_file, w_vectorizer)
     loader = DataLoader(
@@ -627,7 +625,7 @@ def run_full_eval(
         payload: Dict[str, object] = {
             "epoch": int(completed_epoch),
             "step": int(global_step),
-            "split": opt.full_eval_split,
+            "split": FULL_EVAL_SPLIT,
             "weight_source": weight_source,
             "repeat_times": repeat_times,
             "eval_steps": int(opt.full_eval_steps),
@@ -657,7 +655,8 @@ def run_full_eval(
 
 def make_best_selection_config(opt) -> Dict[str, object]:
     return {
-        "split": str(opt.full_eval_split),
+        "dataset_name": normalized_dataset_name(getattr(opt, "dataset_name", "t2m")),
+        "split": FULL_EVAL_SPLIT,
         "weight_source": "model" if opt.disable_full_eval_ema else "ema",
         "repeat_times": int(opt.full_eval_repeat_times),
         "eval_steps": int(opt.full_eval_steps),
@@ -689,6 +688,8 @@ def selection_configs_match(saved: Optional[Dict[str, object]], expected: Dict[s
         and expected_normalized.get("best_checkpoint_limit") == DEFAULT_BEST_CHECKPOINT_LIMIT
     ):
         saved_normalized["best_checkpoint_limit"] = DEFAULT_BEST_CHECKPOINT_LIMIT
+    if "dataset_name" not in saved_normalized and expected_normalized.get("dataset_name") == "t2m":
+        saved_normalized["dataset_name"] = "t2m"
     return saved_normalized == expected_normalized
 
 
@@ -993,10 +994,8 @@ def main(
     stats_summary = validate_stats_contract(opt)
     master_print(rank, "STATS_CONTRACT " + json.dumps(stats_summary, sort_keys=True))
 
-    train_dataset = build_dataset(opt, "train")
-    val_dataset = build_dataset(opt, "val")
+    train_dataset = build_train_dataset(opt)
     train_sampler = DistributedSampler(train_dataset, num_replicas=world_size, rank=rank, shuffle=True) if use_ddp else None
-    val_sampler = DistributedSampler(val_dataset, num_replicas=world_size, rank=rank, shuffle=False) if use_ddp else None
     train_loader = DataLoader(
         train_dataset,
         batch_size=opt.batch_size,
@@ -1005,15 +1004,6 @@ def main(
         num_workers=opt.num_workers,
         pin_memory=True,
         drop_last=True,
-    )
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=opt.batch_size,
-        shuffle=False,
-        sampler=val_sampler,
-        num_workers=max(0, opt.num_workers // 2),
-        pin_memory=True,
-        drop_last=False,
     )
     lr_schedule = build_lr_schedule(opt, len(train_loader))
     attach_lr_schedule_to_options(opt, lr_schedule)
@@ -1141,14 +1131,6 @@ def main(
                 master_print(rank, " ".join([f"{key}={value:.5f}" if isinstance(value, float) else f"{key}={value}" for key, value in metrics.items()]))
                 if rank == 0:
                     append_jsonl(log_path, metrics)
-
-            if opt.val_every > 0 and global_step > 0 and global_step % opt.val_every == 0:
-                val_metrics = validate(model, val_loader, device, opt, opt.val_batches)
-                if rank == 0:
-                    payload = {"epoch": epoch, "step": global_step}
-                    payload.update({f"val_{key}": value for key, value in val_metrics.items()})
-                    append_jsonl(out_dir / "logs" / "val.jsonl", payload)
-                    master_print(rank, "VAL " + " ".join(f"{key}={value:.5f}" for key, value in payload.items() if isinstance(value, float)))
 
             global_step += 1
             if opt.max_steps > 0 and global_step >= opt.max_steps:

@@ -116,7 +116,15 @@ class PartVQTokenizer(nn.Module):
         if not part_path.is_file():
             raise FileNotFoundError(f"VQ partition not found: {part_path}")
 
+        with part_path.open("r", encoding="utf-8") as f:
+            self.partition = json.load(f)
+        partition_dataset = str(self.partition.get("dataset", "")).lower()
+        feature_dim = int(self.partition.get("feature_dim", 251 if partition_dataset == "kit" else 263))
+        dataname = "kit" if feature_dim == 251 or partition_dataset == "kit" else "t2m"
+
         cfg = dict(VQ_CFG)
+        cfg["dataname"] = dataname
+        cfg["input_dim"] = feature_dim
         cfg["load_dir_vqvae"] = str(ckpt_path)
         cfg["partition_file"] = str(part_path)
         args = Namespace(**cfg)
@@ -134,7 +142,7 @@ class PartVQTokenizer(nn.Module):
             args.vq_act,
             args.vq_norm,
         )
-        ckpt = torch.load(str(ckpt_path), map_location="cpu")
+        ckpt = torch.load(str(ckpt_path), map_location="cpu", weights_only=False)
         if isinstance(ckpt, dict) and "net" in ckpt:
             state_dict = ckpt["net"]
         elif isinstance(ckpt, dict) and "vq_model" in ckpt:
@@ -153,9 +161,8 @@ class PartVQTokenizer(nn.Module):
         self.vq_model = model
         self.checkpoint_path = ckpt_path
         self.partition_path = part_path
-
-        with part_path.open("r", encoding="utf-8") as f:
-            self.partition = json.load(f)
+        self.input_dim = feature_dim
+        self.dataname = dataname
 
         codebooks = self._read_codebooks()
         self.num_parts = int(codebooks.shape[0])
@@ -337,9 +344,9 @@ class PartVQTokenizer(nn.Module):
             return summary
 
         if motion.ndim != 3:
-            raise ValueError(f"Expected motion [B, F, 263], got shape {tuple(motion.shape)}")
-        if motion.shape[-1] != 263:
-            raise ValueError(f"Expected HumanML3D 263-dim motion features, got {motion.shape[-1]}")
+            raise ValueError(f"Expected motion [B, F, {self.input_dim}], got shape {tuple(motion.shape)}")
+        if motion.shape[-1] != self.input_dim:
+            raise ValueError(f"Expected {self.dataname} {self.input_dim}-dim motion features, got {motion.shape[-1]}")
         motion = motion[:max_samples].to(self.device)
         if lengths is not None:
             lengths = lengths[: motion.shape[0]].to(self.device).long()

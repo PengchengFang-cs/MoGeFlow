@@ -31,7 +31,6 @@ if __name__ == "__main__":
             "sampling_method": "ode",
             "sde_gamma": 0.0,
             "decode_mode": "nearest",
-            "full_eval_split": "test",
             "full_eval_cond_scale": 3.0,
         },
     )

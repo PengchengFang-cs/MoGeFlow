@@ -10,12 +10,15 @@ class TrainCodeFlowOptions:
     def initialize(self) -> None:
         p = self.parser
         p.add_argument("--name", type=str, default="codeflow_tconcat_dit_b")
-        p.add_argument("--dataset_name", type=str, default="t2m", choices=["t2m"])
+        p.add_argument("--dataset_name", type=str, default="t2m", choices=["t2m", "kit"])
         p.add_argument("--data_root", type=str, default="dataset/HumanML3D")
         p.add_argument("--output_dir", type=str, default="./checkpoints/t2m/codeflow_tconcat_dit_b")
         p.add_argument("--kv_root", type=str, default=".")
+        p.add_argument("--dataset_opt_path", type=str, default="")
+        p.add_argument("--vq_backend", type=str, default="kv_part", choices=["kv_part", "momask_rvq"])
         p.add_argument("--vq_checkpoint", type=str, default="")
         p.add_argument("--vq_partition", type=str, default="")
+        p.add_argument("--vq_opt_path", type=str, default="")
         p.add_argument("--mean_path", type=str, default="")
         p.add_argument("--std_path", type=str, default="")
         p.add_argument("--clip_path", type=str, default="")
@@ -25,6 +28,15 @@ class TrainCodeFlowOptions:
         p.add_argument("--coupling_mode", type=str, default="holder_query", choices=["holder_query", "frame_grouped"])
         p.add_argument("--holder_depth", type=int, default=2)
         p.add_argument("--holder_mlp_ratio", type=float, default=4.0)
+        p.add_argument("--code_dim", type=int, default=128)
+        p.add_argument("--num_parts", type=int, default=6)
+        p.add_argument("--num_codes", type=int, default=128)
+        p.add_argument(
+            "--part_hidden_dim",
+            type=int,
+            default=0,
+            help="Per-part/RVQ-layer hidden width before frame grouping. 0 means use code_dim.",
+        )
         p.add_argument("--hidden_size", type=int, default=768)
         p.add_argument("--num_heads", type=int, default=12)
         p.add_argument("--depth_double", type=int, default=6)
@@ -94,11 +106,8 @@ class TrainCodeFlowOptions:
         p.add_argument("--log_every", type=int, default=50)
         p.add_argument("--save_every", type=int, default=0, help="Deprecated; training now keeps latest and top-k best checkpoints.")
         p.add_argument("--best_checkpoint_limit", type=int, default=5, help="Number of best FID/Top3 checkpoints to retain.")
-        p.add_argument("--val_every", type=int, default=1000)
-        p.add_argument("--val_batches", type=int, default=32)
         p.add_argument("--full_eval_every_epoch", type=int, default=5)
         p.add_argument("--full_eval_start_epoch", type=int, default=0)
-        p.add_argument("--full_eval_split", type=str, default="test", choices=["val", "test"])
         p.add_argument("--full_eval_batch_size", type=int, default=32)
         p.add_argument("--full_eval_num_workers", type=int, default=4)
         p.add_argument("--full_eval_steps", type=int, default=32)
@@ -111,7 +120,6 @@ class TrainCodeFlowOptions:
             help="Fixed base seed for full HumanML3D eval during training. Repeat i uses full_eval_seed+i.",
         )
         p.add_argument("--disable_full_eval_ema", action="store_true")
-        p.add_argument("--disable_val_geometry_metrics", action="store_true")
         p.add_argument("--geometry_severe_quantile", type=float, default=0.75)
         p.add_argument("--allow_non_vq_stats", action="store_true")
         p.add_argument("--disable_vq_contract_check", action="store_true")
@@ -125,14 +133,26 @@ class TrainCodeFlowOptions:
     def parse(self):
         opt = self.parser.parse_args()
         kv_root = Path(opt.kv_root).expanduser()
-        if not opt.vq_checkpoint:
-            opt.vq_checkpoint = str(kv_root / "checkpoints" / "vqvae" / "net_best_fid.pth")
-        if not opt.vq_partition:
-            opt.vq_partition = str(kv_root / "checkpoints" / "vqvae" / "skeleton_partition.json")
-        if not opt.mean_path:
-            opt.mean_path = str(kv_root / "checkpoints" / "stats" / "mean.npy")
-        if not opt.std_path:
-            opt.std_path = str(kv_root / "checkpoints" / "stats" / "std.npy")
+        repo_root = Path(__file__).resolve().parents[1]
+        momask_root = repo_root / "checkpoints" / "t2m" / "rvq_nq6_dc512_nc512_noshare_qdp0.2"
+        if opt.vq_backend == "momask_rvq":
+            if not opt.vq_checkpoint:
+                opt.vq_checkpoint = str(momask_root / "model" / "net_best_fid.tar")
+            if not opt.vq_opt_path:
+                opt.vq_opt_path = str(momask_root / "opt.txt")
+            if not opt.mean_path:
+                opt.mean_path = str(momask_root / "meta" / "mean.npy")
+            if not opt.std_path:
+                opt.std_path = str(momask_root / "meta" / "std.npy")
+        else:
+            if not opt.vq_checkpoint:
+                opt.vq_checkpoint = str(kv_root / "checkpoints" / "vqvae" / "net_best_fid.pth")
+            if not opt.vq_partition:
+                opt.vq_partition = str(kv_root / "checkpoints" / "vqvae" / "skeleton_partition.json")
+            if not opt.mean_path:
+                opt.mean_path = str(kv_root / "checkpoints" / "stats" / "mean.npy")
+            if not opt.std_path:
+                opt.std_path = str(kv_root / "checkpoints" / "stats" / "std.npy")
         if not opt.clip_path:
             opt.clip_path = str(kv_root / "checkpoints" / "clip" / "ViT-B-32.pt")
         return opt
