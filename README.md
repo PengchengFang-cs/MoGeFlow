@@ -1,5 +1,8 @@
 # CodeFlow
 
+[![Hugging Face Weights](https://img.shields.io/badge/Download-Weights%20%28HF%29-f7c843.svg)](https://huggingface.co/AmberJar/CodeFlow-HumanML3D)
+[![HumanML3D Data](https://img.shields.io/badge/Download-Data%20%28HumanML3D%29-2ea44f.svg)](https://github.com/EricGuo5513/HumanML3D#how-to-obtain-the-data)
+
 Part-Structured CodeFlow (PS-CF) is a text-to-motion generation codebase built
 around continuous flow matching over frozen motion-code tokenizers. The canonical
 release path uses HumanML3D features, a part-aware VQ tokenizer, and a
@@ -43,7 +46,9 @@ specific cluster layout.
 
 ## Data And Assets
 
-Prepare HumanML3D in the standard layout:
+Download or reproduce HumanML3D from the official
+[HumanML3D data instructions](https://github.com/EricGuo5513/HumanML3D#how-to-obtain-the-data),
+then prepare it in the standard layout:
 
 ```text
 dataset/HumanML3D/
