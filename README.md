@@ -208,25 +208,6 @@ unless `--eval_dir` is provided.
 - `models/codeflow/momask_vq.py` is a compatibility wrapper for HumanML3D
   MoMask RVQ checkpoints. The project branding remains CodeFlow.
 
-## Acknowledgements
-
-This repository builds on the open-source HumanML3D/MoMask ecosystem and its
-evaluation stack. We also acknowledge the related open-source projects used by
-the upstream codebase, including vector-quantize-pytorch, T2M-GPT, MDM, MLD,
-Muse, and deep-motion-editing.
-
-If you use the upstream MoMask components, please also cite the original work:
-
-```bibtex
-@inproceedings{guo2024momask,
-  title={Momask: Generative masked modeling of 3d human motions},
-  author={Guo, Chuan and Mu, Yuxuan and Javed, Muhammad Gohar and Wang, Sen and Cheng, Li},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={1900--1910},
-  year={2024}
-}
-```
-
 ## License
 
 The code is released under the MIT license. The original upstream copyright
