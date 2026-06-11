@@ -2,6 +2,7 @@
 
 [![Hugging Face Weights](https://img.shields.io/badge/Download-Weights%20%28HF%29-f7c843.svg)](https://huggingface.co/AmberJar/CodeFlow-HumanML3D)
 [![HumanML3D Data](https://img.shields.io/badge/Download-Data%20%28HumanML3D%29-2ea44f.svg)](https://github.com/EricGuo5513/HumanML3D#how-to-obtain-the-data)
+[![arXiv](https://img.shields.io/badge/arXiv-2606.11656-b31b1b.svg)](https://arxiv.org/abs/2606.11656)
 
 Part-Structured CodeFlow (PS-CF) is a text-to-motion generation codebase built
 around continuous flow matching over frozen motion-code tokenizers. The canonical
@@ -213,3 +214,20 @@ unless `--eval_dir` is provided.
 The code is released under the MIT license. The original upstream copyright
 notice is preserved in `LICENSE`; additional CodeFlow changes are released under
 the same license.
+
+## Acknowledgement
+
+If you use this code or find it helpful for your research, please cite:
+
+```bibtex
+@article{fang2026mogeflow,
+  title={MoGeFlow: Flowing Through Motion Codebook Geometry for Text-to-Motion Generation},
+  author={Fang, Pengcheng and Sun, Tengjiao and Zhan, Xiaoyu and Cai, Xiaohao and Fu, Dongjie},
+  journal={arXiv preprint arXiv:2606.11656},
+  year={2026},
+  eprint={2606.11656},
+  archivePrefix={arXiv},
+  primaryClass={cs.GR},
+  url={https://arxiv.org/abs/2606.11656}
+}
+```
