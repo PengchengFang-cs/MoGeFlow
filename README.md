@@ -1,8 +1,18 @@
-# MoGeFlow
+<div align="center">
 
-[![Hugging Face Weights](https://img.shields.io/badge/Download-MoGeFlow%20Weights%20%28HF%29-f7c843.svg)](https://huggingface.co/AmberJar/CodeFlow-HumanML3D)
-[![HumanML3D Data](https://img.shields.io/badge/Download-Data%20%28HumanML3D%29-2ea44f.svg)](https://github.com/EricGuo5513/HumanML3D#how-to-obtain-the-data)
-[![arXiv](https://img.shields.io/badge/arXiv-2606.11656-b31b1b.svg)](https://arxiv.org/abs/2606.11656)
+<h1>MoGeFlow: Flowing Through Motion Codebook Geometry for Text-to-Motion Generation</h1>
+
+<p>Pengcheng Fang, Tengjiao Sun, Xiaoyu Zhan, Xiaohao Cai, Dongjie Fu</p>
+
+<p>
+  <a href="https://arxiv.org/abs/2606.11656"><img src="https://img.shields.io/badge/arXiv-2606.11656-b31b1b.svg" alt="arXiv"></a>
+  <a href="https://huggingface.co/AmberJar/CodeFlow-HumanML3D"><img src="https://img.shields.io/badge/MoGeFlow-Weights%20%28HF%29-f7c843.svg" alt="Hugging Face weights"></a>
+  <a href="https://github.com/EricGuo5513/HumanML3D#how-to-obtain-the-data"><img src="https://img.shields.io/badge/HumanML3D-Data-2ea44f.svg" alt="HumanML3D data"></a>
+</p>
+
+<img src="assets/mogeflow_teaser.png" alt="MoGeFlow teaser: human motion sequence flowing through motion codebook geometry" width="100%">
+
+</div>
 
 MoGeFlow is a text-to-motion generation model that generates through motion
 codebook geometry. Instead of treating vector-quantized motion codes only as
