@@ -2,7 +2,21 @@
 
 <h1>MoGeFlow: Flowing Through Motion Codebook Geometry for Text-to-Motion Generation</h1>
 
-<p>Pengcheng Fang, Tengjiao Sun, Xiaoyu Zhan, Xiaohao Cai, Dongjie Fu</p>
+<p>
+  Pengcheng Fang<sup>1,3</sup>,
+  Tengjiao Sun<sup>1,3</sup>,
+  Xiaoyu Zhan<sup>2,3</sup>,
+  Xiaohao Cai<sup>1</sup>,
+  Dongjie Fu<sup>2,&dagger;</sup>
+</p>
+
+<p>
+  <sup>1</sup>University of Southampton &nbsp;&nbsp;
+  <sup>2</sup>Nanjing University &nbsp;&nbsp;
+  <sup>3</sup>MOGO AI
+</p>
+
+<p><sup>&dagger;</sup>Corresponding author</p>
 
 <p>
   <a href="https://arxiv.org/abs/2606.11656"><img src="https://img.shields.io/badge/arXiv-2606.11656-b31b1b.svg" alt="arXiv"></a>
