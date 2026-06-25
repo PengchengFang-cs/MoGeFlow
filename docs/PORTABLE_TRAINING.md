@@ -40,13 +40,14 @@ VQ_PARTITION=/path/to/skeleton_partition.json \
 MEAN_PATH=/path/to/mean.npy \
 STD_PATH=/path/to/std.npy \
 CLIP_PATH=/path/to/ViT-B-32.pt \
+RUN_NAME=mogeflow_hml3d_standard \
 bash scripts/launch/train_humanml3d_pscf_standard.sh
 ```
 
 The default script uses:
 
 - HumanML3D/T2M data.
-- Part-Structured MoGeFlow/CodeFlow.
+- MoGeFlow structured motion-code frame flow.
 - 6 tokenizer groups with 128-dim code embeddings.
 - `part_hidden_dim=128` and `hidden_size=768`.
 - Dropout `0.05`.
@@ -61,7 +62,7 @@ The default script uses:
 The public HumanML3D release is expected at:
 
 ```text
-checkpoints/codeflow_hml3d_release/
+checkpoints/mogeflow_hml3d_release/
   codeflow/codeflow_hml3d_best_top3_ema.pt
   rvq/part_vq_hml3d_overlap_best_top3.pth
   rvq/skeleton_partition.json
@@ -74,17 +75,17 @@ Download with:
 
 ```bash
 huggingface-cli download AmberJar/CodeFlow-HumanML3D \
-  --local-dir checkpoints/codeflow_hml3d_release
+  --local-dir checkpoints/mogeflow_hml3d_release
 ```
 
 Run inference:
 
 ```bash
 python gen_codeflow_t2m.py \
-  --local_dir checkpoints/codeflow_hml3d_release \
+  --local_dir checkpoints/mogeflow_hml3d_release \
   --text_prompt "A person walks forward and waves with the right hand." \
   --motion_length 196 \
-  --output_dir generation/codeflow_hml3d \
+  --output_dir generation/mogeflow_hml3d \
   --gpu_id 0
 ```
 

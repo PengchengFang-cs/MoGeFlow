@@ -1,14 +1,17 @@
 # MoGeFlow
 
-[![Hugging Face Weights](https://img.shields.io/badge/Download-Weights%20%28HF%29-f7c843.svg)](https://huggingface.co/AmberJar/CodeFlow-HumanML3D)
+[![Hugging Face Weights](https://img.shields.io/badge/Download-MoGeFlow%20Weights%20%28HF%29-f7c843.svg)](https://huggingface.co/AmberJar/CodeFlow-HumanML3D)
 [![HumanML3D Data](https://img.shields.io/badge/Download-Data%20%28HumanML3D%29-2ea44f.svg)](https://github.com/EricGuo5513/HumanML3D#how-to-obtain-the-data)
 [![arXiv](https://img.shields.io/badge/arXiv-2606.11656-b31b1b.svg)](https://arxiv.org/abs/2606.11656)
 
-MoGeFlow is a text-to-motion generation codebase built around continuous flow
-matching over frozen motion-code tokenizers. The public release keeps the
-Part-Structured CodeFlow (PS-CF) implementation used by MoGeFlow: HumanML3D
-features, a part-aware VQ tokenizer, and a part-structured DiT prior with one
-frame token per RVQ timestep.
+MoGeFlow is a text-to-motion generation model that generates through motion
+codebook geometry. Instead of treating vector-quantized motion codes only as
+unordered categorical labels, MoGeFlow uses the learned code embeddings of a
+frozen motion tokenizer as a continuous, geometry-bearing generation space.
+The model represents each timestep as a structured motion-code frame over
+PartVQ group-specific code embeddings, learns a text-conditioned continuous
+flow over these frame states, and projects terminal states back to valid
+codebook entries before frozen decoding.
 
 This repository is adapted from the MoMask/HumanML3D codebase, but the public
 surface is intentionally limited to the MoGeFlow training, inference, and
@@ -16,16 +19,18 @@ checkpoint evaluation path.
 
 ## What Is Included
 
-- Part-Structured MoGeFlow/CodeFlow training on HumanML3D.
-- Full HumanML3D text-to-motion evaluation during training.
-- Top-k best checkpoint tracking by full-eval FID and Top3.
-- Frozen tokenizer support for KV-Control part VQ and a MoMask-compatible RVQ
-  backend for HumanML3D.
-- Portable launch script for the standard PS-CF setting.
+- MoGeFlow training, inference, and checkpoint evaluation on HumanML3D.
+- A frozen PartVQ tokenizer interface inherited from KV-Control.
+- Structured motion-code frame generation over group-specific code embeddings.
+- Terminal projection from continuous codebook-space states to valid motion
+  code indices for frozen decoding.
+- Full HumanML3D text-to-motion evaluation during training and top-k checkpoint
+  tracking by full-eval FID and Top3.
 
-The public release documents HumanML3D only. KIT experiment artifacts, logs,
-checkpoints, and internal reports are intentionally not part of the GitHub
-release.
+The paper evaluates MoGeFlow on HumanML3D, KIT-ML, and MotionMillion. This
+public code release currently documents the HumanML3D workflow; KIT-ML and
+MotionMillion artifacts, logs, checkpoints, and internal reports are
+intentionally not part of the GitHub release.
 
 ## Environment
 
@@ -33,7 +38,7 @@ Create the environment and install CLIP through the dependency file:
 
 ```bash
 conda env create -f environment.yml
-conda activate codeflow
+conda activate mogeflow
 ```
 
 If you prefer pip in an existing environment:
@@ -82,9 +87,12 @@ The released HumanML3D checkpoint bundle is hosted on Hugging Face:
 AmberJar/CodeFlow-HumanML3D
 ```
 
+The Hugging Face repository and checkpoint file paths currently retain the
+historical `codeflow` artifact name for compatibility.
+
 It contains:
 
-- `codeflow/codeflow_hml3d_best_top3_ema.pt`: inference-only EMA CodeFlow checkpoint.
+- `codeflow/codeflow_hml3d_best_top3_ema.pt`: inference-only EMA MoGeFlow checkpoint.
 - `rvq/part_vq_hml3d_overlap_best_top3.pth`: frozen part-aware RVQ tokenizer.
 - `rvq/skeleton_partition.json`: six-part overlap partition.
 - `stats/mean.npy`, `stats/std.npy`: RVQ normalization statistics.
@@ -99,7 +107,7 @@ Download once if you want a local copy:
 
 ```bash
 huggingface-cli download AmberJar/CodeFlow-HumanML3D \
-  --local-dir checkpoints/codeflow_hml3d_release
+  --local-dir checkpoints/mogeflow_hml3d_release
 ```
 
 ## Inference
@@ -110,7 +118,7 @@ Generate from a single prompt with automatic Hugging Face download:
 python gen_codeflow_t2m.py \
   --text_prompt "A person walks forward and waves with the right hand." \
   --motion_length 196 \
-  --output_dir generation/codeflow_hml3d \
+  --output_dir generation/mogeflow_hml3d \
   --gpu_id 0
 ```
 
@@ -118,10 +126,10 @@ Or use a downloaded local weight directory:
 
 ```bash
 python gen_codeflow_t2m.py \
-  --local_dir checkpoints/codeflow_hml3d_release \
+  --local_dir checkpoints/mogeflow_hml3d_release \
   --text_prompt "A person walks forward and waves with the right hand." \
   --motion_length 196 \
-  --output_dir generation/codeflow_hml3d \
+  --output_dir generation/mogeflow_hml3d \
   --gpu_id 0
 ```
 
@@ -129,29 +137,29 @@ The script saves HumanML3D features, normalized features, RVQ ids, recovered
 joint arrays, and `results.json`. To render simple MP4 stick figures, add
 `--save_mp4`.
 
-## Standard PS-CF Training
+## Standard MoGeFlow Training
 
-The standard HumanML3D setting is:
+The public HumanML3D training recipe is:
 
 ```text
-representation      part_structured
-tokenizer backend   kv_part
-code_dim            128
-num_parts           6
-num_codes           128
-part_hidden_dim     128
-hidden_size         768
-depth               double=6, single=12
-num_heads           12
-dropout             0.05
-batch_size          64
-epochs              600
-learning rate       1e-4
-scheduler           half_cosine, eta_min_ratio=0.01
-seed                42
-terminal loss       0.0
-full eval           test split, every 10 epochs, 96 steps, CFG=6.0
-checkpoint select   top-3 by full-eval FID and Top3
+model              MoGeFlow structured motion-code frame flow
+tokenizer backend  frozen KV-Control PartVQ
+code_dim           128
+num_groups         6
+num_codes          128 per group
+part_hidden_dim    128
+hidden_size        768
+depth              double=6, single=12
+num_heads          12
+dropout            0.05
+batch_size         64
+epochs             600
+learning rate      1e-4
+scheduler          half_cosine, eta_min_ratio=0.01
+seed               42
+terminal loss      0.0
+full eval          test split, every 10 epochs, 96 steps, CFG=6.0
+checkpoint select  top-3 by full-eval FID and Top3
 ```
 
 Set the asset paths and launch:
@@ -164,13 +172,14 @@ VQ_PARTITION=/path/to/skeleton_partition.json \
 MEAN_PATH=/path/to/mean.npy \
 STD_PATH=/path/to/std.npy \
 CLIP_PATH=/path/to/ViT-B-32.pt \
+RUN_NAME=mogeflow_hml3d_standard \
 bash scripts/launch/train_humanml3d_pscf_standard.sh
 ```
 
 The script writes checkpoints under:
 
 ```text
-checkpoints/t2m/codeflow_part_structured_pscf_hml3d_standard/
+checkpoints/t2m/mogeflow_hml3d_standard/
 ```
 
 You can override `RUN_NAME`, `OUT_DIR`, `CUDA_VISIBLE_DEVICES`,
@@ -182,13 +191,13 @@ Evaluate a saved MoGeFlow checkpoint on HumanML3D test:
 
 ```bash
 python eval_codeflow_part_structured_t2m.py \
-  --checkpoint checkpoints/codeflow_hml3d_release/codeflow/codeflow_hml3d_best_top3_ema.pt \
+  --checkpoint checkpoints/mogeflow_hml3d_release/codeflow/codeflow_hml3d_best_top3_ema.pt \
   --dataset_opt_path checkpoints/t2m/Comp_v6_KLD005/opt.txt \
   --data_root dataset/HumanML3D \
-  --vq_checkpoint checkpoints/codeflow_hml3d_release/rvq/part_vq_hml3d_overlap_best_top3.pth \
-  --vq_partition checkpoints/codeflow_hml3d_release/rvq/skeleton_partition.json \
-  --mean_path checkpoints/codeflow_hml3d_release/stats/mean.npy \
-  --std_path checkpoints/codeflow_hml3d_release/stats/std.npy \
+  --vq_checkpoint checkpoints/mogeflow_hml3d_release/rvq/part_vq_hml3d_overlap_best_top3.pth \
+  --vq_partition checkpoints/mogeflow_hml3d_release/rvq/skeleton_partition.json \
+  --mean_path checkpoints/mogeflow_hml3d_release/stats/mean.npy \
+  --std_path checkpoints/mogeflow_hml3d_release/stats/std.npy \
   --clip_path /path/to/ViT-B-32.pt \
   --repeat_times 20 \
   --steps 96 \
@@ -202,7 +211,7 @@ unless `--eval_dir` is provided.
 ## Repository Notes
 
 - `gen_codeflow_t2m.py` is the public text-to-motion inference entry.
-- `train_codeflow_part_structured.py` is the canonical PS-CF training entry.
+- `train_codeflow_part_structured.py` is the canonical MoGeFlow training entry.
 - `eval_codeflow_part_structured_t2m.py` is the public checkpoint evaluation
   entry.
 - `models/codeflow/trainer.py` contains the internal training loop, checkpoint
@@ -212,6 +221,9 @@ unless `--eval_dir` is provided.
   part-structured model.
 - `models/codeflow/momask_vq.py` is a compatibility wrapper for HumanML3D
   MoMask RVQ checkpoints.
+- Some Python file and artifact paths retain the historical `codeflow` name for
+  compatibility with existing checkpoints and scripts; the method name used in
+  the paper and release documentation is MoGeFlow.
 
 ## License
 

@@ -1,4 +1,4 @@
-name: codeflow
+name: mogeflow
 channels:
   - conda-forge
   - defaults
