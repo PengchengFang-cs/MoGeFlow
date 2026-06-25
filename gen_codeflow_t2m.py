@@ -11,8 +11,8 @@ import numpy as np
 import torch
 
 from models.codeflow import PartStructuredMotionCodeFlow
+from models.codeflow.trainer import make_config
 from options.codeflow_options import TrainCodeFlowOptions
-from train_codeflow import make_config
 from utils.fixseed import fixseed
 from utils.motion_process import recover_from_ric
 

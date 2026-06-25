@@ -14,9 +14,9 @@ from torch.utils.data import DataLoader
 
 from data.t2m_dataset import Text2MotionDatasetEval, collate_fn
 from models.codeflow import CodeFlowEvalConfig, MotionCodeFlow, evaluate_codeflow_t2m
+from models.codeflow.trainer import make_config
 from models.t2m_eval_wrapper import EvaluatorModelWrapper
 from options.codeflow_options import TrainCodeFlowOptions
-from train_codeflow import make_config
 from utils.fixseed import fixseed
 from utils.get_opt import get_opt
 from utils.word_vectorizer import WordVectorizer

@@ -1,21 +1,22 @@
-# CodeFlow
+# MoGeFlow
 
 [![Hugging Face Weights](https://img.shields.io/badge/Download-Weights%20%28HF%29-f7c843.svg)](https://huggingface.co/AmberJar/CodeFlow-HumanML3D)
 [![HumanML3D Data](https://img.shields.io/badge/Download-Data%20%28HumanML3D%29-2ea44f.svg)](https://github.com/EricGuo5513/HumanML3D#how-to-obtain-the-data)
 [![arXiv](https://img.shields.io/badge/arXiv-2606.11656-b31b1b.svg)](https://arxiv.org/abs/2606.11656)
 
-Part-Structured CodeFlow (PS-CF) is a text-to-motion generation codebase built
-around continuous flow matching over frozen motion-code tokenizers. The canonical
-release path uses HumanML3D features, a part-aware VQ tokenizer, and a
-part-structured DiT prior with one frame token per RVQ timestep.
+MoGeFlow is a text-to-motion generation codebase built around continuous flow
+matching over frozen motion-code tokenizers. The public release keeps the
+Part-Structured CodeFlow (PS-CF) implementation used by MoGeFlow: HumanML3D
+features, a part-aware VQ tokenizer, and a part-structured DiT prior with one
+frame token per RVQ timestep.
 
-This repository is the public code release for our CodeFlow experiments. It is
-adapted from the MoMask/HumanML3D codebase, but the main training and evaluation
-entry points here are CodeFlow-specific.
+This repository is adapted from the MoMask/HumanML3D codebase, but the public
+surface is intentionally limited to the MoGeFlow training, inference, and
+checkpoint evaluation path.
 
 ## What Is Included
 
-- Part-Structured CodeFlow training on HumanML3D.
+- Part-Structured MoGeFlow/CodeFlow training on HumanML3D.
 - Full HumanML3D text-to-motion evaluation during training.
 - Top-k best checkpoint tracking by full-eval FID and Top3.
 - Frozen tokenizer support for KV-Control part VQ and a MoMask-compatible RVQ
@@ -88,7 +89,7 @@ It contains:
 - `rvq/skeleton_partition.json`: six-part overlap partition.
 - `stats/mean.npy`, `stats/std.npy`: RVQ normalization statistics.
 
-The released CodeFlow checkpoint is the training-time HumanML3D best-Top3
+The released MoGeFlow checkpoint is the training-time HumanML3D best-Top3
 model: Top3 `0.873060`, FID `0.058190`, epoch `290`, step `111070`. Its
 architecture is `part_hidden_dim=192`, `hidden_size=1152`, `dropout=0.05`.
 This is the strongest released checkpoint; the standard training recipe below
@@ -177,7 +178,7 @@ You can override `RUN_NAME`, `OUT_DIR`, `CUDA_VISIBLE_DEVICES`,
 
 ## Evaluation
 
-Evaluate a saved CodeFlow checkpoint on HumanML3D test:
+Evaluate a saved MoGeFlow checkpoint on HumanML3D test:
 
 ```bash
 python eval_codeflow_part_structured_t2m.py \
@@ -202,17 +203,20 @@ unless `--eval_dir` is provided.
 
 - `gen_codeflow_t2m.py` is the public text-to-motion inference entry.
 - `train_codeflow_part_structured.py` is the canonical PS-CF training entry.
-- `train_codeflow.py` contains the shared training loop, checkpoint selection,
-  full-eval scheduling, and optimizer logic.
+- `eval_codeflow_part_structured_t2m.py` is the public checkpoint evaluation
+  entry.
+- `models/codeflow/trainer.py` contains the internal training loop, checkpoint
+  selection, full-eval scheduling, and optimizer logic.
+- `models/codeflow/eval_t2m_cli.py` contains the internal evaluation CLI.
 - `models/codeflow/part_structured_motion_code_flow.py` contains the canonical
   part-structured model.
 - `models/codeflow/momask_vq.py` is a compatibility wrapper for HumanML3D
-  MoMask RVQ checkpoints. The project branding remains CodeFlow.
+  MoMask RVQ checkpoints.
 
 ## License
 
 The code is released under the MIT license. The original upstream copyright
-notice is preserved in `LICENSE`; additional CodeFlow changes are released under
+notice is preserved in `LICENSE`; additional MoGeFlow changes are released under
 the same license.
 
 ## Acknowledgement

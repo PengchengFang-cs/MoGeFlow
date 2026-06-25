@@ -1,7 +1,7 @@
 """Train Part-Structured Code Flow."""
 
 from models.codeflow import PartStructuredMotionCodeFlow
-from train_codeflow import main
+from models.codeflow.trainer import main
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-# Portable Training Notes
+# Portable MoGeFlow Notes
 
 This repository is prepared for code-only transfer. Large or generated files are
 intentionally ignored by git: datasets, evaluator checkpoints, model
@@ -28,7 +28,7 @@ checkpoints/t2m/text_mot_match/model/finest.tar
 glove/
 ```
 
-## Standard CodeFlow Training
+## Standard MoGeFlow Training
 
 The canonical public launch script is:
 
@@ -46,7 +46,7 @@ bash scripts/launch/train_humanml3d_pscf_standard.sh
 The default script uses:
 
 - HumanML3D/T2M data.
-- Part-Structured CodeFlow.
+- Part-Structured MoGeFlow/CodeFlow.
 - 6 tokenizer groups with 128-dim code embeddings.
 - `part_hidden_dim=128` and `hidden_size=768`.
 - Dropout `0.05`.
