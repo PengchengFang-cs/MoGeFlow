@@ -118,9 +118,10 @@ historical `codeflow` artifact name for compatibility.
 It contains:
 
 - `codeflow/codeflow_hml3d_best_top3_ema.pt`: inference-only EMA MoGeFlow checkpoint.
-- `rvq/part_vq_hml3d_overlap_best_top3.pth`: frozen part-aware RVQ tokenizer.
+- `rvq/part_vq_hml3d_overlap_best_top3.pth`: frozen part-aware VQ tokenizer
+  (one codebook per joint group; the `rvq/` folder name is historical).
 - `rvq/skeleton_partition.json`: six-part overlap partition.
-- `stats/mean.npy`, `stats/std.npy`: RVQ normalization statistics.
+- `stats/mean.npy`, `stats/std.npy`: tokenizer normalization statistics.
 
 The released MoGeFlow checkpoint is the training-time HumanML3D best-Top3
 model: Top3 `0.873060`, FID `0.058190`, epoch `290`, step `111070`. Its
@@ -158,7 +159,7 @@ python gen_codeflow_t2m.py \
   --gpu_id 0
 ```
 
-The script saves HumanML3D features, normalized features, RVQ ids, recovered
+The script saves HumanML3D features, normalized features, part-VQ code ids, recovered
 joint arrays, and `results.json`. To render simple MP4 stick figures, add
 `--save_mp4`.
 
