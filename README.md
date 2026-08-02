@@ -184,8 +184,7 @@ learning rate      1e-4
 scheduler          half_cosine, eta_min_ratio=0.01
 seed               42
 terminal loss      0.0
-full eval          test split, every 10 epochs, 96 steps, CFG=6.0
-checkpoint select  top-3 by full-eval FID and Top3
+full eval          every 10 epochs, 96 steps, CFG=6.0
 ```
 
 Set the asset paths and launch:

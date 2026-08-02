@@ -26,7 +26,7 @@ from utils.word_vectorizer import WordVectorizer
 
 
 DEFAULT_BEST_CHECKPOINT_LIMIT = 5
-FULL_EVAL_SPLIT = "test"
+FULL_EVAL_SPLIT = "val"
 
 
 def normalized_dataset_name(dataset_name: str) -> str:
