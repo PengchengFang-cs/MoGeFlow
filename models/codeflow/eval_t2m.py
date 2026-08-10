@@ -23,7 +23,6 @@ class CodeFlowEvalConfig:
     steps: int = 32
     cond_scale: float = 3.0
     terminal_mode: Optional[str] = None
-    decode_mode: Optional[str] = None
     unit_length: int = 4
     max_batches: int = 0
     cal_mm: bool = True
@@ -123,7 +122,6 @@ def generate_eval_motion_and_ids(
         steps=int(cfg.steps),
         cond_scale=float(cfg.cond_scale),
         terminal_mode=cfg.terminal_mode,
-        decode_mode=cfg.decode_mode,
     )
     eval_motion = prepare_codeflow_motion_for_eval(
         decoded_motion=decoded_motion,

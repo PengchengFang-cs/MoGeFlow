@@ -97,9 +97,15 @@ class PartVQTokenizer(nn.Module):
         kv_root: str,
         checkpoint_path: Optional[str] = None,
         partition_path: Optional[str] = None,
+        num_codes: Optional[int] = None,
+        code_dim: Optional[int] = None,
+        target_mode: str = "codebook",
         device: Optional[torch.device] = None,
     ) -> None:
         super().__init__()
+        if target_mode not in {"codebook", "encoder"}:
+            raise ValueError(f"Unsupported PartVQ target_mode: {target_mode}")
+        self.target_mode = str(target_mode)
         self.kv_root = Path(kv_root).expanduser().resolve()
         add_kv_control_to_path(self.kv_root)
 
@@ -124,6 +130,11 @@ class PartVQTokenizer(nn.Module):
 
         cfg = dict(VQ_CFG)
         cfg["dataname"] = dataname
+        if num_codes is not None:
+            cfg["nb_code"] = int(num_codes)
+        if code_dim is not None:
+            cfg["code_dim"] = int(code_dim)
+            cfg["output_emb_width"] = int(code_dim)
         cfg["input_dim"] = feature_dim
         cfg["load_dir_vqvae"] = str(ckpt_path)
         cfg["partition_file"] = str(part_path)
@@ -209,6 +220,40 @@ class PartVQTokenizer(nn.Module):
         ids_flat = self.vq_model(motion, type="encode")
         return ids_flat_to_grid(ids_flat.long(), self.num_parts)
 
+    @torch.no_grad()
+    def encode_encoder_latents(self, motion: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        """Return pre-quantization part encoder latents and their nearest code ids."""
+        if motion.ndim != 3:
+            raise ValueError(f"Expected motion [B, F, {self.input_dim}], got shape {tuple(motion.shape)}")
+        if motion.shape[-1] != self.input_dim:
+            raise ValueError(f"Expected {self.input_dim}-dim motion features, got {motion.shape[-1]}")
+        vqvae = self.vq_model.vqvae
+        batch = motion.shape[0]
+        x_in = vqvae.preprocess(motion)
+        x_in_t = x_in.permute(0, 2, 1)
+        ids_parts: List[torch.Tensor] = []
+        latent_parts: List[torch.Tensor] = []
+        latent_len_ref: Optional[int] = None
+
+        for part_idx, part in enumerate(vqvae.partSeg):
+            x_part = x_in_t[:, :, part].permute(0, 2, 1).contiguous()
+            z_e = vqvae.limb_encoders[part_idx](x_part)
+            z_e_t = z_e.permute(0, 2, 1).contiguous()
+            latent_len = int(z_e_t.shape[1])
+            if latent_len_ref is None:
+                latent_len_ref = latent_len
+            elif latent_len != latent_len_ref:
+                raise RuntimeError(
+                    f"All part encoders must emit the same latent length; "
+                    f"part 0={latent_len_ref}, part {part_idx}={latent_len}"
+                )
+            z_flat = z_e_t.view(-1, z_e_t.shape[-1])
+            ids = vqvae.quantizers[part_idx].quantize(z_flat).view(batch, latent_len)
+            ids_parts.append(ids.long())
+            latent_parts.append(z_e_t)
+
+        return torch.stack(ids_parts, dim=2), torch.stack(latent_parts, dim=2)
+
     def ids_to_embeddings(self, ids: torch.Tensor) -> torch.Tensor:
         if ids.ndim != 3:
             raise ValueError(f"Expected ids [B, T, P], got shape {tuple(ids.shape)}")
@@ -286,6 +331,8 @@ class PartVQTokenizer(nn.Module):
 
     @torch.no_grad()
     def encode(self, motion: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        if self.target_mode == "encoder":
+            return self.encode_encoder_latents(motion)
         ids = self.encode_ids(motion)
         return ids, self.ids_to_embeddings(ids)
 
@@ -332,6 +379,7 @@ class PartVQTokenizer(nn.Module):
         summary: Dict[str, object] = {
             "checkpoint_path": str(self.checkpoint_path),
             "partition_path": str(self.partition_path),
+            "target_mode": self.target_mode,
             "num_parts": self.num_parts,
             "num_codes": self.num_codes,
             "code_dim": self.code_dim,
@@ -357,7 +405,10 @@ class PartVQTokenizer(nn.Module):
         if not torch.equal(ids_grid, ids_via_public):
             raise RuntimeError("encode_ids is not consistent with KV-Control flat part-major ids")
 
-        embeddings = self.ids_to_embeddings(ids_grid)
+        target_ids, embeddings = self.encode(motion)
+        if not torch.equal(target_ids, ids_grid):
+            mismatch = int((target_ids != ids_grid).sum().item())
+            raise RuntimeError(f"encode target ids do not match KV-Control encode ids: {mismatch} mismatched ids")
         nearest = self.nearest_ids(embeddings)
         nearest_match = (nearest == ids_grid).float().mean()
         if not torch.equal(nearest, ids_grid):
@@ -401,11 +452,13 @@ def load_part_vq_tokenizer(
     kv_root: str,
     checkpoint_path: Optional[str] = None,
     partition_path: Optional[str] = None,
+    target_mode: str = "codebook",
     device: Optional[torch.device] = None,
 ) -> PartVQTokenizer:
     return PartVQTokenizer(
         kv_root=kv_root,
         checkpoint_path=checkpoint_path,
         partition_path=partition_path,
+        target_mode=target_mode,
         device=device,
     )

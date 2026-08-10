@@ -149,8 +149,7 @@ learning rate       1e-4
 scheduler           half_cosine, eta_min_ratio=0.01
 seed                42
 terminal loss       0.0
-full eval           test split, every 10 epochs, 96 steps, CFG=6.0
-checkpoint select   top-3 by full-eval FID and Top3
+full eval           every 10 epochs, 96 steps, CFG=6.0
 ```
 
 Set the asset paths and launch:
@@ -202,8 +201,8 @@ unless `--eval_dir` is provided.
 
 - `gen_codeflow_t2m.py` is the public text-to-motion inference entry.
 - `train_codeflow_part_structured.py` is the canonical PS-CF training entry.
-- `train_codeflow.py` contains the shared training loop, checkpoint selection,
-  full-eval scheduling, and optimizer logic.
+- `models/codeflow/trainer.py` contains the internal training loop, checkpoint
+  selection, full-eval scheduling, and optimizer logic.
 - `models/codeflow/part_structured_motion_code_flow.py` contains the canonical
   part-structured model.
 - `models/codeflow/momask_vq.py` is a compatibility wrapper for HumanML3D

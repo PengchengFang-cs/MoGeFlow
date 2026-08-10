@@ -3,20 +3,21 @@
 from .eval_t2m import CodeFlowEvalConfig, evaluate_codeflow_t2m
 from .kv_vq import PartVQTokenizer, ids_flat_to_grid, load_part_vq_tokenizer
 from .momask_vq import MoMaskRVQTokenizer, load_momask_rvq_tokenizer
-from .continuous_motion_code_flow import ContinuousMotionCodeFlow
 from .motion_code_flow import MotionCodeFlow, MotionCodeFlowConfig
 from .part_structured_motion_code_flow import PartStructuredMotionCodeFlow
+from .partvae_vq import PartVAEContinuousTokenizer, load_partvae_continuous_tokenizer
 
 __all__ = [
     "CodeFlowEvalConfig",
-    "ContinuousMotionCodeFlow",
     "MotionCodeFlow",
     "MotionCodeFlowConfig",
     "MoMaskRVQTokenizer",
     "PartStructuredMotionCodeFlow",
+    "PartVAEContinuousTokenizer",
     "PartVQTokenizer",
     "evaluate_codeflow_t2m",
     "ids_flat_to_grid",
     "load_momask_rvq_tokenizer",
     "load_part_vq_tokenizer",
+    "load_partvae_continuous_tokenizer",
 ]

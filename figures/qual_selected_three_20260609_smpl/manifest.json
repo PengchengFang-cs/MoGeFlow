@@ -1,0 +1,159 @@
+{
+  "items": [
+    {
+      "stem": "pscf_p0_crawl",
+      "method": "Ours (PS-CF)",
+      "action": "Crawl then walk",
+      "source": "generation/qual_selected_three_20260609/ours_pscf_w200_bestfid_ema/joints/sample000_repeat00_len196_joints.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/pscf_p0_crawl.npy"
+    },
+    {
+      "stem": "pscf_p1_pickup",
+      "method": "Ours (PS-CF)",
+      "action": "Pick up then turn",
+      "source": "generation/qual_selected_three_20260609/ours_pscf_w200_bestfid_ema/joints/sample001_repeat00_len196_joints.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/pscf_p1_pickup.npy"
+    },
+    {
+      "stem": "pscf_p2_kneel",
+      "method": "Ours (PS-CF)",
+      "action": "Kneel pose then raise",
+      "source": "generation/qual_selected_three_20260609/ours_pscf_w200_bestfid_ema/joints/sample002_repeat00_len196_joints.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/pscf_p2_kneel.npy"
+    },
+    {
+      "stem": "mtransformer_p0_crawl",
+      "method": "M-Transformer",
+      "action": "Crawl then walk",
+      "source": "generation/qual_selected_three_20260609/mtransformer/joints/sample0_repeat0_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/mtransformer_p0_crawl.npy"
+    },
+    {
+      "stem": "mtransformer_p1_pickup",
+      "method": "M-Transformer",
+      "action": "Pick up then turn",
+      "source": "generation/qual_selected_three_20260609/mtransformer/joints/sample1_repeat0_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/mtransformer_p1_pickup.npy"
+    },
+    {
+      "stem": "mtransformer_p2_kneel",
+      "method": "M-Transformer",
+      "action": "Kneel pose then raise",
+      "source": "generation/qual_selected_three_20260609/mtransformer/joints/sample2_repeat0_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/mtransformer_p2_kneel.npy"
+    },
+    {
+      "stem": "momask_p0_crawl",
+      "method": "MoMask",
+      "action": "Crawl then walk",
+      "source": "generation/qual_selected_three_20260609/momask/joints/sample000_repeat00_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/momask_p0_crawl.npy"
+    },
+    {
+      "stem": "momask_p1_pickup",
+      "method": "MoMask",
+      "action": "Pick up then turn",
+      "source": "generation/qual_selected_three_20260609/momask/joints/sample001_repeat00_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/momask_p1_pickup.npy"
+    },
+    {
+      "stem": "momask_p2_kneel",
+      "method": "MoMask",
+      "action": "Kneel pose then raise",
+      "source": "generation/qual_selected_three_20260609/momask/joints/sample002_repeat00_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qual_selected_three_20260609_smpl/fit_inputs/momask_p2_kneel.npy"
+    }
+  ],
+  "frame_count": 7,
+  "source_prompt_file": "generation/qual_selected_three_20260609/prompts.txt"
+}

@@ -17,6 +17,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 
@@ -37,12 +38,24 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Optional external KV-Control checkout. Omit to use the vendored kvctrl package in this repo.",
     )
+    parser.add_argument(
+        "--mean_path",
+        type=Path,
+        default=None,
+        help="Optional preprocessed normalization mean to use instead of data_root/Mean.npy.",
+    )
+    parser.add_argument(
+        "--std_path",
+        type=Path,
+        default=None,
+        help="Optional preprocessed normalization std to use instead of data_root/Std.npy. No feat_bias is applied when set.",
+    )
     parser.add_argument("--output_dir", type=Path, required=True)
-    parser.add_argument("--partition_file", type=Path, default=Path("configs/kit_skeleton_partition_pscf.json"))
+    parser.add_argument("--partition_file", type=Path, default=Path("configs/kit_skeleton_partition_formal_overlap.json"))
 
     parser.add_argument("--batch_size", type=int, default=256)
     parser.add_argument("--window_size", type=int, default=64)
-    parser.add_argument("--num_workers", type=int, default=4)
+    parser.add_argument("--num_workers", type=int, default=8)
     parser.add_argument("--eval_batch_size", type=int, default=32)
 
     parser.add_argument("--total_iter", type=int, default=300000)
@@ -77,12 +90,19 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--print_iter", type=int, default=200)
     parser.add_argument("--eval_iter", type=int, default=5000)
+    parser.add_argument("--eval_split", type=str, default="test", choices=["train", "val", "test"])
     parser.add_argument("--save_latest", type=int, default=500)
     parser.add_argument("--topk", type=int, default=3)
     parser.add_argument("--disable_eval", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--seed", type=int, default=3407)
+    parser.add_argument("--eval_seed", type=int, default=None)
     parser.add_argument("--gpu_id", type=int, default=0)
+    parser.add_argument(
+        "--part_specific_recipe",
+        action="store_true",
+        help="Use the part-aware-vqvae EMA reset and optimization schedule.",
+    )
 
     return parser.parse_args()
 
@@ -92,6 +112,25 @@ def set_seed(seed: int) -> None:
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+
+
+def capture_rng_state(device: torch.device) -> dict[str, object]:
+    state: dict[str, object] = {
+        "python": random.getstate(),
+        "numpy": np.random.get_state(),
+        "torch": torch.get_rng_state(),
+    }
+    if device.type == "cuda" and torch.cuda.is_available():
+        state["cuda"] = torch.cuda.get_rng_state_all()
+    return state
+
+
+def restore_rng_state(state: dict[str, object]) -> None:
+    random.setstate(state["python"])
+    np.random.set_state(state["numpy"])
+    torch.set_rng_state(state["torch"])
+    if "cuda" in state and torch.cuda.is_available():
+        torch.cuda.set_rng_state_all(state["cuda"])
 
 
 def setup_paths(args: argparse.Namespace) -> dict[str, Path]:
@@ -137,16 +176,23 @@ def apply_feat_bias(std: np.ndarray, joints_num: int, feat_bias: float, passes: 
 
 def load_stats(args: argparse.Namespace, paths: dict[str, Path]) -> tuple[np.ndarray, np.ndarray]:
     dim_pose, joints_num = dataset_shape(args.dataset_name)
-    mean = np.load(args.data_root / "Mean.npy").astype(np.float32)
-    std_raw = np.load(args.data_root / "Std.npy").astype(np.float32)
+    if args.mean_path is not None:
+        mean = np.load(args.mean_path).astype(np.float32)
+    else:
+        mean = np.load(args.data_root / "Mean.npy").astype(np.float32)
+
+    if args.std_path is not None:
+        std = np.load(args.std_path).astype(np.float32)
+    else:
+        std_raw = np.load(args.data_root / "Std.npy").astype(np.float32)
+        std = apply_feat_bias(std_raw, joints_num, args.feat_bias, args.stat_bias_passes).astype(np.float32)
 
     expected_dim = 4 + (joints_num - 1) * 9 + joints_num * 3 + 4
-    if mean.shape[-1] != dim_pose or std_raw.shape[-1] != dim_pose or expected_dim != dim_pose:
+    if mean.shape[-1] != dim_pose or std.shape[-1] != dim_pose or expected_dim != dim_pose:
         raise ValueError(
-            f"Unexpected feature dim: mean={mean.shape}, std={std_raw.shape}, expected={dim_pose}"
+            f"Unexpected feature dim: mean={mean.shape}, std={std.shape}, expected={dim_pose}"
         )
 
-    std = apply_feat_bias(std_raw, joints_num, args.feat_bias, args.stat_bias_passes).astype(np.float32)
     for out_dir in (paths["meta"], paths["stats"]):
         np.save(out_dir / "mean.npy", mean)
         np.save(out_dir / "std.npy", std)
@@ -160,7 +206,6 @@ class FixedWindowMotionDataset(Dataset):
         self.mean = mean
         self.std = std
         self.data: list[np.ndarray] = []
-        self.lengths: list[int] = []
 
         split_path = data_root / f"{split}.txt"
         ids = [line.strip() for line in split_path.read_text().splitlines() if line.strip()]
@@ -175,30 +220,124 @@ class FixedWindowMotionDataset(Dataset):
             if motion.shape[0] < window_size:
                 short += 1
                 continue
-            self.lengths.append(motion.shape[0] - window_size)
             self.data.append(motion)
 
-        self.cumsum = np.cumsum([0] + self.lengths)
         print(
-            f"[dataset:{split}] motions={len(self.data)} snippets={int(self.cumsum[-1])} "
+            f"[dataset:{split}] motions={len(self.data)} sampling=uniform_motion_random_crop "
             f"missing={missing} short={short}"
         )
-        if int(self.cumsum[-1]) <= 0:
-            raise RuntimeError(f"No snippets loaded for split {split}")
+        if not self.data:
+            raise RuntimeError(f"No motions loaded for split {split}")
 
     def __len__(self) -> int:
-        return int(self.cumsum[-1])
+        return len(self.data)
 
     def __getitem__(self, item: int) -> torch.Tensor:
-        if item != 0:
-            motion_id = int(np.searchsorted(self.cumsum, item) - 1)
-            idx = int(item - self.cumsum[motion_id] - 1)
-        else:
-            motion_id = 0
-            idx = 0
-        motion = self.data[motion_id][idx:idx + self.window_size]
+        source = self.data[item]
+        idx = random.randint(0, len(source) - self.window_size)
+        motion = source[idx:idx + self.window_size]
         motion = (motion - self.mean) / self.std
         return torch.from_numpy(motion.astype(np.float32))
+
+
+class PartSpecificQuantizeEMAReset(nn.Module):
+    """EMA reset quantizer from part-aware-vqvae commit 3c44777."""
+
+    def __init__(self, nb_code: int, code_dim: int) -> None:
+        super().__init__()
+        self.nb_code = nb_code
+        self.code_dim = code_dim
+        self.mu = 0.99
+        self.init = False
+        self.code_sum = None
+        self.code_count = None
+        self.register_buffer("codebook", torch.zeros(nb_code, code_dim))
+        self.reset_count = 0
+        self.usage = torch.zeros((nb_code, 1))
+
+    def _tile(self, x: torch.Tensor) -> torch.Tensor:
+        if x.shape[0] < self.nb_code:
+            repeats = (self.nb_code + x.shape[0] - 1) // x.shape[0]
+            out = x.repeat(repeats, 1)
+            return out + torch.randn_like(out) * (0.01 / np.sqrt(x.shape[1]))
+        return x
+
+    def init_codebook(self, x: torch.Tensor) -> None:
+        out = self._tile(x)
+        self.codebook = out[:self.nb_code]
+        self.code_sum = self.codebook.clone()
+        self.code_count = torch.ones(self.nb_code, device=self.codebook.device)
+        self.init = True
+
+    def preprocess(self, x: torch.Tensor) -> torch.Tensor:
+        return x.permute(0, 2, 1).contiguous().view(-1, x.shape[1])
+
+    def quantize(self, x: torch.Tensor) -> torch.Tensor:
+        distance = (
+            torch.sum(x ** 2, dim=-1, keepdim=True)
+            - 2 * torch.matmul(x, self.codebook.t())
+            + torch.sum(self.codebook ** 2, dim=1).unsqueeze(0)
+        )
+        return torch.min(distance, dim=-1).indices
+
+    def dequantize(self, code_idx: torch.Tensor) -> torch.Tensor:
+        return F.embedding(code_idx, self.codebook)
+
+    @torch.no_grad()
+    def compute_perplexity(self, code_idx: torch.Tensor) -> torch.Tensor:
+        onehot = torch.zeros(self.nb_code, code_idx.shape[0], device=code_idx.device)
+        onehot.scatter_(0, code_idx.view(1, -1), 1)
+        prob = onehot.sum(dim=-1) / code_idx.shape[0]
+        return torch.exp(-torch.sum(prob * torch.log(prob + 1e-7)))
+
+    @torch.no_grad()
+    def update_codebook(self, x: torch.Tensor, code_idx: torch.Tensor) -> torch.Tensor:
+        onehot = torch.zeros(self.nb_code, x.shape[0], device=x.device)
+        onehot.scatter_(0, code_idx.view(1, -1), 1)
+        code_sum = torch.matmul(onehot, x)
+        code_count = onehot.sum(dim=-1)
+        out = self._tile(x)
+        code_rand = out[torch.randperm(out.shape[0])[:self.nb_code]]
+        self.code_sum = self.mu * self.code_sum + (1.0 - self.mu) * code_sum
+        self.code_count = self.mu * self.code_count + (1.0 - self.mu) * code_count
+        usage = (self.code_count.view(self.nb_code, 1) >= 1.0).float()
+        self.usage = self.usage.to(usage.device)
+        if self.reset_count >= 20:
+            self.reset_count = 0
+            usage = (usage + self.usage >= 1.0).float()
+        else:
+            self.reset_count += 1
+            self.usage = (usage + self.usage >= 1.0).float()
+            usage = torch.ones_like(self.usage, device=x.device)
+        code_update = self.code_sum.view(self.nb_code, self.code_dim) / self.code_count.view(self.nb_code, 1)
+        self.codebook = usage * code_update + (1.0 - usage) * code_rand
+        prob = code_count / torch.sum(code_count)
+        return torch.exp(-torch.sum(prob * torch.log(prob + 1e-7)))
+
+    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        n_batch, _width, n_time = x.shape
+        flat = self.preprocess(x)
+        if self.training and not self.init:
+            self.init_codebook(flat)
+        code_idx = self.quantize(flat)
+        decoded = self.dequantize(code_idx)
+        perplexity = self.update_codebook(flat, code_idx) if self.training else self.compute_perplexity(code_idx)
+        commit_loss = F.mse_loss(flat, decoded.detach())
+        decoded = flat + (decoded - flat).detach()
+        decoded = decoded.view(n_batch, n_time, -1).permute(0, 2, 1).contiguous()
+        return decoded, commit_loss, perplexity
+
+    def get_code_idx(self, x: torch.Tensor) -> torch.Tensor:
+        n_batch, _width, n_time = x.shape
+        flat = self.preprocess(x)
+        if self.training and not self.init:
+            self.init_codebook(flat)
+        return self.quantize(flat).view(n_batch, n_time).contiguous()
+
+    def forward_from_code_idx(self, x_idx: torch.Tensor) -> torch.Tensor:
+        n_batch, n_time = x_idx.shape
+        decoded = self.dequantize(x_idx.long().view(-1))
+        return decoded.view(n_batch, n_time, -1).permute(0, 2, 1).contiguous()
 
 
 def build_model(args: argparse.Namespace, device: torch.device):
@@ -226,7 +365,12 @@ def build_model(args: argparse.Namespace, device: torch.device):
         dilation_growth_rate=args.dilation_growth_rate,
         activation=args.vq_act,
         norm=args.vq_norm,
-    ).to(device)
+    )
+    if args.part_specific_recipe:
+        model.vqvae.quantizers = nn.ModuleList(
+            [PartSpecificQuantizeEMAReset(args.nb_code, args.code_dim) for _ in model.vqvae.partSeg]
+        )
+    model = model.to(device)
     return model
 
 
@@ -266,21 +410,6 @@ def set_optimizer_lr(optimizer: torch.optim.Optimizer, lr: float) -> None:
         group["lr"] = lr
 
 
-def average_val_loss(args: argparse.Namespace, model, val_loader: DataLoader, device: torch.device) -> dict[str, float]:
-    model.eval()
-    totals: OrderedDict[str, float] = OrderedDict()
-    count = 0
-    with torch.no_grad():
-        for batch in val_loader:
-            motions = batch.to(device=device, dtype=torch.float32, non_blocking=True)
-            losses = compute_losses(args, model, motions)
-            for key, value in losses.items():
-                totals[key] = totals.get(key, 0.0) + float(value.detach().cpu().item())
-            count += 1
-    model.train()
-    return {key: value / max(count, 1) for key, value in totals.items()}
-
-
 @torch.no_grad()
 def evaluate_retrieval(model, eval_loader: DataLoader, eval_wrapper, device: torch.device) -> dict[str, float]:
     from utils.metrics import (
@@ -304,7 +433,11 @@ def evaluate_retrieval(model, eval_loader: DataLoader, eval_wrapper, device: tor
         word_embeddings, pos_one_hots, _caption, sent_len, motion, m_length, _token = batch
         motion = motion.to(device=device, dtype=torch.float32, non_blocking=True)
         et, em = eval_wrapper.get_co_embeddings(word_embeddings, pos_one_hots, sent_len, motion, m_length)
-        pred_pose_eval, _loss_commit, _perplexity = model(motion)
+        pred_pose_eval = torch.zeros_like(motion)
+        for idx in range(motion.shape[0]):
+            length = int(m_length[idx])
+            pred_pose, _loss_commit, _perplexity = model(motion[idx:idx + 1, :length])
+            pred_pose_eval[idx:idx + 1, :length] = pred_pose
         et_pred, em_pred = eval_wrapper.get_co_embeddings(
             word_embeddings, pos_one_hots, sent_len, pred_pose_eval, m_length
         )
@@ -375,6 +508,27 @@ def refresh_best_aliases(model_dir: Path, key: str, ranking: list[dict]) -> None
         shutil.copy2(ranking[0]["path"], model_dir / alias)
 
 
+def load_rankings(logs_dir: Path, model_dir: Path, topk: int) -> dict[str, list[dict]]:
+    rankings = {"fid": [], "top3": []}
+    metrics_path = logs_dir / "best_metrics.json"
+    if not metrics_path.exists():
+        return rankings
+
+    with metrics_path.open("r", encoding="utf-8") as f:
+        payload = json.load(f)
+
+    for key, reverse in (("fid", False), ("top3", True)):
+        entries = []
+        for entry in payload.get(key, []):
+            path = Path(entry.get("path", ""))
+            if path.is_file():
+                entries.append(entry)
+        entries.sort(key=lambda item: item["value"], reverse=reverse)
+        rankings[key] = entries[:topk]
+        refresh_best_aliases(model_dir, key, rankings[key])
+    return rankings
+
+
 def maybe_save_ranked(
     args,
     model,
@@ -424,7 +578,9 @@ def load_eval_components(args: argparse.Namespace, device: torch.device):
     opt_path = Path("checkpoints") / args.dataset_name / "Comp_v6_KLD005" / "opt.txt"
     wrapper_opt = get_opt(str(opt_path), device)
     eval_wrapper = EvaluatorModelWrapper(wrapper_opt)
-    eval_loader, _ = get_dataset_motion_loader(str(opt_path), args.eval_batch_size, "val", device=device)
+    eval_loader, _ = get_dataset_motion_loader(
+        str(opt_path), args.eval_batch_size, args.eval_split, device=device
+    )
     return eval_loader, eval_wrapper
 
 
@@ -436,6 +592,8 @@ def format_seconds(seconds: float) -> str:
 
 def main() -> None:
     args = parse_args()
+    if args.eval_seed is None:
+        args.eval_seed = args.seed
     set_seed(args.seed)
     os.environ.setdefault("OMP_NUM_THREADS", "1")
 
@@ -448,6 +606,10 @@ def main() -> None:
     args.data_root = args.data_root.resolve()
     if args.kv_root is not None:
         args.kv_root = args.kv_root.resolve()
+    if args.mean_path is not None:
+        args.mean_path = args.mean_path.resolve()
+    if args.std_path is not None:
+        args.std_path = args.std_path.resolve()
     args.output_dir = args.output_dir.resolve()
     args.partition_file = args.partition_file.resolve()
     paths = setup_paths(args)
@@ -459,7 +621,6 @@ def main() -> None:
 
     mean, std = load_stats(args, paths)
     train_dataset = FixedWindowMotionDataset(args.data_root, "train", args.window_size, mean, std)
-    val_dataset = FixedWindowMotionDataset(args.data_root, "val", args.window_size, mean, std)
     train_loader = DataLoader(
         train_dataset,
         batch_size=args.batch_size,
@@ -468,18 +629,13 @@ def main() -> None:
         num_workers=args.num_workers,
         pin_memory=True,
     )
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=args.batch_size,
-        shuffle=False,
-        drop_last=False,
-        num_workers=args.num_workers,
-        pin_memory=True,
-    )
 
     model = build_model(args, device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=args.lr, betas=(0.9, 0.99), weight_decay=args.weight_decay
+    )
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(
+        optimizer, milestones=args.milestones, gamma=args.gamma
     )
     param_count = sum(param.numel() for param in model.parameters())
     print(f"[model] params={param_count / 1_000_000:.3f}M device={device}")
@@ -493,23 +649,84 @@ def main() -> None:
 
     step = 0
     epoch = 0
-    best_val = math.inf
     rankings = {"fid": [], "top3": []}
     latest_path = paths["model"] / "latest.tar"
     if args.resume and latest_path.exists():
-        checkpoint = torch.load(latest_path, map_location=device)
+        checkpoint = torch.load(latest_path, map_location=device, weights_only=False)
         model.load_state_dict(checkpoint["vq_model"])
         if "optimizer" in checkpoint:
             optimizer.load_state_dict(checkpoint["optimizer"])
         step = int(checkpoint.get("step", 0))
         epoch = int(checkpoint.get("ep", 0))
         print(f"[resume] loaded {latest_path} step={step} epoch={epoch}")
+        rankings = load_rankings(paths["logs"], paths["model"], args.topk)
+        print(
+            f"[resume] fid_ranked={len(rankings['fid'])} top3_ranked={len(rankings['top3'])}"
+        )
 
     model.train()
+
+    def run_evaluation(eval_step: int) -> None:
+        if eval_loader is None or eval_wrapper is None:
+            return
+        rng_state = capture_rng_state(device)
+        try:
+            set_seed(int(args.eval_seed))
+            eval_metrics = evaluate_retrieval(model, eval_loader, eval_wrapper, device)
+        finally:
+            restore_rng_state(rng_state)
+        metrics = dict(eval_metrics)
+        print(
+            "[eval] "
+            + f"step={eval_step} epoch={epoch} "
+            + " ".join(f"{key}={value:.6f}" for key, value in eval_metrics.items()),
+            flush=True,
+        )
+        fid_hit = maybe_save_ranked(
+            args, model, optimizer, paths["model"], rankings, "fid", "min",
+            eval_metrics["fid"], eval_step, epoch, metrics
+        )
+        top3_hit = maybe_save_ranked(
+            args, model, optimizer, paths["model"], rankings, "top3", "max",
+            eval_metrics["top3"], eval_step, epoch, metrics
+        )
+        print(f"[best] step={eval_step} fid_hit={fid_hit} top3_hit={top3_hit}", flush=True)
+        write_json(paths["logs"] / "best_metrics.json", rankings)
+
     logs: OrderedDict[str, float] = OrderedDict()
     log_count = 0
     start_time = time.time()
     train_iter = iter(train_loader)
+
+    if args.part_specific_recipe and step == 0:
+        for warmup_step in range(1, args.warm_up_iter):
+            try:
+                batch = next(train_iter)
+            except StopIteration:
+                epoch += 1
+                train_iter = iter(train_loader)
+                batch = next(train_iter)
+            lr = args.lr * float(warmup_step + 1) / float(args.warm_up_iter + 1)
+            set_optimizer_lr(optimizer, lr)
+            motions = batch.to(device=device, dtype=torch.float32, non_blocking=True)
+            losses = compute_losses(args, model, motions)
+            optimizer.zero_grad(set_to_none=True)
+            losses["loss"].backward()
+            optimizer.step()
+            log_count += 1
+            for key, value in losses.items():
+                logs[key] = logs.get(key, 0.0) + float(value.detach().cpu().item())
+            logs["lr"] = logs.get("lr", 0.0) + lr
+            if warmup_step % args.print_iter == 0:
+                avg = {key: value / log_count for key, value in logs.items()}
+                msg = " ".join(f"{key}={value:.6f}" for key, value in avg.items())
+                print(f"[warmup] step={warmup_step} epoch={epoch} {msg}", flush=True)
+                logs.clear()
+                log_count = 0
+        logs.clear()
+        log_count = 0
+        run_evaluation(0)
+
     while step < args.total_iter:
         try:
             batch = next(train_iter)
@@ -519,14 +736,19 @@ def main() -> None:
             batch = next(train_iter)
 
         step += 1
-        lr = lr_at_step(args, step)
-        set_optimizer_lr(optimizer, lr)
+        if args.part_specific_recipe:
+            lr = float(optimizer.param_groups[0]["lr"])
+        else:
+            lr = lr_at_step(args, step)
+            set_optimizer_lr(optimizer, lr)
 
         motions = batch.to(device=device, dtype=torch.float32, non_blocking=True)
         losses = compute_losses(args, model, motions)
         optimizer.zero_grad(set_to_none=True)
         losses["loss"].backward()
         optimizer.step()
+        if args.part_specific_recipe:
+            scheduler.step()
 
         log_count += 1
         for key, value in losses.items():
@@ -545,45 +767,7 @@ def main() -> None:
             save_checkpoint(latest_path, args, model, optimizer, step, epoch, include_optimizer=True)
 
         if args.eval_iter > 0 and (step % args.eval_iter == 0 or step == args.total_iter):
-            val_metrics = average_val_loss(args, model, val_loader, device)
-            print(
-                "[val] "
-                + f"step={step} epoch={epoch} "
-                + " ".join(f"{key}={value:.6f}" for key, value in val_metrics.items()),
-                flush=True,
-            )
-            if val_metrics["loss"] < best_val:
-                best_val = val_metrics["loss"]
-                save_checkpoint(
-                    paths["model"] / "net_best_val.tar",
-                    args,
-                    model,
-                    optimizer,
-                    step,
-                    epoch,
-                    metrics={"val": val_metrics},
-                    include_optimizer=False,
-                )
-
-            if eval_loader is not None and eval_wrapper is not None:
-                eval_metrics = evaluate_retrieval(model, eval_loader, eval_wrapper, device)
-                metrics = {"val": val_metrics, **eval_metrics}
-                print(
-                    "[eval] "
-                    + f"step={step} epoch={epoch} "
-                    + " ".join(f"{key}={value:.6f}" for key, value in eval_metrics.items()),
-                    flush=True,
-                )
-                fid_hit = maybe_save_ranked(
-                    args, model, optimizer, paths["model"], rankings, "fid", "min",
-                    eval_metrics["fid"], step, epoch, metrics
-                )
-                top3_hit = maybe_save_ranked(
-                    args, model, optimizer, paths["model"], rankings, "top3", "max",
-                    eval_metrics["top3"], step, epoch, metrics
-                )
-                print(f"[best] step={step} fid_hit={fid_hit} top3_hit={top3_hit}", flush=True)
-                write_json(paths["logs"] / "best_metrics.json", rankings)
+            run_evaluation(step)
 
     save_checkpoint(latest_path, args, model, optimizer, step, epoch, include_optimizer=True)
     print(f"[done] step={step} epoch={epoch} latest={latest_path}", flush=True)

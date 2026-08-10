@@ -1,0 +1,163 @@
+=== render pscf_p0_crawl ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 13.77 ms
+PLY import of '0001.ply' took 77.01 ms
+PLY import of '0002.ply' took 6.34 ms
+PLY import of '0003.ply' took 168.12 ms
+PLY import of '0004.ply' took 148.30 ms
+PLY import of '0005.ply' took 101.70 ms
+PLY import of '0006.ply' took 299.58 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/pscf_p0_crawl.png'
+Time: 00:03.72 (Saving: 00:00.49)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/pscf_p0_crawl.png
+
+Blender quit
+=== render pscf_p1_pickup ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 25.36 ms
+PLY import of '0001.ply' took 39.03 ms
+PLY import of '0002.ply' took 91.31 ms
+PLY import of '0003.ply' took 49.50 ms
+PLY import of '0004.ply' took 49.09 ms
+PLY import of '0005.ply' took 7.26 ms
+PLY import of '0006.ply' took 6.94 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/pscf_p1_pickup.png'
+Time: 00:03.43 (Saving: 00:00.41)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/pscf_p1_pickup.png
+
+Blender quit
+=== render pscf_p2_kneel ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 23.79 ms
+PLY import of '0001.ply' took 7.89 ms
+PLY import of '0002.ply' took 45.20 ms
+PLY import of '0003.ply' took 51.84 ms
+PLY import of '0004.ply' took 145.75 ms
+PLY import of '0005.ply' took 45.14 ms
+PLY import of '0006.ply' took 7.02 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/pscf_p2_kneel.png'
+Time: 00:03.29 (Saving: 00:00.40)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/pscf_p2_kneel.png
+
+Blender quit
+=== render mtransformer_p0_crawl ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 16.84 ms
+PLY import of '0001.ply' took 40.21 ms
+PLY import of '0002.ply' took 55.09 ms
+PLY import of '0003.ply' took 48.02 ms
+PLY import of '0004.ply' took 50.24 ms
+PLY import of '0005.ply' took 50.95 ms
+PLY import of '0006.ply' took 5.45 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/mtransformer_p0_crawl.png'
+Time: 00:03.25 (Saving: 00:00.33)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/mtransformer_p0_crawl.png
+
+Blender quit
+=== render mtransformer_p1_pickup ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 28.49 ms
+PLY import of '0001.ply' took 7.34 ms
+PLY import of '0002.ply' took 42.07 ms
+PLY import of '0003.ply' took 49.40 ms
+PLY import of '0004.ply' took 44.03 ms
+PLY import of '0005.ply' took 85.19 ms
+PLY import of '0006.ply' took 82.22 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/mtransformer_p1_pickup.png'
+Time: 00:03.20 (Saving: 00:00.30)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/mtransformer_p1_pickup.png
+
+Blender quit
+=== render mtransformer_p2_kneel ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 9.49 ms
+PLY import of '0001.ply' took 6.50 ms
+PLY import of '0002.ply' took 7.63 ms
+PLY import of '0003.ply' took 51.26 ms
+PLY import of '0004.ply' took 39.90 ms
+PLY import of '0005.ply' took 72.79 ms
+PLY import of '0006.ply' took 74.34 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/mtransformer_p2_kneel.png'
+Time: 00:03.17 (Saving: 00:00.36)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/mtransformer_p2_kneel.png
+
+Blender quit
+=== render momask_p0_crawl ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 15.16 ms
+PLY import of '0001.ply' took 56.43 ms
+PLY import of '0002.ply' took 87.84 ms
+PLY import of '0003.ply' took 50.75 ms
+PLY import of '0004.ply' took 98.50 ms
+PLY import of '0005.ply' took 52.11 ms
+PLY import of '0006.ply' took 48.43 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/momask_p0_crawl.png'
+Time: 00:03.16 (Saving: 00:00.35)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/momask_p0_crawl.png
+
+Blender quit
+=== render momask_p1_pickup ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 14.12 ms
+PLY import of '0001.ply' took 53.18 ms
+PLY import of '0002.ply' took 146.30 ms
+PLY import of '0003.ply' took 41.90 ms
+PLY import of '0004.ply' took 8.30 ms
+PLY import of '0005.ply' took 6.06 ms
+PLY import of '0006.ply' took 5.71 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/momask_p1_pickup.png'
+Time: 00:03.33 (Saving: 00:00.32)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/momask_p1_pickup.png
+
+Blender quit
+=== render momask_p2_kneel ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+Blender 4.2.20 LTS (hash 6df22026265d built 2026-04-21 01:30:59)
+PLY import of '0000.ply' took 13.83 ms
+PLY import of '0001.ply' took 8.53 ms
+PLY import of '0002.ply' took 43.64 ms
+PLY import of '0003.ply' took 89.75 ms
+PLY import of '0004.ply' took 7.13 ms
+PLY import of '0005.ply' took 49.24 ms
+PLY import of '0006.ply' took 8.62 ms
+Saved: '/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/momask_p2_kneel.png'
+Time: 00:03.72 (Saving: 00:00.36)
+
+Wrote /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel/momask_p2_kneel.png
+
+Blender quit
+Done. Blender cells: /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/cells_panel

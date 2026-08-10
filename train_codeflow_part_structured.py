@@ -1,7 +1,7 @@
 """Train Part-Structured Code Flow."""
 
 from models.codeflow import PartStructuredMotionCodeFlow
-from train_codeflow import main
+from models.codeflow.trainer import main
 
 
 if __name__ == "__main__":
@@ -30,7 +30,6 @@ if __name__ == "__main__":
             "sampling_schedule": "uniform",
             "sampling_method": "ode",
             "sde_gamma": 0.0,
-            "decode_mode": "nearest",
             "full_eval_cond_scale": 3.0,
         },
     )

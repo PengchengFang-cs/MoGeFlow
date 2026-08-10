@@ -1,0 +1,181 @@
+{
+  "frame_count": 7,
+  "prompts": [
+    "a person is doing jumping jacks.",
+    "a person sits down and then stays still.",
+    "a person jogs in place."
+  ],
+  "methods": [
+    {
+      "name": "PS-CF",
+      "key": "pscf",
+      "entries": [
+        {
+          "prompt_index": 0,
+          "prompt": "a person is doing jumping jacks.",
+          "stem": "pscf_p0_jacks",
+          "source": "generation/paper_qual_pscf_candidates_20260608/joints/sample003_repeat00_len100_joints.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/pscf_p0_jacks.npy",
+          "source_num_frames": 100,
+          "selected_frame_ids": [
+            0,
+            16,
+            33,
+            50,
+            66,
+            82,
+            99
+          ]
+        },
+        {
+          "prompt_index": 1,
+          "prompt": "a person sits down and then stays still.",
+          "stem": "pscf_p1_sit",
+          "source": "generation/paper_qual_pscf_candidates_20260608/joints/sample004_repeat00_len120_joints.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/pscf_p1_sit.npy",
+          "source_num_frames": 120,
+          "selected_frame_ids": [
+            0,
+            20,
+            40,
+            60,
+            79,
+            99,
+            119
+          ]
+        },
+        {
+          "prompt_index": 2,
+          "prompt": "a person jogs in place.",
+          "stem": "pscf_p2_jog",
+          "source": "generation/paper_qual_pscf_candidates_20260608/joints/sample005_repeat00_len80_joints.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/pscf_p2_jog.npy",
+          "source_num_frames": 80,
+          "selected_frame_ids": [
+            0,
+            13,
+            26,
+            40,
+            53,
+            66,
+            79
+          ]
+        }
+      ]
+    },
+    {
+      "name": "M-Transformer",
+      "key": "mtransformer",
+      "entries": [
+        {
+          "prompt_index": 0,
+          "prompt": "a person is doing jumping jacks.",
+          "stem": "mtransformer_p0_jacks",
+          "source": "generation/paper_qual_mtransformer_selected_20260608/joints/sample1_repeat0_len100.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/mtransformer_p0_jacks.npy",
+          "source_num_frames": 100,
+          "selected_frame_ids": [
+            0,
+            16,
+            33,
+            50,
+            66,
+            82,
+            99
+          ]
+        },
+        {
+          "prompt_index": 1,
+          "prompt": "a person sits down and then stays still.",
+          "stem": "mtransformer_p1_sit",
+          "source": "generation/paper_qual_mtransformer_selected_20260608/joints/sample2_repeat0_len120.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/mtransformer_p1_sit.npy",
+          "source_num_frames": 120,
+          "selected_frame_ids": [
+            0,
+            20,
+            40,
+            60,
+            79,
+            99,
+            119
+          ]
+        },
+        {
+          "prompt_index": 2,
+          "prompt": "a person jogs in place.",
+          "stem": "mtransformer_p2_jog",
+          "source": "generation/paper_qual_mtransformer_selected_20260608/joints/sample3_repeat0_len80.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/mtransformer_p2_jog.npy",
+          "source_num_frames": 80,
+          "selected_frame_ids": [
+            0,
+            13,
+            26,
+            40,
+            53,
+            66,
+            79
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MoMask",
+      "key": "momask",
+      "entries": [
+        {
+          "prompt_index": 0,
+          "prompt": "a person is doing jumping jacks.",
+          "stem": "momask_p0_jacks",
+          "source": "generation/paper_qual_momask_selected_20260608/p1/joints/0/sample0_repeat0_len100.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/momask_p0_jacks.npy",
+          "source_num_frames": 100,
+          "selected_frame_ids": [
+            0,
+            16,
+            33,
+            50,
+            66,
+            82,
+            99
+          ]
+        },
+        {
+          "prompt_index": 1,
+          "prompt": "a person sits down and then stays still.",
+          "stem": "momask_p1_sit",
+          "source": "generation/paper_qual_momask_selected_20260608/p2/joints/0/sample0_repeat0_len120.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/momask_p1_sit.npy",
+          "source_num_frames": 120,
+          "selected_frame_ids": [
+            0,
+            20,
+            40,
+            60,
+            79,
+            99,
+            119
+          ]
+        },
+        {
+          "prompt_index": 2,
+          "prompt": "a person jogs in place.",
+          "stem": "momask_p2_jog",
+          "source": "generation/paper_qual_momask_selected_20260608/p3/joints/0/sample0_repeat0_len80.npy",
+          "fit_input": "figures/qualitative_selected_20260608_smpl/fit_inputs/momask_p2_jog.npy",
+          "source_num_frames": 80,
+          "selected_frame_ids": [
+            0,
+            13,
+            26,
+            40,
+            53,
+            66,
+            79
+          ]
+        }
+      ]
+    }
+  ]
+}

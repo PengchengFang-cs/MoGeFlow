@@ -11,8 +11,9 @@ import numpy as np
 import torch
 
 from models.codeflow import PartStructuredMotionCodeFlow
+from models.codeflow.motion_code_flow import DECODE_MODE
+from models.codeflow.trainer import make_config
 from options.codeflow_options import TrainCodeFlowOptions
-from train_codeflow import make_config
 from utils.fixseed import fixseed
 from utils.motion_process import recover_from_ric
 
@@ -41,6 +42,12 @@ def parse_args() -> argparse.Namespace:
         default="",
         help="Optional local OpenAI CLIP ViT-B/32 checkpoint. If omitted, clip.load may download it.",
     )
+    parser.add_argument(
+        "--text_cache_path",
+        type=str,
+        default="",
+        help="Override the CLIP-L + Qwen3 cache recorded in a cached-text checkpoint.",
+    )
 
     parser.add_argument("--text_prompt", type=str, default="")
     parser.add_argument("--text_path", type=str, default="")
@@ -48,8 +55,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repeat_times", type=int, default=1)
     parser.add_argument("--steps", type=int, default=96)
     parser.add_argument("--cond_scale", type=float, default=6.0)
-    parser.add_argument("--terminal_mode", type=str, default="", choices=["", "nearest", "tied_logits", "learned_head"])
-    parser.add_argument("--decode_mode", type=str, default="nearest", choices=["nearest", "ids", "continuous"])
+    parser.add_argument(
+        "--terminal_mode",
+        type=str,
+        default="",
+        choices=["", "nearest", "residual_nearest", "tied_logits", "learned_head"],
+    )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--gpu_id", type=int, default=-1)
     parser.add_argument("--device", type=str, default="")
@@ -143,6 +154,9 @@ def load_model(args: argparse.Namespace, assets: Dict[str, str], device: torch.d
     opt = TrainCodeFlowOptions().parser.parse_args([])
     for key, value in ckpt.get("options", {}).items():
         setattr(opt, key, value)
+    # Checkpoints predating the fix store decode_mode="nearest" (every KIT run
+    # does), and the loop above copies stored keys verbatim.  Decoding is fixed.
+    opt.decode_mode = DECODE_MODE
 
     opt.vq_backend = "kv_part"
     opt.vq_checkpoint = assets["vq_checkpoint"]
@@ -150,11 +164,14 @@ def load_model(args: argparse.Namespace, assets: Dict[str, str], device: torch.d
     opt.mean_path = assets["mean_path"]
     opt.std_path = assets["std_path"]
     opt.clip_path = str(Path(args.clip_path).expanduser()) if args.clip_path else ""
+    if args.text_cache_path:
+        opt.text_cache_path = str(Path(args.text_cache_path).expanduser())
     opt.kv_root = "."
     opt.gpu_id = args.gpu_id
 
     model = PartStructuredMotionCodeFlow(make_config(opt))
     state = ckpt["model"]
+    model.assert_pooled_mode_matches_checkpoint(state)
     missing, unexpected = model.load_trainable_state_dict(state)
     if missing or unexpected:
         raise RuntimeError(f"Checkpoint load mismatch: missing={missing[:8]} unexpected={unexpected[:8]}")
@@ -206,7 +223,6 @@ def main() -> None:
                 steps=int(args.steps),
                 cond_scale=float(args.cond_scale),
                 terminal_mode=args.terminal_mode or getattr(opt, "terminal_mode", None),
-                decode_mode=args.decode_mode,
             )
         motion_norm_np = motion_norm.detach().cpu().numpy()
         ids_np = ids.detach().cpu().numpy()

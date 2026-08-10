@@ -1,0 +1,3 @@
+A person runs straight ahead, then makes a 90 degree left turn and walks slowly for several steps.#196
+A person hops forward on his right foot.#196
+A person walks sideways to the right, keeping close to the wall.#196

@@ -1,7 +1,7 @@
 """Run HumanML3D evaluation for Part-Structured CodeFlow checkpoints."""
 
 from models.codeflow import PartStructuredMotionCodeFlow
-from eval_codeflow_t2m import main
+from models.codeflow.eval_t2m_cli import main
 
 
 if __name__ == "__main__":

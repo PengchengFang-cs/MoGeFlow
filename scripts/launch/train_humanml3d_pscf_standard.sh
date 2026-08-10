@@ -1,24 +1,38 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-4}"
+export PYTHONUNBUFFERED=1
+export TORCH_NCCL_ASYNC_ERROR_HANDLING=1
 
-RUN_NAME="${RUN_NAME:-codeflow_part_structured_pscf_hml3d_standard}"
+PYTHON_BIN="${PYTHON_BIN:-/scratch/pf2m24/miniconda3/envs/fudoki-momask/bin/python}"
+NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
+RUN_NAME="${RUN_NAME:-codeflow_pscf_hml3d_clipqwen_codebook_h1152_p192_bs32x2}"
 DATA_ROOT="${DATA_ROOT:-dataset/HumanML3D}"
-KV_ROOT="${KV_ROOT:-.}"
+KV_ROOT="${KV_ROOT:-/scratch/pf2m24/projects/Umdd/KV-Control}"
 OUT_DIR="${OUT_DIR:-checkpoints/t2m/${RUN_NAME}}"
 
-VQ_CHECKPOINT="${VQ_CHECKPOINT:-${KV_ROOT}/checkpoints/vqvae/net_best_top3.pth}"
-VQ_PARTITION="${VQ_PARTITION:-${KV_ROOT}/checkpoints/vqvae/skeleton_partition.json}"
+VQ_CHECKPOINT="${VQ_CHECKPOINT:-${KV_ROOT}/checkpoints/vqvae_overlap_top3_20260529_hf/new_vq_overlap_top3_20260529_best_top3.pth}"
+VQ_PARTITION="${VQ_PARTITION:-${KV_ROOT}/checkpoints/vqvae_overlap_top3_20260529_hf/config/skeleton_partition.json}"
+KV_PART_TARGET_MODE="${KV_PART_TARGET_MODE:-codebook}"
 MEAN_PATH="${MEAN_PATH:-${KV_ROOT}/checkpoints/stats/mean.npy}"
 STD_PATH="${STD_PATH:-${KV_ROOT}/checkpoints/stats/std.npy}"
-CLIP_PATH="${CLIP_PATH:-${KV_ROOT}/checkpoints/clip/ViT-B-32.pt}"
+QWEN_PATH="${QWEN_PATH:-/scratch/pf2m24/hf-models/Qwen3-8B}"
+CLIP_HF_PATH="${CLIP_HF_PATH:-/scratch/pf2m24/hf-models/clip-vit-large-patch14}"
+TEXT_CACHE_PATH="${TEXT_CACHE_PATH:-/scratch/pf2m24/text-caches/humanml3d_clip_l_qwen3_8b_hymotion_l128_v1}"
 
-PART_HIDDEN_DIM="${PART_HIDDEN_DIM:-128}"
-HIDDEN_SIZE="${HIDDEN_SIZE:-768}"
+PART_HIDDEN_DIM="${PART_HIDDEN_DIM:-192}"
+HIDDEN_SIZE="${HIDDEN_SIZE:-1152}"
+BATCH_SIZE="${BATCH_SIZE:-32}"
+TEXT_REFINER_DEPTH="${TEXT_REFINER_DEPTH:-2}"
 
-python train_codeflow_part_structured.py \
+LAUNCH=("${PYTHON_BIN}")
+if (( NPROC_PER_NODE > 1 )); then
+  LAUNCH+=( -m torch.distributed.run --standalone --nproc_per_node "${NPROC_PER_NODE}" )
+fi
+
+"${LAUNCH[@]}" train_codeflow_part_structured.py \
   --name "${RUN_NAME}" \
   --output_dir "${OUT_DIR}" \
   --dataset_name t2m \
@@ -27,9 +41,17 @@ python train_codeflow_part_structured.py \
   --vq_backend kv_part \
   --vq_checkpoint "${VQ_CHECKPOINT}" \
   --vq_partition "${VQ_PARTITION}" \
+  --kv_part_target_mode "${KV_PART_TARGET_MODE}" \
   --mean_path "${MEAN_PATH}" \
   --std_path "${STD_PATH}" \
-  --clip_path "${CLIP_PATH}" \
+  --text_encoder_type clip_qwen_cache \
+  --text_cache_path "${TEXT_CACHE_PATH}" \
+  --qwen_path "${QWEN_PATH}" \
+  --clip_hf_path "${CLIP_HF_PATH}" \
+  --qwen_max_length 128 \
+  --text_refiner_depth "${TEXT_REFINER_DEPTH}" \
+  --text_refiner_mlp_ratio 4.0 \
+  --text_refiner_pool "${TEXT_REFINER_POOL:-all_tokens}" \
   --representation part_structured \
   --coupling_mode frame_grouped \
   --code_dim 128 \
@@ -42,7 +64,7 @@ python train_codeflow_part_structured.py \
   --depth_single 12 \
   --mlp_ratio 4.0 \
   --dropout 0.05 \
-  --batch_size 64 \
+  --batch_size "${BATCH_SIZE}" \
   --max_epoch 600 \
   --lr 0.0001 \
   --lr_scheduler half_cosine \
@@ -59,9 +81,8 @@ python train_codeflow_part_structured.py \
   --latent_norm_mode codebook \
   --terminal_mode tied_logits \
   --terminal_tau_mode codebook_nn \
-  --terminal_loss_weight 0.0 \
-  --clean_loss_weight 0.0 \
-  --best_checkpoint_limit 3 \
+\
+  --best_checkpoint_limit 1 \
   --full_eval_every_epoch 10 \
   --full_eval_start_epoch 0 \
   --full_eval_batch_size 32 \
@@ -70,4 +91,5 @@ python train_codeflow_part_structured.py \
   --full_eval_cond_scale 6.0 \
   --full_eval_repeat_times 1 \
   --full_eval_seed 42 \
+  --ddp_timeout_minutes 180 \
   "$@"

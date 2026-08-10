@@ -1,0 +1,46 @@
+=== pscf_p0_crawl ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='pscf_p0_crawl.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:05<00:30,  5.04s/it] 29%|██▊       | 2/7 [00:06<00:15,  3.05s/it] 43%|████▎     | 3/7 [00:08<00:09,  2.35s/it] 57%|█████▋    | 4/7 [00:09<00:06,  2.09s/it] 71%|███████▏  | 5/7 [00:11<00:03,  1.92s/it] 86%|████████▌ | 6/7 [00:13<00:01,  1.85s/it]100%|██████████| 7/7 [00:14<00:00,  1.79s/it]100%|██████████| 7/7 [00:14<00:00,  2.13s/it]
+=== pscf_p1_pickup ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='pscf_p1_pickup.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:28,  4.75s/it] 29%|██▊       | 2/7 [00:06<00:13,  2.78s/it] 43%|████▎     | 3/7 [00:07<00:08,  2.21s/it] 57%|█████▋    | 4/7 [00:08<00:05,  1.86s/it] 71%|███████▏  | 5/7 [00:10<00:03,  1.73s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.69s/it]100%|██████████| 7/7 [00:13<00:00,  1.67s/it]100%|██████████| 7/7 [00:13<00:00,  1.97s/it]
+=== pscf_p2_kneel ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='pscf_p2_kneel.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:27,  4.57s/it] 29%|██▊       | 2/7 [00:06<00:14,  2.85s/it] 43%|████▎     | 3/7 [00:07<00:08,  2.15s/it] 57%|█████▋    | 4/7 [00:09<00:05,  1.95s/it] 71%|███████▏  | 5/7 [00:10<00:03,  1.85s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.79s/it]100%|██████████| 7/7 [00:14<00:00,  1.74s/it]100%|██████████| 7/7 [00:14<00:00,  2.02s/it]
+=== mtransformer_p0_crawl ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='mtransformer_p0_crawl.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:27,  4.52s/it] 29%|██▊       | 2/7 [00:06<00:14,  2.81s/it] 43%|████▎     | 3/7 [00:07<00:08,  2.17s/it] 57%|█████▋    | 4/7 [00:09<00:05,  1.94s/it] 71%|███████▏  | 5/7 [00:10<00:03,  1.82s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.75s/it]100%|██████████| 7/7 [00:13<00:00,  1.64s/it]100%|██████████| 7/7 [00:13<00:00,  1.97s/it]
+=== mtransformer_p1_pickup ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='mtransformer_p1_pickup.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:26,  4.50s/it] 29%|██▊       | 2/7 [00:06<00:14,  2.82s/it] 43%|████▎     | 3/7 [00:07<00:09,  2.32s/it] 57%|█████▋    | 4/7 [00:09<00:05,  1.99s/it] 71%|███████▏  | 5/7 [00:11<00:03,  1.88s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.82s/it]100%|██████████| 7/7 [00:14<00:00,  1.77s/it]100%|██████████| 7/7 [00:14<00:00,  2.06s/it]
+=== mtransformer_p2_kneel ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='mtransformer_p2_kneel.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:27,  4.59s/it] 29%|██▊       | 2/7 [00:06<00:13,  2.75s/it] 43%|████▎     | 3/7 [00:07<00:08,  2.15s/it] 57%|█████▋    | 4/7 [00:09<00:05,  1.93s/it] 71%|███████▏  | 5/7 [00:10<00:03,  1.78s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.72s/it]100%|██████████| 7/7 [00:13<00:00,  1.67s/it]100%|██████████| 7/7 [00:13<00:00,  1.97s/it]
+=== momask_p0_crawl ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='momask_p0_crawl.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:28,  4.73s/it] 29%|██▊       | 2/7 [00:06<00:14,  2.92s/it] 43%|████▎     | 3/7 [00:08<00:09,  2.34s/it] 57%|█████▋    | 4/7 [00:09<00:06,  2.10s/it] 71%|███████▏  | 5/7 [00:11<00:03,  1.84s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.77s/it]100%|██████████| 7/7 [00:14<00:00,  1.60s/it]100%|██████████| 7/7 [00:14<00:00,  2.00s/it]
+=== momask_p1_pickup ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='momask_p1_pickup.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:27,  4.54s/it] 29%|██▊       | 2/7 [00:06<00:14,  2.86s/it] 43%|████▎     | 3/7 [00:07<00:09,  2.31s/it] 57%|█████▋    | 4/7 [00:09<00:05,  1.99s/it] 71%|███████▏  | 5/7 [00:11<00:03,  1.87s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.81s/it]100%|██████████| 7/7 [00:14<00:00,  1.75s/it]100%|██████████| 7/7 [00:14<00:00,  2.05s/it]
+=== momask_p2_kneel ===
+Namespace(batchSize=1, num_smplify_iters=8, cuda=True, gpu_ids=0, num_joints=22, joint_category='AMASS', fix_foot='False', data_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/fit_inputs', save_folder='/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08', files='momask_p2_kneel.npy')
+./body_models/
+WARNING: You are using a SMPL model, with only 10 shape coefficients.
+  0%|          | 0/7 [00:00<?, ?it/s] 14%|█▍        | 1/7 [00:04<00:26,  4.49s/it] 29%|██▊       | 2/7 [00:05<00:13,  2.72s/it] 43%|████▎     | 3/7 [00:07<00:08,  2.04s/it] 57%|█████▋    | 4/7 [00:08<00:05,  1.89s/it] 71%|███████▏  | 5/7 [00:10<00:03,  1.82s/it] 86%|████████▌ | 6/7 [00:12<00:01,  1.75s/it]100%|██████████| 7/7 [00:13<00:00,  1.60s/it]100%|██████████| 7/7 [00:13<00:00,  1.93s/it]
+Done. SMPLify output: /iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260609_smpl/smpl_fit_iter08

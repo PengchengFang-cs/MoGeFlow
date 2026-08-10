@@ -1,0 +1,145 @@
+{
+  "batch_size": 32,
+  "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/hml3d_20260807_nopool_gate/model/gate/gate_ep0300_fid0.0750_top30.8707.pt",
+  "code_dim": 128,
+  "cond_scale": 6.0,
+  "dataset_size": 4646,
+  "delta_definition": "delta = d_tp / (0.5 * s_p); s_p = median_k min_{k'!=k} ||e_pk - e_pk'||_2",
+  "groups": {
+    "head": {
+      "codebook_nn_spacing": 13.265279769897461,
+      "count": 18086,
+      "d": {
+        "mean": 5.281300067901611,
+        "median": 4.837793350219727,
+        "p90": 9.194217205047607
+      },
+      "delta": {
+        "mean": 0.7962591052055359,
+        "median": 0.7293918132781982,
+        "p90": 1.3862078189849854
+      },
+      "frac_delta_ge_1": 0.27789450403627114,
+      "frac_delta_lt_0.5": 0.2839765564525047,
+      "frac_delta_lt_1": 0.7221054959637289,
+      "part": 5
+    },
+    "left_leg": {
+      "codebook_nn_spacing": 19.609848022460938,
+      "count": 18086,
+      "d": {
+        "mean": 6.099888324737549,
+        "median": 5.660122394561768,
+        "p90": 10.515764236450195
+      },
+      "delta": {
+        "mean": 0.6221250891685486,
+        "median": 0.5772734880447388,
+        "p90": 1.0724983215332031
+      },
+      "frac_delta_ge_1": 0.1349662722547827,
+      "frac_delta_lt_0.5": 0.407995134358067,
+      "frac_delta_lt_1": 0.8650337277452173,
+      "part": 4
+    },
+    "right_leg": {
+      "codebook_nn_spacing": 16.521862030029297,
+      "count": 18086,
+      "d": {
+        "mean": 6.904172897338867,
+        "median": 6.386232376098633,
+        "p90": 11.938793182373047
+      },
+      "delta": {
+        "mean": 0.8357622027397156,
+        "median": 0.7730644941329956,
+        "p90": 1.4452115893363953
+      },
+      "frac_delta_ge_1": 0.3161008514873383,
+      "frac_delta_lt_0.5": 0.2539533340705518,
+      "frac_delta_lt_1": 0.6838991485126618,
+      "part": 2
+    },
+    "root_lower_spine": {
+      "codebook_nn_spacing": 18.05622673034668,
+      "count": 18086,
+      "d": {
+        "mean": 11.274115562438965,
+        "median": 10.48098087310791,
+        "p90": 18.792634963989258
+      },
+      "delta": {
+        "mean": 1.2487785816192627,
+        "median": 1.1609270572662354,
+        "p90": 2.0815683603286743
+      },
+      "frac_delta_ge_1": 0.6114674333738803,
+      "frac_delta_lt_0.5": 0.09283423642596483,
+      "frac_delta_lt_1": 0.3885325666261196,
+      "part": 0
+    },
+    "upper_spine_neck": {
+      "codebook_nn_spacing": 15.59075927734375,
+      "count": 18086,
+      "d": {
+        "mean": 5.469977855682373,
+        "median": 5.0725579261779785,
+        "p90": 9.468094825744629
+      },
+      "delta": {
+        "mean": 0.701694905757904,
+        "median": 0.6507133841514587,
+        "p90": 1.2145777940750122
+      },
+      "frac_delta_ge_1": 0.20098418666371778,
+      "frac_delta_lt_0.5": 0.33633749861771534,
+      "frac_delta_lt_1": 0.7990158133362822,
+      "part": 3
+    },
+    "upper_torso_arms": {
+      "codebook_nn_spacing": 20.364112854003906,
+      "count": 18086,
+      "d": {
+        "mean": 4.618680000305176,
+        "median": 4.2493391036987305,
+        "p90": 8.000694274902344
+      },
+      "delta": {
+        "mean": 0.4536097049713135,
+        "median": 0.41733604669570923,
+        "p90": 0.785764068365097
+      },
+      "frac_delta_ge_1": 0.029525599911533782,
+      "frac_delta_lt_0.5": 0.6251796970032069,
+      "frac_delta_lt_1": 0.9704744000884662,
+      "part": 1
+    }
+  },
+  "latent_norm_mode": "codebook",
+  "num_codes": 128,
+  "num_parts": 6,
+  "num_prompts": 512,
+  "overall": {
+    "count": 108516,
+    "d": {
+      "mean": 6.608022689819336,
+      "median": 5.720780372619629,
+      "p90": 12.074860095977783
+    },
+    "delta": {
+      "mean": 0.7763714790344238,
+      "median": 0.6766334772109985,
+      "p90": 1.4299014806747437
+    },
+    "frac_delta_ge_1": 0.26182314128792067,
+    "frac_delta_lt_0.5": 0.33337940948800177,
+    "frac_delta_lt_1": 0.7381768587120793
+  },
+  "seed": 42,
+  "split": "test",
+  "steps": 96,
+  "unit_length": 4,
+  "vq_backend": "kv_part",
+  "vq_checkpoint": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/new_vq_overlap_top3_20260529_best_top3.pth",
+  "weight_source": "ema"
+}

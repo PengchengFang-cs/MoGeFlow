@@ -211,6 +211,121 @@ class MultiHeadAttention(nn.Module):
         return out
 
 
+class TextRefinerBlock(nn.Module):
+    """HY-Motion-style gated bidirectional block for causal LLM features."""
+
+    def __init__(self, hidden_size: int, num_heads: int, mlp_ratio: float, dropout: float) -> None:
+        super().__init__()
+        if hidden_size % num_heads != 0:
+            raise ValueError(f"hidden_size {hidden_size} must be divisible by num_heads {num_heads}")
+        self.num_heads = int(num_heads)
+        self.head_dim = hidden_size // num_heads
+        mlp_hidden = int(hidden_size * mlp_ratio)
+        self.norm1 = nn.LayerNorm(hidden_size, elementwise_affine=True, eps=1e-6)
+        self.qkv = nn.Linear(hidden_size, hidden_size * 3, bias=True)
+        self.q_norm = nn.LayerNorm(self.head_dim, elementwise_affine=True, eps=1e-6)
+        self.k_norm = nn.LayerNorm(self.head_dim, elementwise_affine=True, eps=1e-6)
+        self.attn_out = nn.Linear(hidden_size, hidden_size, bias=True)
+        self.norm2 = nn.LayerNorm(hidden_size, elementwise_affine=True, eps=1e-6)
+        self.mlp = nn.Sequential(
+            nn.Linear(hidden_size, mlp_hidden, bias=True),
+            nn.SiLU(),
+            nn.Dropout(dropout),
+            nn.Linear(mlp_hidden, hidden_size, bias=True),
+            nn.Dropout(dropout),
+        )
+        self.gate_modulation = nn.Sequential(
+            nn.SiLU(),
+            nn.Linear(hidden_size, hidden_size * 2, bias=True),
+        )
+        nn.init.zeros_(self.gate_modulation[-1].weight)
+        nn.init.zeros_(self.gate_modulation[-1].bias)
+        self.dropout = float(dropout)
+
+    def forward(self, x: torch.Tensor, cond: torch.Tensor, valid: torch.Tensor) -> torch.Tensor:
+        gate_attn, gate_mlp = self.gate_modulation(cond).chunk(2, dim=-1)
+        bsz, seq_len, hidden_size = x.shape
+        qkv = self.qkv(self.norm1(x)).view(
+            bsz, seq_len, 3, self.num_heads, self.head_dim
+        ).permute(2, 0, 3, 1, 4)
+        q, k, v = qkv.unbind(dim=0)
+        q = self.q_norm(q)
+        k = self.k_norm(k)
+        attn = _attention(
+            q,
+            k,
+            v,
+            key_valid=valid,
+            dropout_p=self.dropout if self.training else 0.0,
+        )
+        attn = attn.transpose(1, 2).contiguous().view(bsz, seq_len, hidden_size)
+        attn = self.attn_out(attn) * valid[:, :, None].to(attn.dtype)
+        x = x + gate_attn[:, None] * attn
+        x = x + gate_mlp[:, None] * self.mlp(self.norm2(x))
+        return x * valid[:, :, None].to(x.dtype)
+
+
+class BidirectionalTextRefiner(nn.Module):
+    """Turn projected causal Qwen features into bidirectional text features.
+
+    This mirrors HY-Motion's SingleTokenRefiner: projected Qwen tokens get an
+    additional input projection, their masked global mean is encoded and added
+    to a private sinusoidal timestep encoder, and that context gates two
+    full-attention text-only blocks before the MMDiT backbone.
+
+    ``content_mask`` narrows *only* that mean.  Chat-wrapped providers keep
+    ``<|im_start|>user`` scaffolding in the token stream -- a quarter of a short
+    motion caption -- and a mean is a fixed operator that cannot learn to
+    discount it.  Attention can, so the blocks still see every valid token.
+    """
+
+    def __init__(
+        self,
+        hidden_size: int,
+        num_heads: int,
+        depth: int = 2,
+        mlp_ratio: float = 4.0,
+        dropout: float = 0.0,
+    ) -> None:
+        super().__init__()
+        if depth <= 0:
+            raise ValueError(f"Text refiner depth must be positive, got {depth}")
+        self.input_embedder = nn.Linear(hidden_size, hidden_size, bias=True)
+        self.context_encoder = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size),
+            nn.SiLU(),
+            nn.Linear(hidden_size, hidden_size),
+        )
+        self.timestep_encoder = TimestepEmbedder(
+            hidden_size,
+            frequency_embedding_size=hidden_size,
+        )
+        self.blocks = nn.ModuleList([
+            TextRefinerBlock(hidden_size, num_heads, mlp_ratio, dropout)
+            for _ in range(depth)
+        ])
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        timesteps: torch.Tensor,
+        padding_mask: torch.Tensor,
+        content_mask: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        valid = ~padding_mask
+        valid_float = valid[:, :, None].to(x.dtype)
+        pool = valid if content_mask is None else (content_mask & valid)
+        pool_float = pool[:, :, None].to(x.dtype)
+        # clamp_min guards a row whose content span fell entirely outside the
+        # valid range; it then pools to zero rather than dividing by zero.
+        pooled = (x * pool_float).sum(dim=1) / pool_float.sum(dim=1).clamp_min(1.0)
+        cond = self.timestep_encoder(timesteps.float()) + self.context_encoder(pooled)
+        x = self.input_embedder(x) * valid_float
+        for block in self.blocks:
+            x = block(x, cond, valid)
+        return x
+
+
 class DoubleStreamBlock(nn.Module):
     """Joint text-motion attention with separate stream updates."""
 

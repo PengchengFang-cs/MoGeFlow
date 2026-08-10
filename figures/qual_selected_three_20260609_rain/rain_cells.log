@@ -1,0 +1,4 @@
+=== render pscf_p0_crawl ===
+libEGL warning: failed to open /dev/dri/card0: Permission denied
+
+EGL Error (0x3009): EGL_BAD_MATCH: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).

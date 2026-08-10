@@ -56,7 +56,8 @@ class MoMaskRVQTokenizer(nn.Module):
     Public shapes match the CodeFlow tokenizer boundary:
       - motion: [B, F, 263], normalized with the RVQVAE mean/std
       - ids: [B, T, Q]
-      - embeddings: [B, T, Q, D]
+      - embeddings: [B, T, Q, D] for target_mode='stage'
+      - embeddings: [B, T, 1, D] for target_mode='sum'
 
     Here Q is the number of residual quantizer layers, not a body-part axis.
     """
@@ -65,9 +66,12 @@ class MoMaskRVQTokenizer(nn.Module):
         self,
         checkpoint_path: str,
         opt_path: Optional[str] = None,
+        target_mode: str = "stage",
         device: Optional[torch.device] = None,
     ) -> None:
         super().__init__()
+        if target_mode not in {"stage", "sum"}:
+            raise ValueError(f"Unsupported MoMask RVQ target_mode: {target_mode}")
         ckpt_path = Path(checkpoint_path).expanduser().resolve()
         if not ckpt_path.is_file():
             raise FileNotFoundError(f"MoMask VQ checkpoint not found: {ckpt_path}")
@@ -113,7 +117,9 @@ class MoMaskRVQTokenizer(nn.Module):
         self.checkpoint_path = ckpt_path
         self.opt_path = opt_file
         self.partition_path = None
-        self.num_parts = int(args.num_quantizers)
+        self.target_mode = str(target_mode)
+        self.num_quantizers = int(args.num_quantizers)
+        self.num_parts = self.num_quantizers if self.target_mode == "stage" else 1
         self.num_codes = int(args.nb_code)
         self.code_dim = int(args.code_dim)
         self.register_buffer("codebooks", self._read_codebooks(), persistent=False)
@@ -151,10 +157,10 @@ class MoMaskRVQTokenizer(nn.Module):
             raise RuntimeError("MoMask RVQVAE is missing forward_decoder(ids)")
         if not hasattr(self.vq_model, "decoder"):
             raise RuntimeError("MoMask RVQVAE is missing decoder")
-        if self.codebooks.shape != (self.num_parts, self.num_codes, self.code_dim):
+        if self.codebooks.shape != (self.num_quantizers, self.num_codes, self.code_dim):
             raise RuntimeError(
                 "MoMask RVQ codebook shape mismatch: "
-                f"{tuple(self.codebooks.shape)} vs ({self.num_parts}, {self.num_codes}, {self.code_dim})"
+                f"{tuple(self.codebooks.shape)} vs ({self.num_quantizers}, {self.num_codes}, {self.code_dim})"
             )
 
     @torch.no_grad()
@@ -164,34 +170,45 @@ class MoMaskRVQTokenizer(nn.Module):
             raise RuntimeError(f"Expected MoMask ids [B,T,Q], got {tuple(ids.shape)}")
         return ids.long()
 
-    def ids_to_embeddings(self, ids: torch.Tensor) -> torch.Tensor:
+    def _ids_to_stage_embeddings(self, ids: torch.Tensor) -> torch.Tensor:
         if ids.ndim != 3:
             raise ValueError(f"Expected ids [B, T, Q], got shape {tuple(ids.shape)}")
-        if ids.shape[-1] != self.num_parts:
-            raise ValueError(f"Expected {self.num_parts} residual layers, got {ids.shape[-1]}")
+        if ids.shape[-1] != self.num_quantizers:
+            raise ValueError(f"Expected {self.num_quantizers} residual layers, got {ids.shape[-1]}")
         ids = ids.long()
         parts = []
-        for part_idx in range(self.num_parts):
+        for part_idx in range(self.num_quantizers):
             part = self.codebooks[part_idx].index_select(0, ids[..., part_idx].reshape(-1))
             parts.append(part.view(ids.shape[0], ids.shape[1], self.code_dim))
         return torch.stack(parts, dim=2)
 
+    def ids_to_embeddings(self, ids: torch.Tensor) -> torch.Tensor:
+        stage_embeddings = self._ids_to_stage_embeddings(ids)
+        if self.target_mode == "sum":
+            return stage_embeddings.sum(dim=2, keepdim=True)
+        return stage_embeddings
+
     def codebook_tied_logits(self, z: torch.Tensor, tau: float = 1.0) -> torch.Tensor:
+        if self.target_mode == "sum":
+            raise ValueError(
+                "codebook_tied_logits is undefined for MoMask RVQ target_mode='sum'; "
+                "use terminal_mode='residual_nearest'."
+            )
         if z.ndim != 4:
             raise ValueError(f"Expected z [B, T, Q, D], got shape {tuple(z.shape)}")
-        if z.shape[2] != self.num_parts or z.shape[3] != self.code_dim:
+        if z.shape[2] != self.num_quantizers or z.shape[3] != self.code_dim:
             raise ValueError(
-                f"Expected z residual/code dims ({self.num_parts}, {self.code_dim}), "
+                f"Expected z residual/code dims ({self.num_quantizers}, {self.code_dim}), "
                 f"got ({z.shape[2]}, {z.shape[3]})"
             )
         tau_tensor = torch.as_tensor(tau, device=z.device, dtype=torch.float32).flatten()
         if tau_tensor.numel() == 1:
-            tau_tensor = tau_tensor.expand(self.num_parts)
-        elif tau_tensor.numel() != self.num_parts:
-            raise ValueError(f"tau must be scalar or length {self.num_parts}, got shape {tuple(tau_tensor.shape)}")
+            tau_tensor = tau_tensor.expand(self.num_quantizers)
+        elif tau_tensor.numel() != self.num_quantizers:
+            raise ValueError(f"tau must be scalar or length {self.num_quantizers}, got shape {tuple(tau_tensor.shape)}")
         tau_tensor = tau_tensor.clamp_min(1e-8)
         logits = []
-        for part_idx in range(self.num_parts):
+        for part_idx in range(self.num_quantizers):
             z_part = z[:, :, part_idx].float()
             codebook = self.codebooks[part_idx].float()
             dist = (
@@ -204,14 +221,45 @@ class MoMaskRVQTokenizer(nn.Module):
 
     @torch.no_grad()
     def nearest_ids(self, z: torch.Tensor) -> torch.Tensor:
+        if self.target_mode == "sum":
+            return self.residual_nearest_ids(z)
         return self.codebook_tied_logits(z, tau=1.0).argmax(dim=-1).long()
+
+    @torch.no_grad()
+    def residual_nearest_ids(self, z: torch.Tensor) -> torch.Tensor:
+        if z.ndim != 4:
+            raise ValueError(f"Expected z [B, T, Q, D], got shape {tuple(z.shape)}")
+        expected_parts = self.num_quantizers if self.target_mode == "stage" else 1
+        if z.shape[2] != expected_parts or z.shape[3] != self.code_dim:
+            raise ValueError(
+                f"Expected z residual/code dims ({expected_parts}, {self.code_dim}), "
+                f"got ({z.shape[2]}, {z.shape[3]})"
+            )
+        residual = z.float().sum(dim=2) if self.target_mode == "stage" else z[:, :, 0].float()
+        ids: List[torch.Tensor] = []
+        for quantizer_idx in range(self.num_quantizers):
+            codebook = self.codebooks[quantizer_idx].float()
+            dist = (
+                residual.square().sum(dim=-1, keepdim=True)
+                - 2.0 * torch.matmul(residual, codebook.t())
+                + codebook.square().sum(dim=-1)[None, None]
+            ).clamp_min_(0.0)
+            layer_ids = dist.argmin(dim=-1)
+            quantized = codebook.index_select(0, layer_ids.reshape(-1)).view(
+                residual.shape[0],
+                residual.shape[1],
+                self.code_dim,
+            )
+            residual = residual - quantized
+            ids.append(layer_ids)
+        return torch.stack(ids, dim=2).long()
 
     @torch.no_grad()
     def decode_ids(self, ids: torch.Tensor) -> torch.Tensor:
         if ids.ndim != 3:
             raise ValueError(f"Expected ids [B, T, Q], got shape {tuple(ids.shape)}")
-        if ids.shape[-1] != self.num_parts:
-            raise ValueError(f"Expected {self.num_parts} residual layers, got {ids.shape[-1]}")
+        if ids.shape[-1] != self.num_quantizers:
+            raise ValueError(f"Expected {self.num_quantizers} residual layers, got {ids.shape[-1]}")
         if ids.numel() and (ids.min() < 0 or ids.max() >= self.num_codes):
             raise ValueError(f"Code ids must be in [0, {self.num_codes}), got min={ids.min()} max={ids.max()}")
         return self.vq_model.forward_decoder(ids.long())
@@ -219,12 +267,13 @@ class MoMaskRVQTokenizer(nn.Module):
     def decode_embeddings(self, z: torch.Tensor) -> torch.Tensor:
         if z.ndim != 4:
             raise ValueError(f"Expected embeddings [B, T, Q, D], got shape {tuple(z.shape)}")
-        if z.shape[2] != self.num_parts or z.shape[3] != self.code_dim:
+        expected_parts = self.num_quantizers if self.target_mode == "stage" else 1
+        if z.shape[2] != expected_parts or z.shape[3] != self.code_dim:
             raise ValueError(
-                f"Expected embedding residual/code dims ({self.num_parts}, {self.code_dim}), "
+                f"Expected embedding residual/code dims ({expected_parts}, {self.code_dim}), "
                 f"got ({z.shape[2]}, {z.shape[3]})"
             )
-        latent = z.sum(dim=2).permute(0, 2, 1).contiguous()
+        latent = (z.sum(dim=2) if self.target_mode == "stage" else z[:, :, 0]).permute(0, 2, 1).contiguous()
         return self.vq_model.decoder(latent)
 
     @torch.no_grad()
@@ -236,14 +285,14 @@ class MoMaskRVQTokenizer(nn.Module):
     def code_id_distances(self, target_ids: torch.Tensor, pred_ids: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         if target_ids.shape != pred_ids.shape:
             raise ValueError(f"target/pred id shape mismatch: {tuple(target_ids.shape)} vs {tuple(pred_ids.shape)}")
-        if target_ids.ndim != 3 or target_ids.shape[-1] != self.num_parts:
-            raise ValueError(f"Expected ids [B, T, {self.num_parts}], got {tuple(target_ids.shape)}")
+        if target_ids.ndim != 3 or target_ids.shape[-1] != self.num_quantizers:
+            raise ValueError(f"Expected ids [B, T, {self.num_quantizers}], got {tuple(target_ids.shape)}")
         target_ids = target_ids.long()
         pred_ids = pred_ids.long()
         dists: List[torch.Tensor] = []
         rank_pcts: List[torch.Tensor] = []
         denom = max(self.num_codes - 1, 1)
-        for part_idx in range(self.num_parts):
+        for part_idx in range(self.num_quantizers):
             dist_mat = torch.cdist(
                 self.codebooks[part_idx].float(),
                 self.codebooks[part_idx].float(),
@@ -270,7 +319,9 @@ class MoMaskRVQTokenizer(nn.Module):
             "checkpoint_path": str(self.checkpoint_path),
             "opt_path": str(self.opt_path),
             "backend": "momask_rvq",
+            "target_mode": self.target_mode,
             "num_parts": self.num_parts,
+            "num_quantizers": self.num_quantizers,
             "num_codes": self.num_codes,
             "code_dim": self.code_dim,
             "decoder_id_layout": "rvq_grid_B_T_Q",
@@ -290,13 +341,14 @@ class MoMaskRVQTokenizer(nn.Module):
 
         ids = self.encode_ids(motion)
         embeddings = self.ids_to_embeddings(ids)
-        nearest = self.nearest_ids(embeddings)
-        nearest_match = (nearest == ids).float().mean()
-        if not torch.equal(nearest, ids):
-            mismatch = int((nearest != ids).sum().item())
+        projected_ids = self.nearest_ids(embeddings)
+        nearest_match = (projected_ids == ids).float().mean()
+        if self.target_mode == "stage" and not torch.equal(projected_ids, ids):
+            mismatch = int((projected_ids != ids).sum().item())
             raise RuntimeError(f"ids_to_embeddings/nearest_ids contract failed: {mismatch} mismatched ids")
 
         decoded = self.decode_ids(ids)
+        decoded_from_embeddings = self.decode_embeddings(embeddings)
         if decoded.ndim != 3 or decoded.shape[0] != motion.shape[0] or decoded.shape[-1] != motion.shape[-1]:
             raise RuntimeError(
                 f"Decoded motion shape {tuple(decoded.shape)} is incompatible with input {tuple(motion.shape)}"
@@ -318,12 +370,14 @@ class MoMaskRVQTokenizer(nn.Module):
         if not torch.isfinite(recon_l1) or not torch.isfinite(recon_mse):
             raise RuntimeError("MoMask RVQ round-trip reconstruction produced non-finite error")
 
+        embedding_decode_l1 = (decoded_from_embeddings[:, :common_len] - decoded[:, :common_len]).abs().mean()
         summary.update({
             "input_motion_shape": list(motion.shape),
             "encoded_grid_shape": list(ids.shape),
             "embedding_shape": list(embeddings.shape),
             "decoded_motion_shape": list(decoded.shape),
             "nearest_embedding_id_match": float(nearest_match.detach().cpu()),
+            "decode_embedding_l1": float(embedding_decode_l1.detach().cpu()),
             "roundtrip_l1": float(recon_l1.detach().cpu()),
             "roundtrip_mse": float(recon_mse.detach().cpu()),
         })
@@ -333,10 +387,12 @@ class MoMaskRVQTokenizer(nn.Module):
 def load_momask_rvq_tokenizer(
     checkpoint_path: str,
     opt_path: Optional[str] = None,
+    target_mode: str = "stage",
     device: Optional[torch.device] = None,
 ) -> MoMaskRVQTokenizer:
     return MoMaskRVQTokenizer(
         checkpoint_path=checkpoint_path,
         opt_path=opt_path,
+        target_mode=target_mode,
         device=device,
     )

@@ -1,0 +1,221 @@
+{
+  "frame_count": 7,
+  "methods": [
+    {
+      "name": "PS-CF",
+      "key": "pscf",
+      "entries": [
+        {
+          "prompt_index": 0,
+          "prompt": "A person runs straight ahead, then makes a 90 degree left turn and walks slowly for several steps.",
+          "source": "generation/paper_qual_pscf_w125_20260607/joints/sample000_repeat00_len196_joints.npy",
+          "stem": "pscf_p0",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/pscf_p0.npy",
+          "source_num_frames": 196,
+          "selected_frame_ids": [
+            0,
+            32,
+            65,
+            98,
+            130,
+            162,
+            195
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        },
+        {
+          "prompt_index": 1,
+          "prompt": "A person hops forward on his right foot.",
+          "source": "generation/paper_qual_pscf_w125_20260607/joints/sample001_repeat00_len196_joints.npy",
+          "stem": "pscf_p1",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/pscf_p1.npy",
+          "source_num_frames": 196,
+          "selected_frame_ids": [
+            0,
+            32,
+            65,
+            98,
+            130,
+            162,
+            195
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        },
+        {
+          "prompt_index": 2,
+          "prompt": "A person walks sideways to the right, keeping close to the wall.",
+          "source": "generation/paper_qual_pscf_w125_20260607/joints/sample002_repeat00_len196_joints.npy",
+          "stem": "pscf_p2",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/pscf_p2.npy",
+          "source_num_frames": 196,
+          "selected_frame_ids": [
+            0,
+            32,
+            65,
+            98,
+            130,
+            162,
+            195
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "name": "M-Transformer",
+      "key": "mtransformer",
+      "entries": [
+        {
+          "prompt_index": 0,
+          "prompt": "A person runs straight ahead, then makes a 90 degree left turn and walks slowly for several steps.",
+          "source": "generation/paper_qual_mtransformer_20260607/joints/0/sample0_repeat0_len112.npy",
+          "stem": "mtransformer_p0",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/mtransformer_p0.npy",
+          "source_num_frames": 112,
+          "selected_frame_ids": [
+            0,
+            18,
+            37,
+            56,
+            74,
+            92,
+            111
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        },
+        {
+          "prompt_index": 1,
+          "prompt": "A person hops forward on his right foot.",
+          "source": "generation/paper_qual_mtransformer_20260607/joints/1/sample1_repeat0_len84.npy",
+          "stem": "mtransformer_p1",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/mtransformer_p1.npy",
+          "source_num_frames": 84,
+          "selected_frame_ids": [
+            0,
+            14,
+            28,
+            42,
+            55,
+            69,
+            83
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        },
+        {
+          "prompt_index": 2,
+          "prompt": "A person walks sideways to the right, keeping close to the wall.",
+          "source": "generation/paper_qual_mtransformer_20260607/joints/2/sample2_repeat0_len112.npy",
+          "stem": "mtransformer_p2",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/mtransformer_p2.npy",
+          "source_num_frames": 112,
+          "selected_frame_ids": [
+            0,
+            18,
+            37,
+            56,
+            74,
+            92,
+            111
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MoMask",
+      "key": "momask",
+      "entries": [
+        {
+          "prompt_index": 0,
+          "prompt": "A person runs straight ahead, then makes a 90 degree left turn and walks slowly for several steps.",
+          "source": "generation/paper_qual_momask_20260607/joints/0/sample0_repeat0_len112.npy",
+          "stem": "momask_p0",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/momask_p0.npy",
+          "source_num_frames": 112,
+          "selected_frame_ids": [
+            0,
+            18,
+            37,
+            56,
+            74,
+            92,
+            111
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        },
+        {
+          "prompt_index": 1,
+          "prompt": "A person hops forward on his right foot.",
+          "source": "generation/paper_qual_momask_20260607/joints/1/sample1_repeat0_len84.npy",
+          "stem": "momask_p1",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/momask_p1.npy",
+          "source_num_frames": 84,
+          "selected_frame_ids": [
+            0,
+            14,
+            28,
+            42,
+            55,
+            69,
+            83
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        },
+        {
+          "prompt_index": 2,
+          "prompt": "A person walks sideways to the right, keeping close to the wall.",
+          "source": "generation/paper_qual_momask_20260607/joints/2/sample2_repeat0_len112.npy",
+          "stem": "momask_p2",
+          "fit_input": "figures/qualitative_20260608_smpl/fit_inputs/momask_p2.npy",
+          "source_num_frames": 112,
+          "selected_frame_ids": [
+            0,
+            18,
+            37,
+            56,
+            74,
+            92,
+            111
+          ],
+          "shape": [
+            7,
+            22,
+            3
+          ]
+        }
+      ]
+    }
+  ]
+}

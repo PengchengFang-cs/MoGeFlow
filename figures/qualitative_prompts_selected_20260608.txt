@@ -1,0 +1,3 @@
+a person is doing jumping jacks.#100
+a person sits down and then stays still.#120
+a person jogs in place.#80

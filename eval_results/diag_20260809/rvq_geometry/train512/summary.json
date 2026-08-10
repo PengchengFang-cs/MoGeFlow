@@ -1,0 +1,120 @@
+{
+  "num_motions": 512,
+  "motion_length": 196,
+  "latent_length": 49,
+  "num_parts": 6,
+  "part_dims": [
+    263,
+    263,
+    263,
+    263,
+    263,
+    263
+  ],
+  "prototype_spaces": [
+    "feature"
+  ],
+  "backend": "momask_rvq",
+  "kv_root": "/scratch/pf2m24/projects/Umdd/KV-Control",
+  "data_root": "/iridisfs/scratch/pf2m24/data/HumanML3D/HumanML3D",
+  "vq_checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/rvq_nq6_dc512_nc512_noshare_qdp0.2/model/net_best_fid.tar",
+  "vq_opt_path": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/rvq_nq6_dc512_nc512_noshare_qdp0.2/opt.txt",
+  "mean_path": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/rvq_nq6_dc512_nc512_noshare_qdp0.2/meta/mean.npy",
+  "std_path": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/rvq_nq6_dc512_nc512_noshare_qdp0.2/meta/std.npy",
+  "partition_file": "synthetic_full_body_per_rvq_layer",
+  "num_quantizers": 6,
+  "nb_code": 512,
+  "code_dim": 512,
+  "split": "train",
+  "max_motions": 512,
+  "min_code_count": 20,
+  "max_pairs": 20000,
+  "bootstrap": 1000,
+  "confound_controls": true,
+  "error_cost": true,
+  "replacement_samples": 32,
+  "code_usage": [
+    {
+      "part": 0,
+      "part_name": "rvq_layer_0",
+      "total_tokens": 17543,
+      "active_codes": 508,
+      "dead_codes": 4,
+      "perplexity": 331.6487934135096,
+      "min_count_active": 1,
+      "max_count": 405
+    },
+    {
+      "part": 1,
+      "part_name": "rvq_layer_1",
+      "total_tokens": 17543,
+      "active_codes": 511,
+      "dead_codes": 1,
+      "perplexity": 365.6412648772505,
+      "min_count_active": 1,
+      "max_count": 392
+    },
+    {
+      "part": 2,
+      "part_name": "rvq_layer_2",
+      "total_tokens": 17543,
+      "active_codes": 512,
+      "dead_codes": 0,
+      "perplexity": 375.0834576655399,
+      "min_count_active": 1,
+      "max_count": 178
+    },
+    {
+      "part": 3,
+      "part_name": "rvq_layer_3",
+      "total_tokens": 17543,
+      "active_codes": 511,
+      "dead_codes": 1,
+      "perplexity": 375.55734051242223,
+      "min_count_active": 2,
+      "max_count": 192
+    },
+    {
+      "part": 4,
+      "part_name": "rvq_layer_4",
+      "total_tokens": 17543,
+      "active_codes": 512,
+      "dead_codes": 0,
+      "perplexity": 394.6360824452699,
+      "min_count_active": 2,
+      "max_count": 153
+    },
+    {
+      "part": 5,
+      "part_name": "rvq_layer_5",
+      "total_tokens": 17543,
+      "active_codes": 510,
+      "dead_codes": 2,
+      "perplexity": 399.2635239089309,
+      "min_count_active": 1,
+      "max_count": 153
+    }
+  ],
+  "replacement_summary": {
+    "far": {
+      "whole_motion_delta_l1": 0.04572215175479263,
+      "target_part_delta_l1": 0.04572215175479263,
+      "local_target_delta_l1": 0.3597294644957098
+    },
+    "mid": {
+      "whole_motion_delta_l1": 0.019148701863741735,
+      "target_part_delta_l1": 0.019148701863741735,
+      "local_target_delta_l1": 0.14979692017853571
+    },
+    "near": {
+      "whole_motion_delta_l1": 0.007430506828616974,
+      "target_part_delta_l1": 0.007430506828616974,
+      "local_target_delta_l1": 0.05309697044625258
+    },
+    "random": {
+      "whole_motion_delta_l1": 0.02044303338455696,
+      "target_part_delta_l1": 0.02044303338455696,
+      "local_target_delta_l1": 0.15971914421728192
+    }
+  }
+}

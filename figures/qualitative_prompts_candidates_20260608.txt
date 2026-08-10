@@ -1,0 +1,6 @@
+a person walks several steps forward in a straight line.#80
+a person waves with his right hand.#80
+a person does a forward kick with his right leg.#80
+a person is doing jumping jacks.#100
+a person sits down and then stays still.#120
+a person jogs in place.#80

@@ -1,0 +1,157 @@
+{
+  "items": [
+    {
+      "stem": "pscf_p0_jacks",
+      "method": "Ours (PS-CF)",
+      "action": "Jumping jacks",
+      "source": "generation/debug_test_caption_exact_length_20260608/w200_bestfid_ema/joints/sample000_repeat00_len72_joints.npy",
+      "length": 72,
+      "frame_ids": [
+        0,
+        12,
+        24,
+        36,
+        47,
+        59,
+        71
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/pscf_p0_jacks.npy"
+    },
+    {
+      "stem": "pscf_p1_sit",
+      "method": "Ours (PS-CF)",
+      "action": "Sit down",
+      "source": "generation/debug_test_caption_exact_length_20260608/w200_bestfid_ema/joints/sample001_repeat00_len196_joints.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/pscf_p1_sit.npy"
+    },
+    {
+      "stem": "pscf_p2_jog",
+      "method": "Ours (PS-CF)",
+      "action": "Jog in place",
+      "source": "generation/debug_test_caption_exact_length_20260608/w200_bestfid_ema/joints/sample002_repeat00_len92_joints.npy",
+      "length": 92,
+      "frame_ids": [
+        0,
+        15,
+        30,
+        46,
+        61,
+        76,
+        91
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/pscf_p2_jog.npy"
+    },
+    {
+      "stem": "mtransformer_p0_jacks",
+      "method": "M-Transformer",
+      "action": "Jumping jacks",
+      "source": "generation/paper_qual_mtransformer_exactlen_20260608/joints/sample0_repeat0_len72.npy",
+      "length": 72,
+      "frame_ids": [
+        0,
+        12,
+        24,
+        36,
+        47,
+        59,
+        71
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/mtransformer_p0_jacks.npy"
+    },
+    {
+      "stem": "mtransformer_p1_sit",
+      "method": "M-Transformer",
+      "action": "Sit down",
+      "source": "generation/paper_qual_mtransformer_exactlen_20260608/joints/sample1_repeat0_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/mtransformer_p1_sit.npy"
+    },
+    {
+      "stem": "mtransformer_p2_jog",
+      "method": "M-Transformer",
+      "action": "Jog in place",
+      "source": "generation/paper_qual_mtransformer_exactlen_20260608/joints/sample2_repeat0_len92.npy",
+      "length": 92,
+      "frame_ids": [
+        0,
+        15,
+        30,
+        46,
+        61,
+        76,
+        91
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/mtransformer_p2_jog.npy"
+    },
+    {
+      "stem": "momask_p0_jacks",
+      "method": "MoMask",
+      "action": "Jumping jacks",
+      "source": "generation/paper_qual_momask_exactlen_20260608/p0/joints/0/sample0_repeat0_len72.npy",
+      "length": 72,
+      "frame_ids": [
+        0,
+        12,
+        24,
+        36,
+        47,
+        59,
+        71
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/momask_p0_jacks.npy"
+    },
+    {
+      "stem": "momask_p1_sit",
+      "method": "MoMask",
+      "action": "Sit down",
+      "source": "generation/paper_qual_momask_exactlen_20260608/p1/joints/0/sample0_repeat0_len196.npy",
+      "length": 196,
+      "frame_ids": [
+        0,
+        32,
+        65,
+        98,
+        130,
+        162,
+        195
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/momask_p1_sit.npy"
+    },
+    {
+      "stem": "momask_p2_jog",
+      "method": "MoMask",
+      "action": "Jog in place",
+      "source": "generation/paper_qual_momask_exactlen_20260608/p2/joints/0/sample0_repeat0_len92.npy",
+      "length": 92,
+      "frame_ids": [
+        0,
+        15,
+        30,
+        46,
+        61,
+        76,
+        91
+      ],
+      "fit_input": "figures/qualitative_exactlen_20260608_smpl/fit_inputs/momask_p2_jog.npy"
+    }
+  ]
+}

@@ -1,0 +1,338 @@
+{
+  "per_checkpoint": {
+    "best_fid": {
+      "best_fid": {
+        "cfg": 6,
+        "checkpoint": "best_fid",
+        "diversity": 9.94782543182373,
+        "fid": 0.05412144542802366,
+        "matching": 2.5988496731067525,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_test_s96_cfg6_tied_logits_continuous.json",
+        "top1": 0.5780172413793103,
+        "top2": 0.7693965517241379,
+        "top3": 0.8592672413793103
+      },
+      "best_top3": {
+        "cfg": 4,
+        "checkpoint": "best_fid",
+        "diversity": 9.994747161865234,
+        "fid": 0.07131197580332582,
+        "matching": 2.5954831501533246,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_test_s96_cfg4_tied_logits_continuous.json",
+        "top1": 0.5831896551724138,
+        "top2": 0.775,
+        "top3": 0.8637931034482759
+      }
+    },
+    "best_fid_rank2": {
+      "best_fid": {
+        "cfg": 6,
+        "checkpoint": "best_fid_rank2",
+        "diversity": 9.951019287109375,
+        "fid": 0.055098776409366224,
+        "matching": 2.603161908840311,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_rank2_test_s96_cfg6_tied_logits_continuous.json",
+        "top1": 0.5754310344827587,
+        "top2": 0.7700431034482759,
+        "top3": 0.8575431034482759
+      },
+      "best_top3": {
+        "cfg": 4,
+        "checkpoint": "best_fid_rank2",
+        "diversity": 10.013922691345215,
+        "fid": 0.07572213185291332,
+        "matching": 2.5975009194735823,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_rank2_test_s96_cfg4_tied_logits_continuous.json",
+        "top1": 0.5818965517241379,
+        "top2": 0.775,
+        "top3": 0.8616379310344827
+      }
+    },
+    "best_top3": {
+      "best_fid": {
+        "cfg": 7,
+        "checkpoint": "best_top3",
+        "diversity": 10.279487609863281,
+        "fid": 0.1516085283319768,
+        "matching": 2.5411788085411335,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_test_s96_cfg7_tied_logits_continuous.json",
+        "top1": 0.6032327586206897,
+        "top2": 0.7984913793103449,
+        "top3": 0.8838362068965517
+      },
+      "best_top3": {
+        "cfg": 7,
+        "checkpoint": "best_top3",
+        "diversity": 10.279487609863281,
+        "fid": 0.1516085283319768,
+        "matching": 2.5411788085411335,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_test_s96_cfg7_tied_logits_continuous.json",
+        "top1": 0.6032327586206897,
+        "top2": 0.7984913793103449,
+        "top3": 0.8838362068965517
+      }
+    },
+    "best_top3_rank2": {
+      "best_fid": {
+        "cfg": 7,
+        "checkpoint": "best_top3_rank2",
+        "diversity": 10.245980262756348,
+        "fid": 0.13576713039685728,
+        "matching": 2.5423073226007924,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_rank2_test_s96_cfg7_tied_logits_continuous.json",
+        "top1": 0.6017241379310345,
+        "top2": 0.7959051724137931,
+        "top3": 0.8780172413793104
+      },
+      "best_top3": {
+        "cfg": 5,
+        "checkpoint": "best_top3_rank2",
+        "diversity": 10.264328956604004,
+        "fid": 0.174456474375404,
+        "matching": 2.5478369088008486,
+        "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_rank2_test_s96_cfg5_tied_logits_continuous.json",
+        "top1": 0.5995689655172414,
+        "top2": 0.7989224137931035,
+        "top3": 0.884051724137931
+      }
+    }
+  },
+  "protocol": {
+    "cfg_values": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "decode_mode": "continuous",
+    "repeat_times": 1,
+    "seed": 42,
+    "split": "test",
+    "steps": 96,
+    "terminal_mode": "tied_logits",
+    "weight_source": "ema"
+  },
+  "rows": [
+    {
+      "cfg": 3,
+      "checkpoint": "best_fid",
+      "diversity": 10.038016319274902,
+      "fid": 0.10178182329660501,
+      "matching": 2.6082405945350384,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_test_s96_cfg3_tied_logits_continuous.json",
+      "top1": 0.5745689655172413,
+      "top2": 0.7782327586206896,
+      "top3": 0.8584051724137931
+    },
+    {
+      "cfg": 4,
+      "checkpoint": "best_fid",
+      "diversity": 9.994747161865234,
+      "fid": 0.07131197580332582,
+      "matching": 2.5954831501533246,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_test_s96_cfg4_tied_logits_continuous.json",
+      "top1": 0.5831896551724138,
+      "top2": 0.775,
+      "top3": 0.8637931034482759
+    },
+    {
+      "cfg": 5,
+      "checkpoint": "best_fid",
+      "diversity": 9.958481788635254,
+      "fid": 0.05772012427031825,
+      "matching": 2.597058865119671,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_test_s96_cfg5_tied_logits_continuous.json",
+      "top1": 0.58125,
+      "top2": 0.7741379310344828,
+      "top3": 0.8618534482758621
+    },
+    {
+      "cfg": 6,
+      "checkpoint": "best_fid",
+      "diversity": 9.94782543182373,
+      "fid": 0.05412144542802366,
+      "matching": 2.5988496731067525,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_test_s96_cfg6_tied_logits_continuous.json",
+      "top1": 0.5780172413793103,
+      "top2": 0.7693965517241379,
+      "top3": 0.8592672413793103
+    },
+    {
+      "cfg": 7,
+      "checkpoint": "best_fid",
+      "diversity": 9.937068939208984,
+      "fid": 0.057745817520213905,
+      "matching": 2.602091235127942,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_test_s96_cfg7_tied_logits_continuous.json",
+      "top1": 0.5790948275862069,
+      "top2": 0.7689655172413793,
+      "top3": 0.8577586206896551
+    },
+    {
+      "cfg": 3,
+      "checkpoint": "best_fid_rank2",
+      "diversity": 10.043182373046875,
+      "fid": 0.10414089379467839,
+      "matching": 2.6083692780856427,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_rank2_test_s96_cfg3_tied_logits_continuous.json",
+      "top1": 0.5752155172413793,
+      "top2": 0.7719827586206897,
+      "top3": 0.8588362068965517
+    },
+    {
+      "cfg": 4,
+      "checkpoint": "best_fid_rank2",
+      "diversity": 10.013922691345215,
+      "fid": 0.07572213185291332,
+      "matching": 2.5975009194735823,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_rank2_test_s96_cfg4_tied_logits_continuous.json",
+      "top1": 0.5818965517241379,
+      "top2": 0.775,
+      "top3": 0.8616379310344827
+    },
+    {
+      "cfg": 5,
+      "checkpoint": "best_fid_rank2",
+      "diversity": 10.003636360168457,
+      "fid": 0.06126320059121326,
+      "matching": 2.598305286210159,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_rank2_test_s96_cfg5_tied_logits_continuous.json",
+      "top1": 0.5793103448275863,
+      "top2": 0.7724137931034483,
+      "top3": 0.8601293103448275
+    },
+    {
+      "cfg": 6,
+      "checkpoint": "best_fid_rank2",
+      "diversity": 9.951019287109375,
+      "fid": 0.055098776409366224,
+      "matching": 2.603161908840311,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_rank2_test_s96_cfg6_tied_logits_continuous.json",
+      "top1": 0.5754310344827587,
+      "top2": 0.7700431034482759,
+      "top3": 0.8575431034482759
+    },
+    {
+      "cfg": 7,
+      "checkpoint": "best_fid_rank2",
+      "diversity": 9.906115531921387,
+      "fid": 0.05723006402105568,
+      "matching": 2.6060432779377902,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_fid_rank2_test_s96_cfg7_tied_logits_continuous.json",
+      "top1": 0.5732758620689655,
+      "top2": 0.7709051724137931,
+      "top3": 0.8549568965517241
+    },
+    {
+      "cfg": 3,
+      "checkpoint": "best_top3",
+      "diversity": 10.345734596252441,
+      "fid": 0.24335830527168412,
+      "matching": 2.600402753106479,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_test_s96_cfg3_tied_logits_continuous.json",
+      "top1": 0.5887931034482758,
+      "top2": 0.7842672413793104,
+      "top3": 0.8709051724137931
+    },
+    {
+      "cfg": 4,
+      "checkpoint": "best_top3",
+      "diversity": 10.337306022644043,
+      "fid": 0.21281767128056117,
+      "matching": 2.5672218766705743,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_test_s96_cfg4_tied_logits_continuous.json",
+      "top1": 0.590301724137931,
+      "top2": 0.7943965517241379,
+      "top3": 0.8767241379310344
+    },
+    {
+      "cfg": 5,
+      "checkpoint": "best_top3",
+      "diversity": 10.323787689208984,
+      "fid": 0.18930442495465627,
+      "matching": 2.5514704046578243,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_test_s96_cfg5_tied_logits_continuous.json",
+      "top1": 0.5982758620689655,
+      "top2": 0.7993534482758621,
+      "top3": 0.8795258620689655
+    },
+    {
+      "cfg": 6,
+      "checkpoint": "best_top3",
+      "diversity": 10.291963577270508,
+      "fid": 0.16668218982707117,
+      "matching": 2.5424276080624812,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_test_s96_cfg6_tied_logits_continuous.json",
+      "top1": 0.6008620689655172,
+      "top2": 0.7991379310344827,
+      "top3": 0.8801724137931034
+    },
+    {
+      "cfg": 7,
+      "checkpoint": "best_top3",
+      "diversity": 10.279487609863281,
+      "fid": 0.1516085283319768,
+      "matching": 2.5411788085411335,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_test_s96_cfg7_tied_logits_continuous.json",
+      "top1": 0.6032327586206897,
+      "top2": 0.7984913793103449,
+      "top3": 0.8838362068965517
+    },
+    {
+      "cfg": 3,
+      "checkpoint": "best_top3_rank2",
+      "diversity": 10.266877174377441,
+      "fid": 0.22450836168852106,
+      "matching": 2.594844131634153,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_rank2_test_s96_cfg3_tied_logits_continuous.json",
+      "top1": 0.5887931034482758,
+      "top2": 0.7907327586206897,
+      "top3": 0.8730603448275862
+    },
+    {
+      "cfg": 4,
+      "checkpoint": "best_top3_rank2",
+      "diversity": 10.271882057189941,
+      "fid": 0.19866105175795212,
+      "matching": 2.565425339238397,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_rank2_test_s96_cfg4_tied_logits_continuous.json",
+      "top1": 0.6008620689655172,
+      "top2": 0.7956896551724137,
+      "top3": 0.8806034482758621
+    },
+    {
+      "cfg": 5,
+      "checkpoint": "best_top3_rank2",
+      "diversity": 10.264328956604004,
+      "fid": 0.174456474375404,
+      "matching": 2.5478369088008486,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_rank2_test_s96_cfg5_tied_logits_continuous.json",
+      "top1": 0.5995689655172414,
+      "top2": 0.7989224137931035,
+      "top3": 0.884051724137931
+    },
+    {
+      "cfg": 6,
+      "checkpoint": "best_top3_rank2",
+      "diversity": 10.261606216430664,
+      "fid": 0.15122962507763305,
+      "matching": 2.541251854238839,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_rank2_test_s96_cfg6_tied_logits_continuous.json",
+      "top1": 0.6043103448275862,
+      "top2": 0.7995689655172413,
+      "top3": 0.8825431034482759
+    },
+    {
+      "cfg": 7,
+      "checkpoint": "best_top3_rank2",
+      "diversity": 10.245980262756348,
+      "fid": 0.13576713039685728,
+      "matching": 2.5423073226007924,
+      "result": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/clipqwen3_rank12_cfg3_7_seed42_s96_20260721/best_top3_rank2_test_s96_cfg7_tied_logits_continuous.json",
+      "top1": 0.6017241379310345,
+      "top2": 0.7959051724137931,
+      "top3": 0.8780172413793104
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+hml3d_20260802_clipL_pooltoken_r2|best_fid|7
+hml3d_20260802_clipL_pooltoken_r2|best_fid|6
+hml3d_20260802_e1_pooltoken|best_fid|6
+hml3d_20260802_e1_pooltoken|best_fid|7
+hml3d_20260802_clipL_pooltoken|best_fid|7
