@@ -34,6 +34,10 @@ TEXT_POOLED_MODES = ("modulation", "token")
 # for the paper is produced by a standalone script that calls terminal_ids() and
 # tokenizer.decode_ids() directly, not by flipping anything here.
 DECODE_MODE = "continuous"
+# PERMANENT (2026-08-09): the backbone head predicts the clean endpoint x0.
+# Velocity never leaves the sampler -- it is derived there as (x0 - z_t)/(1 - t)
+# for ODE integration only.  There is no velocity-prediction mode.
+PREDICTION_TYPE = "x0"
 
 
 @dataclass
@@ -680,15 +684,15 @@ class MotionCodeFlow(nn.Module):
         valid = lengths_to_mask(token_lengths, z.shape[1]).to(pred.dtype)
         return pred * valid[:, :, None, None]
 
-    def predict_clean_from_velocity(
+    def velocity_from_clean(
         self,
         z_t: torch.Tensor,
         timesteps: torch.Tensor,
-        velocity: torch.Tensor,
+        clean: torch.Tensor,
     ) -> torch.Tensor:
         while timesteps.ndim < z_t.ndim:
             timesteps = timesteps[..., None]
-        return z_t + (1.0 - timesteps).clamp_min(self.config.t_eps) * velocity
+        return (clean - z_t) / (1.0 - timesteps).clamp_min(self.config.t_eps)
 
     def terminal_logits(self, clean_pred: torch.Tensor, mode: Optional[str] = None) -> torch.Tensor:
         mode = mode or self.config.terminal_mode
@@ -775,7 +779,6 @@ class MotionCodeFlow(nn.Module):
                 t = t.expand(bsz)
         t_view = t[:, None, None, None]
         z_t = t_view * target_model + (1.0 - t_view) * noise
-        velocity_target = target_model - noise
         z_t = z_t * valid_float[:, :, :, None]
 
         if x_self_cond is not None:
@@ -790,11 +793,11 @@ class MotionCodeFlow(nn.Module):
                     x_self_cond=None,
                     text_drop_prob=0.0,
                 )
-                clean_init = self.predict_clean_from_velocity(z_t, t, v_init).detach()
+                clean_init = v_init.detach()  # head output IS the clean endpoint
             keep = (torch.rand(bsz, device=target_embeddings.device) < cfg.self_cond_prob).to(target_embeddings.dtype)
             x_self_cond = clean_init * keep[:, None, None, None]
 
-        velocity_pred = self.forward(
+        x0_pred = self.forward(
             z_t,
             t,
             texts,
@@ -802,21 +805,20 @@ class MotionCodeFlow(nn.Module):
             x_self_cond=x_self_cond,
             text_drop_prob=cfg.cond_drop_prob,
         )
-        velocity_pred_f = velocity_pred.float()
-        velocity_target_f = velocity_target.float()
+        x0_pred_f = x0_pred.float()
         target_model_f = target_model.float()
         valid_float_f = valid_float.float()
         z_t_f = z_t.float()
         t_f = t.float()
 
-        per_part_flow = (velocity_pred_f - velocity_target_f).square().mean(dim=-1)
+        per_part_flow = (x0_pred_f - target_model_f).square().mean(dim=-1)
         flow_loss = (per_part_flow * valid_float_f).sum() / valid_float_f.sum().clamp_min(1.0)
 
-        # PERMANENT (2026-08-09): the training objective is the flow (velocity)
-        # MSE alone.  Terminal/codebook CE and clean-state regression losses are
-        # deleted outright -- they measurably hurt quality and must never be
-        # reintroduced.  clean_pred survives only for no-grad diagnostics.
-        clean_pred = self.predict_clean_from_velocity(z_t_f, t_f, velocity_pred_f)
+        # PERMANENT (2026-08-09): the sole training loss is the flow-matching
+        # regression on the clean endpoint (x0 MSE) under PREDICTION_TYPE="x0".
+        # Terminal/codebook CE and auxiliary clean losses are deleted outright
+        # and must never be reintroduced.  clean_pred feeds no-grad diagnostics.
+        clean_pred = x0_pred_f
         clean_pred_raw = self.model_to_raw_latent(clean_pred)
 
         code_metrics: Dict[str, torch.Tensor] = {}
@@ -932,9 +934,10 @@ class MotionCodeFlow(nn.Module):
                     text_drop_prob=0.0,
                     raw_text_condition=raw_text_condition,
                 )
-                v_uncond, v_cond = v_all.chunk(2, dim=0)
-                v_out = v_uncond + float(cond_scale) * (v_cond - v_uncond)
-            clean_out = self.predict_clean_from_velocity(z_in, t_in, v_out)
+                x0_uncond, x0_cond = v_all.chunk(2, dim=0)
+                v_out = x0_uncond + float(cond_scale) * (x0_cond - x0_uncond)
+            clean_out = v_out  # head output is x0; CFG combined in x0 space
+            v_out = self.velocity_from_clean(z_in, t_in, clean_out)
             return v_out, clean_out
 
         for idx in range(steps):

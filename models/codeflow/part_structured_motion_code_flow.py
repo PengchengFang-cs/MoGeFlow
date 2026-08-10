@@ -444,10 +444,9 @@ class PartStructuredMotionCodeFlow(MotionCodeFlow):
                 t = t.expand(bsz)
         t_view = t[:, None, None, None]
         z_t = t_view * target_model + (1.0 - t_view) * noise
-        velocity_target = target_model - noise
         z_t = z_t * valid_float[:, :, :, None]
 
-        velocity_pred = self.forward(
+        x0_pred = self.forward(
             z_t,
             t,
             texts,
@@ -455,20 +454,21 @@ class PartStructuredMotionCodeFlow(MotionCodeFlow):
             x_self_cond=None,
             text_drop_prob=cfg.cond_drop_prob,
         )
-        velocity_pred_f = velocity_pred.float()
-        velocity_target_f = velocity_target.float()
+        x0_pred_f = x0_pred.float()
+        target_model_f = target_model.float()
         valid_float_f = valid_float.float()
         z_t_f = z_t.float()
         t_f = t.float()
         cell_weight_f = cell_weight.float()
 
-        per_part_flow = (velocity_pred_f - velocity_target_f).square().mean(dim=-1)
+        per_part_flow = (x0_pred_f - target_model_f).square().mean(dim=-1)
         flow_loss = (per_part_flow * cell_weight_f).sum() / loss_denom
 
-        # PERMANENT (2026-08-09): flow (velocity) MSE is the sole training loss.
-        # Terminal/codebook CE and clean-state losses are deleted outright and
-        # must never be reintroduced.  clean_pred is kept for no-grad metrics.
-        clean_pred = self.predict_clean_from_velocity(z_t_f, t_f, velocity_pred_f)
+        # PERMANENT (2026-08-09): the sole training loss is the flow-matching
+        # regression on the clean endpoint (x0 MSE) under PREDICTION_TYPE="x0".
+        # Terminal/codebook CE and auxiliary losses are deleted and must never
+        # be reintroduced.  clean_pred feeds no-grad metrics only.
+        clean_pred = x0_pred_f
         clean_pred_raw = self.model_to_raw_latent(clean_pred)
 
         code_metrics: Dict[str, torch.Tensor] = {}

@@ -347,7 +347,7 @@ def prepare_flow_training_state(
                 x_self_cond=None,
                 text_drop_prob=0.0,
             )
-            clean_init = model.predict_clean_from_velocity(z_t, timesteps, v_init).detach()
+            clean_init = v_init.detach()  # head output IS the clean endpoint
         keep = (torch.rand(bsz, device=target_embeddings.device) < cfg.self_cond_prob).to(target_embeddings.dtype)
         x_self_cond = clean_init * keep[:, None, None, None]
 
