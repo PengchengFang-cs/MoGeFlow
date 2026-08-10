@@ -123,9 +123,9 @@ def sample_timesteps(
     p_std: float,
 ) -> torch.Tensor:
     if schedule == "uniform":
-        return torch.rand(batch_size, device=device)
+        return torch.rand(batch_size, device=device).clamp(1e-4, 1.0 - 1e-4)
     if schedule == "logit_normal":
-        return torch.sigmoid(torch.randn(batch_size, device=device) * p_std + p_mean)
+        return torch.sigmoid(torch.randn(batch_size, device=device) * p_std + p_mean).clamp(1e-4, 1.0 - 1e-4)
     raise ValueError(f"Unknown time schedule: {schedule}")
 
 
@@ -811,11 +811,13 @@ class MotionCodeFlow(nn.Module):
         z_t_f = z_t.float()
         t_f = t.float()
 
-        per_part_flow = (x0_pred_f - target_model_f).square().mean(dim=-1)
+        v_pred_f = self.velocity_from_clean(z_t_f, t_f, x0_pred_f)
+        v_target_f = (target_model - noise).float()
+        per_part_flow = (v_pred_f - v_target_f).square().mean(dim=-1)
         flow_loss = (per_part_flow * valid_float_f).sum() / valid_float_f.sum().clamp_min(1.0)
 
         # PERMANENT (2026-08-09): the sole training loss is the flow-matching
-        # regression on the clean endpoint (x0 MSE) under PREDICTION_TYPE="x0".
+        # velocity-space MSE computed from the x0 head: MSE((x0-z_t)/(1-t), Y1-Y0).
         # Terminal/codebook CE and auxiliary clean losses are deleted outright
         # and must never be reintroduced.  clean_pred feeds no-grad diagnostics.
         clean_pred = x0_pred_f

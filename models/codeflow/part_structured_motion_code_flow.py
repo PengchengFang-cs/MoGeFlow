@@ -461,11 +461,13 @@ class PartStructuredMotionCodeFlow(MotionCodeFlow):
         t_f = t.float()
         cell_weight_f = cell_weight.float()
 
-        per_part_flow = (x0_pred_f - target_model_f).square().mean(dim=-1)
+        v_pred_f = self.velocity_from_clean(z_t_f, t_f, x0_pred_f)
+        v_target_f = (target_model - noise).float()
+        per_part_flow = (v_pred_f - v_target_f).square().mean(dim=-1)
         flow_loss = (per_part_flow * cell_weight_f).sum() / loss_denom
 
         # PERMANENT (2026-08-09): the sole training loss is the flow-matching
-        # regression on the clean endpoint (x0 MSE) under PREDICTION_TYPE="x0".
+        # velocity-space MSE computed from the x0 head: MSE((x0-z_t)/(1-t), Y1-Y0).
         # Terminal/codebook CE and auxiliary losses are deleted and must never
         # be reintroduced.  clean_pred feeds no-grad metrics only.
         clean_pred = x0_pred_f
