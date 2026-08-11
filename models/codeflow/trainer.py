@@ -259,6 +259,7 @@ def make_config(opt) -> MotionCodeFlowConfig:
         self_cond_prob=opt.self_cond_prob,
         use_self_condition=not opt.disable_self_condition,
         time_schedule=opt.time_schedule,
+        t_eps=float(getattr(opt, "t_eps", 1e-4)),
         denoiser_p_mean=opt.denoiser_p_mean,
         denoiser_p_std=opt.denoiser_p_std,
         noise_scale=opt.noise_scale,

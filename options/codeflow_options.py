@@ -191,6 +191,7 @@ class TrainCodeFlowOptions:
         p.add_argument("--denoiser_p_mean", type=float, default=-1.5)
         p.add_argument("--denoiser_p_std", type=float, default=0.8)
         p.add_argument("--noise_scale", type=float, default=1.0)
+        p.add_argument("--t_eps", type=float, default=1e-4, help="Denominator floor for (1-t) in the x0->velocity conversion (loss and sampler). JiT uses 0.05.")
         p.add_argument("--latent_norm_mode", type=str, default="none", choices=["none", "codebook", "empirical"])
         p.add_argument("--latent_offset", type=float, default=0.0)
         p.add_argument("--latent_norm_eps", type=float, default=1e-6)
