@@ -62,3 +62,9 @@ geometry_diagnostics/
 # OS/editor files
 .DS_Store
 *.swp
+# living experiment record (2026-08-18): track the fixed-name files only
+!refine-logs/
+refine-logs/*
+!refine-logs/EXPERIMENT_PLAN.md
+!refine-logs/EXPERIMENT_TRACKER.md
+EXPERIMENT_LOG_2026*_*.md
