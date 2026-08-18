@@ -24,7 +24,7 @@
 ## B0 · v 时代（velocity 头 + 曾带 terminal CE）—— 摘要与指针
 
 **日期**：2026-05-26（首个可移植代码发布）→ 2026-08-09
-**状态**：全部检查点在 x0 硬编码后**语义失效**（用户裁定），但以下**结论仍成立**：
+**状态**：权重不能在 x0 代码下 resume/复用；**评测数字与结论继续有效**（用户 08-18 澄清：不作废，论文只重填 Table 1 两行）：
 
 | 子项 | 结论 | 记录 |
 |---|---|---|
@@ -33,7 +33,7 @@
 | 文本编码器 6-run（08-01→02） | CLIP-L / LLM2Vec-Llama3 / LLM2Vec-Qwen3 × pool：Top3 不可分（0.8711–0.8722）；LLM2Vec-Qwen3 FID 最低 0.0459；nopool 两选点更好；Llama3 早期结论因特征污染撤回 | `docs/ENCODER_ABLATION_FINAL_20260802.md` |
 | pooled-routing 6-run + cfg 扫 72/72 + repeat-20 1/8（08-02→07） | nopool vs pool-token 唯一干净 A/B；CLIP-L 后期漂移 +0.11 FID；**FID 单次抖动 ~0.01（clipL r2 cfg7: 单次 0.0338 → r20 0.0440±0.0030）** | `docs/POOLED_ROUTING_CAMPAIGN_20260802.md` |
 | HML3D/KIT nopool_gate 重训（08-07） | 脚本漏 `--terminal_loss_weight 0` → CE=1.0 训练（事故）；产出 hml3d gate_ep0300、kit ep320/350 | memory `flow-only-loss-permanent` |
-| KIT ep350 repeat-20（08-08） | 0.483±.007 / 0.724±.006 / 0.837±.004 / 0.173±.005 / 2.507±.016 / 10.860±.093 → 论文 Table 1 KIT 行（**现已被 x0 裁定波及，待 B8**） | `docs/PAPER_REVISION_CAMPAIGN_20260808.md` §2.1；`eval_results/kit_repeat20_20260808/` |
+| KIT ep350 repeat-20（08-08） | 0.483±.007 / 0.724±.006 / 0.837±.004 / 0.173±.005 / 2.507±.016 / 10.860±.093 → 论文 Table 1 KIT 行（待 B8 x0 结果替换） | `docs/PAPER_REVISION_CAMPAIGN_20260808.md` §2.1；`eval_results/kit_repeat20_20260808/` |
 | 几何诊断 E1/E2/E3（08-09） | δ 中位 0.68、26% 超半间距；白化 ρ 0.815→0.838；通用 RVQ 仅基层 ρ 0.80、其余 0.40–0.53 | 同上 §2.2–2.4；`eval_results/diag_20260809/` |
 | 论文 3 审稿人闭环 | 5/4/4 → 修订全部落地；决策登记见 PLAN | 同上 §3–4 |
 | PS-CF 方法定型 + 05-22 cfg/步数扫描 + 06-18 continuous decode/encoder-latent + 07-23 KIT part-aware VQ | 见原文各节 | `CODEFLOW_EXPERIMENT_LOG.md`（根目录，05-21→07-23，本文件的前身） |

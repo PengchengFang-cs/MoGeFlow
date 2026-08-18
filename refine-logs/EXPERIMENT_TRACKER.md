@@ -20,7 +20,7 @@
 |---|---|---|---|
 | T1 | 收齐 B4 → 出 cfg9/cfg10 各 100-seed 完整统计（每 seed 一行 + mean/std/CI） | R-B4 | 用户在 cfg9/10 之间定 Table 1 行 |
 | T2 | KIT 1000ep 结果 → 决定 KIT 行是否用 x0 数字；若达标做 KIT 100-seed（同 B4 协议） | R-B8b | 达标线：≈ v 时代 0.17/0.85 |
-| T3 | 论文 Method 改写为 x0 + 速度空间损失；Table 1 换 B4 数字；abstract 一句 | T1, T2 | 用户说"改了再写" |
+| T3 | 论文 Method 改写为 x0 + 速度空间损失；**只重填 Table 1 两行**（HML3D=B4、KIT=B8）；消融表/MotionMillion 行/诊断保留旧数字；abstract 一句 | T1, T2 | 用户 08-18 定案；MotionMillion 不重训 |
 | T4 | （可选）采样步数消融 8/16/32/64/96（纯 eval） | 用户拍板 | 几小时 |
 | T5 | ScaMo/MotionMillion 作者名单再核；AI use statement（用户写）；bib-audit 提交仍在本地未 push | — | 只在指令下 push |
 

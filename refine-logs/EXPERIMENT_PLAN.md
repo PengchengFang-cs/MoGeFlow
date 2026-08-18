@@ -29,7 +29,7 @@
 ## 实验块
 
 ### 实验块 0（B0）：v 时代基线与几何诊断（2026-05 → 08-09，历史）
-- **状态**：已完成并归档；模型全部为 velocity 头（用户裁定：x0 硬编码后所有旧检查点失效，仅诊断结论仍成立）
+- **状态**：已完成并归档；模型全部为 velocity 头。**用户 08-18 澄清：旧检查点与其评测数字并未作废**——只是不能在 x0 代码下 resume/复用权重；论文里的消融表（key_ablations、decode/target）、MotionMillion 行、几何诊断全部保留 v 时代数字，**只重填 Table 1 的 HML3D 与 KIT 两行**（x0L1 100-seed + KIT x0）
 - **内容**：Part-VQ tokenizer 选定（`new_vq_overlap_top3_20260529`）；MoGeFlow-L 主线；文本编码器 6-run 消融（CLIP-L / LLM2Vec-Llama3 / LLM2Vec-Qwen3 × pool）；pooled-routing 6-run；v 时代 cfg 扫描 72/72；repeat-20 1/8；HML3D/KIT gate 重训（**事故**：terminal CE 权重意外为 1.0，见 `memory/flow-only-loss-permanent.md`）；KIT ep350 repeat-20 进论文；几何诊断 E1/E2/E3
 - **记录**：`docs/TEXT_CONDITIONING_EXPERIMENTS_20260731.md`、`docs/ENCODER_ABLATION_FINAL_20260802.md`、`docs/POOLED_ROUTING_CAMPAIGN_20260802.md`、`docs/PAPER_REVISION_CAMPAIGN_20260808.md`
 - **对后续的约束**：一行=一个检查点（禁止跨检查点拼接）；FID 单次抖动 ~0.01，排名必须用多 seed；论文数字"一个模型一个数字"
@@ -88,6 +88,7 @@
 
 ### 可选实验块（未启动）
 - **B9 采样步数消融**（8/16/32/64/96，纯 eval，几小时）— flow 论文标配表；用户未拍板
+- **MotionMillion 不重训**（用户 08-18：需 8×A100 约 15 天），论文沿用旧结果那一行
 - 已明确**不做**：seed 研究以外的 CI、参数量对齐的分类式对照（E7）、MotionMillion CI、bz/dropout 调参、Heun 采样器、self-conditioning（架构改动）
 
 ---
@@ -118,7 +119,7 @@
 - **同节点多作业误杀**（08-17 `pkill -f` 误杀两个 seed 块）→ 只按 PID 杀；重排即可
 - **会话/tmux 重启会带走 srun 训练步**（08-14 三条 lr2e4 训练死亡，从 latest.pt 无损续跑）→ 每次训练存活判据 = GPU 占用 + 日志新鲜度，不看 epoch 数字
 - **单 seed 乐观偏差**：seed 42 在 100 seed 里偏好端（cfg10：0.0555 vs 均值 0.0678）→ 论文只用多 seed 均值
-- **论文 KIT 行**目前是 v 时代数字（已被裁定失效）→ 依赖 B8 结果
+- **论文 KIT 行**目前是 v 时代 ep350 r20 数字 → 待 B8 x0 结果替换（用户：只重填 Table 1 两行）
 
 ## 决策登记（已定案，不再重提）
 - 单一损失（x0 头、速度空间 MSE），terminal/codebook/clean 损失永久删除
