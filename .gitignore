@@ -68,3 +68,4 @@ refine-logs/*
 !refine-logs/EXPERIMENT_PLAN.md
 !refine-logs/EXPERIMENT_TRACKER.md
 EXPERIMENT_LOG_2026*_*.md
+!/MANIFEST.md
