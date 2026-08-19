@@ -23,3 +23,5 @@
 | 2026-06-14 | research-review | CONTINUOUS_DECODE_RESEARCH_REVIEW_20260614.md | B0 | continuous decode 评审 |
 | 2026-07-12 | pipeline Stage 4 | NARRATIVE_REPORT.md（+ 05-27/06-02/07-12 版本） | B0 | 叙事报告（pre-x0，待 T3 时刷新） |
 | 2026-07-28 | 手工 | MEMORY.md（根目录） | 运维 | 07-28 发车与集群事故记录 |
+| 2026-08-19 | 本会话 | eval_results/x0L1_seed100_20260816/（40 块 / 200 次评测） | B4 | HML3D 100-seed × cfg9/cfg10 完成 |
+| 2026-08-19 | 本会话 | checkpoints/kit/kit_x0L1_ep1000_20260818/ + tools/report_kit_x0.py | B8b | KIT x0 1000ep 完成（gate 3 个） |
