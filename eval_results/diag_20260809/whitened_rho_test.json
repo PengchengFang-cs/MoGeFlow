@@ -1,0 +1,295 @@
+{
+  "bootstrap": 1000,
+  "data_root": "/iridisfs/scratch/pf2m24/data/HumanML3D/HumanML3D",
+  "kv_root": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control",
+  "latent_length": 49,
+  "latent_norm_eps": 1e-06,
+  "max_motions": 512,
+  "max_pairs": 20000,
+  "mean_over_parts": {
+    "feature": {
+      "spearman_raw_mean": 0.8215775451812171,
+      "spearman_raw_shuffled_mean": 0.014362539382509074,
+      "spearman_whitened_mean": 0.8447078050104818,
+      "spearman_whitened_shuffled_mean": 0.013931529874396116
+    }
+  },
+  "mean_path": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/stats/mean.npy",
+  "min_code_count": 20,
+  "motion_length": 196,
+  "num_motions": 512,
+  "num_parts": 6,
+  "part_dims": [
+    19,
+    132,
+    81,
+    60,
+    81,
+    24
+  ],
+  "part_names": [
+    "root_lower_spine",
+    "upper_torso_arms",
+    "right_leg",
+    "upper_spine_neck",
+    "left_leg",
+    "head"
+  ],
+  "partition_file": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/config/skeleton_partition.json",
+  "prototype_spaces": [
+    "feature"
+  ],
+  "rows": [
+    {
+      "active_codes": 123,
+      "metrics": {
+        "raw": {
+          "pearson": 0.9576888082613072,
+          "spearman": 0.9624962132058147,
+          "spearman_boot_mean": 0.9624586175325283,
+          "spearman_ci_high": 0.9643805620713851,
+          "spearman_ci_low": 0.960374211310371
+        },
+        "raw_shuffled": {
+          "pearson": -0.05682917092535242,
+          "spearman": -0.036976405303771255,
+          "spearman_boot_mean": -0.037162309813839514,
+          "spearman_ci_high": -0.014943404762658428,
+          "spearman_ci_low": -0.0587305237711815
+        },
+        "whitened": {
+          "pearson": 0.9611149219595839,
+          "spearman": 0.9644655282356279,
+          "spearman_boot_mean": 0.9644574102334916,
+          "spearman_ci_high": 0.9665559054167941,
+          "spearman_ci_low": 0.9624838135541548
+        },
+        "whitened_shuffled": {
+          "pearson": -0.05210241853016522,
+          "spearman": -0.03427598557312899,
+          "spearman_boot_mean": -0.0345303834540858,
+          "spearman_ci_high": -0.011413250569084835,
+          "spearman_ci_low": -0.05690087995084435
+        }
+      },
+      "mu_abs_mean": 0.9188203350495314,
+      "pairs": 7503,
+      "part": 0,
+      "part_name": "root_lower_spine",
+      "prototype_space": "feature",
+      "sigma_max": 18.185707092285156,
+      "sigma_mean": 9.187205537687987,
+      "sigma_min": 0.8888282179832458
+    },
+    {
+      "active_codes": 126,
+      "metrics": {
+        "raw": {
+          "pearson": 0.8410171056158419,
+          "spearman": 0.8523066400723239,
+          "spearman_boot_mean": 0.8522089850088995,
+          "spearman_ci_high": 0.859245014856833,
+          "spearman_ci_low": 0.8452867487331406
+        },
+        "raw_shuffled": {
+          "pearson": 0.040386384316245326,
+          "spearman": 0.058608552549519424,
+          "spearman_boot_mean": 0.05862538311116445,
+          "spearman_ci_high": 0.08074786782579858,
+          "spearman_ci_low": 0.034392497201671555
+        },
+        "whitened": {
+          "pearson": 0.8489547782260144,
+          "spearman": 0.8540985134603223,
+          "spearman_boot_mean": 0.8540708037123759,
+          "spearman_ci_high": 0.8611176211901977,
+          "spearman_ci_low": 0.846592218559094
+        },
+        "whitened_shuffled": {
+          "pearson": 0.04338211287484002,
+          "spearman": 0.061258032075763295,
+          "spearman_boot_mean": 0.06089062649749957,
+          "spearman_ci_high": 0.08213025453959545,
+          "spearman_ci_low": 0.038028398559490494
+        }
+      },
+      "mu_abs_mean": 0.8001360430862405,
+      "pairs": 7875,
+      "part": 1,
+      "part_name": "upper_torso_arms",
+      "prototype_space": "feature",
+      "sigma_max": 6.656109809875488,
+      "sigma_mean": 3.819465604610741,
+      "sigma_min": 1.383813738822937
+    },
+    {
+      "active_codes": 106,
+      "metrics": {
+        "raw": {
+          "pearson": 0.725043679892871,
+          "spearman": 0.7791252181472726,
+          "spearman_boot_mean": 0.7789436633440806,
+          "spearman_ci_high": 0.7885558434128325,
+          "spearman_ci_low": 0.7686081587335936
+        },
+        "raw_shuffled": {
+          "pearson": -0.03377443677106833,
+          "spearman": -0.033394685492209614,
+          "spearman_boot_mean": -0.03377863172723385,
+          "spearman_ci_high": -0.007342804562296022,
+          "spearman_ci_low": -0.05975210762809298
+        },
+        "whitened": {
+          "pearson": 0.7905938114098277,
+          "spearman": 0.8363288587018918,
+          "spearman_boot_mean": 0.8364157458113706,
+          "spearman_ci_high": 0.84462694324189,
+          "spearman_ci_low": 0.8284429844638338
+        },
+        "whitened_shuffled": {
+          "pearson": -0.03820307777517946,
+          "spearman": -0.02650971501339123,
+          "spearman_boot_mean": -0.02637660023403251,
+          "spearman_ci_high": 0.00043799731026101363,
+          "spearman_ci_low": -0.053820042270006446
+        }
+      },
+      "mu_abs_mean": 0.9714948027103674,
+      "pairs": 5565,
+      "part": 2,
+      "part_name": "right_leg",
+      "prototype_space": "feature",
+      "sigma_max": 11.558897018432617,
+      "sigma_mean": 5.963958951644599,
+      "sigma_min": 1.807167887687683
+    },
+    {
+      "active_codes": 111,
+      "metrics": {
+        "raw": {
+          "pearson": 0.8872565341795682,
+          "spearman": 0.9026105789411246,
+          "spearman_boot_mean": 0.9026853600395945,
+          "spearman_ci_high": 0.9067603002581114,
+          "spearman_ci_low": 0.8985196248097027
+        },
+        "raw_shuffled": {
+          "pearson": 0.1335475438998808,
+          "spearman": 0.1353557314782099,
+          "spearman_boot_mean": 0.1357275730451667,
+          "spearman_ci_high": 0.15955490354949675,
+          "spearman_ci_low": 0.1120358266986337
+        },
+        "whitened": {
+          "pearson": 0.9027847605316428,
+          "spearman": 0.9171824994764982,
+          "spearman_boot_mean": 0.9171717268390318,
+          "spearman_ci_high": 0.9208069627849977,
+          "spearman_ci_low": 0.9134739490968041
+        },
+        "whitened_shuffled": {
+          "pearson": 0.13550687385650018,
+          "spearman": 0.13742346689154913,
+          "spearman_boot_mean": 0.13832676263453805,
+          "spearman_ci_high": 0.1634292012919294,
+          "spearman_ci_low": 0.11522393637390854
+        }
+      },
+      "mu_abs_mean": 0.663009038529708,
+      "pairs": 6105,
+      "part": 3,
+      "part_name": "upper_spine_neck",
+      "prototype_space": "feature",
+      "sigma_max": 9.24545955657959,
+      "sigma_mean": 4.589227933436632,
+      "sigma_min": 2.1790249347686768
+    },
+    {
+      "active_codes": 113,
+      "metrics": {
+        "raw": {
+          "pearson": 0.5482644791005692,
+          "spearman": 0.6294275443594607,
+          "spearman_boot_mean": 0.6295818778712801,
+          "spearman_ci_high": 0.6446412512691717,
+          "spearman_ci_low": 0.6144726983466422
+        },
+        "raw_shuffled": {
+          "pearson": 0.0033614834807839454,
+          "spearman": 0.0017996043351709815,
+          "spearman_boot_mean": 0.002089249737288019,
+          "spearman_ci_high": 0.02560574234630505,
+          "spearman_ci_low": -0.02276491751413326
+        },
+        "whitened": {
+          "pearson": 0.6377891521762661,
+          "spearman": 0.6918129983201177,
+          "spearman_boot_mean": 0.6921167735854123,
+          "spearman_ci_high": 0.705220397659347,
+          "spearman_ci_low": 0.678191061849658
+        },
+        "whitened_shuffled": {
+          "pearson": -0.0035240689171075605,
+          "spearman": -0.0022502659446123497,
+          "spearman_boot_mean": -0.002808971346563835,
+          "spearman_ci_high": 0.02121208591712701,
+          "spearman_ci_low": -0.026264089076170675
+        }
+      },
+      "mu_abs_mean": 0.720257705928816,
+      "pairs": 6328,
+      "part": 4,
+      "part_name": "left_leg",
+      "prototype_space": "feature",
+      "sigma_max": 10.620527267456055,
+      "sigma_mean": 5.150632533244789,
+      "sigma_min": 1.285988211631775
+    },
+    {
+      "active_codes": 99,
+      "metrics": {
+        "raw": {
+          "pearson": 0.8190970246950622,
+          "spearman": 0.8034990763613065,
+          "spearman_boot_mean": 0.8034186196570218,
+          "spearman_ci_high": 0.8138005359100843,
+          "spearman_ci_low": 0.793198932269173
+        },
+        "raw_shuffled": {
+          "pearson": -0.017015049706030107,
+          "spearman": -0.03921756127186498,
+          "spearman_boot_mean": -0.039252043118608915,
+          "spearman_ci_high": -0.01120847411784014,
+          "spearman_ci_low": -0.0671772083965062
+        },
+        "whitened": {
+          "pearson": 0.8052012011843996,
+          "spearman": 0.8043584318684334,
+          "spearman_boot_mean": 0.8045503581201774,
+          "spearman_ci_high": 0.8145673447144315,
+          "spearman_ci_low": 0.7940916524179576
+        },
+        "whitened_shuffled": {
+          "pearson": -0.030655394930584935,
+          "spearman": -0.05205635318980316,
+          "spearman_boot_mean": -0.05218500849758015,
+          "spearman_ci_high": -0.024282968535450738,
+          "spearman_ci_low": -0.08004512704433003
+        }
+      },
+      "mu_abs_mean": 0.9554693075988325,
+      "pairs": 4851,
+      "part": 5,
+      "part_name": "head",
+      "prototype_space": "feature",
+      "sigma_max": 10.795251846313477,
+      "sigma_mean": 4.2249660305678844,
+      "sigma_min": 1.2250007390975952
+    }
+  ],
+  "seed": 3407,
+  "split": "test",
+  "std_path": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/stats/std.npy",
+  "vq_checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/new_vq_overlap_top3_20260529_best_top3.pth",
+  "whitened_metric": "D_p(k,k') = ||(e_pk - e_pk') / sigma_p||_2, sigma_p = full-codebook per-dim std (unbiased=False)"
+}
