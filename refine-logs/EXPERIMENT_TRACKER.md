@@ -3,7 +3,7 @@
 > ARIS 约定：这是**执行清单**（TODO → RUNNING → DONE），回答"什么在跑、什么待跑、卡在哪"。永久结果与复现命令在 `EXPERIMENT_LOG.md`；计划与 claim 在 `refine-logs/EXPERIMENT_PLAN.md`。
 > **与旧记录的关系**：`EXPERIMENT_TRACKER_20260610_170154.md` 是 6 月 inpainting 支线的清单（已搁置）；本文件自 2026-08-18 起追踪 MoGeFlow 主线。
 > **更新规则**：每次发车 / 结束 / 失败 / 续跑，在**同一轮**里更新本表（附实证：日志行、GPU 占用、run 目录）。不得事后凭记忆补。
-> 最后更新：2026-08-19 14:05
+> 最后更新：2026-08-20
 
 ## 0. 此刻在跑（RUNNING）
 
@@ -13,9 +13,7 @@
 
 | ID | 任务 | 依赖 | 说明 |
 |---|---|---|---|
-| T1 | **待用户拍板**：cfg9（0.0700/0.8673）还是 cfg10（0.0676/0.8671）进 Table 1 | — | 两者 R@3 在噪声内相同，cfg10 FID 低 0.0024 |
-| T2 | **待用户拍板**：KIT x0 R@3 最高 0.8366（ep900）仍低于 v 时代 0.851，FID 0.1217 优于 0.1791 → KIT 行用 x0 还是沿用 v 时代？定了再做 KIT 100-seed | — | 见 LOG#B8 判读 |
-| T3 | 论文 Method 改写为 x0 + 速度空间损失；**只重填 Table 1 两行**（HML3D=B4、KIT=B8）；消融表/MotionMillion 行/诊断保留旧数字；abstract 一句 | T1, T2 | 用户 08-18 定案；MotionMillion 不重训 |
+| T1–T3 | ~~Table 1 重填 / KIT 行 / Method 改写~~ → **08-20 取消**：论文全文保持 v 时代数字（用户裁定，见 PLAN B7） | — | 当天曾填入 cfg10 前 20 的 HML3D 行，已 git checkout 复原 |
 | T4 | （可选）采样步数消融 8/16/32/64/96（纯 eval） | 用户拍板 | 几小时 |
 | T5 | ScaMo/MotionMillion 作者名单再核；AI use statement（用户写）；bib-audit 提交仍在本地未 push | — | 只在指令下 push |
 

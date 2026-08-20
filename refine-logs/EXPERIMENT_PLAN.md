@@ -3,7 +3,7 @@
 > 按 ARIS `/experiment-bridge` 的 `EXPERIMENT_PLAN` 模板整理。**这不是从零起草的计划，而是把已经跑过、正在跑、还要跑的实验按 claim → 实验块 → 里程碑的结构对齐**，让任何一次新会话都能在 5 分钟内接上项目。
 > **与旧记录的关系**：本目录里带 `_20260610_170154` 时间戳的 PLAN/TRACKER 属于 6 月的"统一 T2M + inpainting"支线（已搁置，见 `PROJECT_DIRECTION_LOCK.md` 硬边界：只做基础 T2M）；`refine-logs/MANIFEST.md`、`round-*`、`FINAL_PROPOSAL*` 属于 5–7 月的 research-refine 运行。固定名文件从 2026-08-18 起指向当前主线（MoGeFlow x0 时代）。5–7 月的实验永久记录在根目录 `CODEFLOW_EXPERIMENT_LOG.md`（05-21→07-23）与 `NARRATIVE_REPORT.md`（07-12）。
 > 姊妹文件：`refine-logs/EXPERIMENT_TRACKER.md`（执行清单：什么在跑/待跑）、`EXPERIMENT_LOG.md`（永久记录：跑了什么、结果如何、怎么复现）、`MANIFEST.md`（产物索引）。
-> 最后更新：2026-08-18 06:40（KIT 1000ep 发车、seed-100 进行中）
+> 最后更新：2026-08-20（论文定稿口径：保持 v 时代数字；x0 结果转为后续依据）
 
 **问题**：文本到人体动作生成里，离散 token 接口（分类式 masked/AR 模型）把生成限制在码本格点上；连续流模型又丢掉了 Part-VQ 码本的结构先验。能否在**单层 Part-VQ 码本的连续嵌入空间**上做流匹配，既保留部件结构、又不受格点约束？
 
@@ -29,7 +29,7 @@
 ## 实验块
 
 ### 实验块 0（B0）：v 时代基线与几何诊断（2026-05 → 08-09，历史）
-- **状态**：已完成并归档；模型全部为 velocity 头。**用户 08-18 澄清：旧检查点与其评测数字并未作废**——只是不能在 x0 代码下 resume/复用权重；论文里的消融表（key_ablations、decode/target）、MotionMillion 行、几何诊断全部保留 v 时代数字，**只重填 Table 1 的 HML3D 与 KIT 两行**（x0L1 100-seed + KIT x0）
+- **状态**：已完成并归档；模型全部为 velocity 头。**用户 08-18 澄清：旧检查点与其评测数字并未作废**——只是不能在 x0 代码下 resume/复用权重；**用户 08-20 最终裁定：论文全文保持 v 时代数字不动**（本来就自洽）；x0 时代的全部结果作为后续工作的方向依据，不进本篇。此前『只重填 Table 1 两行』的计划作废。
 - **内容**：Part-VQ tokenizer 选定（`new_vq_overlap_top3_20260529`）；MoGeFlow-L 主线；文本编码器 6-run 消融（CLIP-L / LLM2Vec-Llama3 / LLM2Vec-Qwen3 × pool）；pooled-routing 6-run；v 时代 cfg 扫描 72/72；repeat-20 1/8；HML3D/KIT gate 重训（**事故**：terminal CE 权重意外为 1.0，见 `memory/flow-only-loss-permanent.md`）；KIT ep350 repeat-20 进论文；几何诊断 E1/E2/E3
 - **记录**：`docs/TEXT_CONDITIONING_EXPERIMENTS_20260731.md`、`docs/ENCODER_ABLATION_FINAL_20260802.md`、`docs/POOLED_ROUTING_CAMPAIGN_20260802.md`、`docs/PAPER_REVISION_CAMPAIGN_20260808.md`
 - **对后续的约束**：一行=一个检查点（禁止跨检查点拼接）；FID 单次抖动 ~0.01，排名必须用多 seed；论文数字"一个模型一个数字"
@@ -74,9 +74,10 @@
 - **结论**：砍尾段（t>0.7）零影响；砍头段每 0.1 崩一档 → 引导收益几乎全在 t<0.1；恒定 cfg 保留 ✗
 - **优先级**：已完成 ✅（负结果）
 
-### 实验块 7（B7）：论文数字定稿（待 B4）
-- **内容**：Table 1 HML3D 行 = B4 的 100-seed 均值±CI（选 cfg9 或 cfg10 由用户定）；Method 章改写为 x0（用户：论文暂缓，改完再写）；abstract 一句、AI use statement（用户写）
-- **优先级**：必须 ⏳
+### 实验块 7（B7）：论文数字定稿 —— **取消（08-20）**
+- **裁定**：论文保持 v 时代数字与 v 时代 Method，全文自洽，不做 x0 重填。08-20 曾按 cfg10 前 20 seed 填过 Table 1 / 摘要 / §4.2 四处，随即按用户指示 `git checkout` 全部复原，Overleaf 工作区干净（HEAD eb89474）。
+- **理由（用户原话）**：全文保持以前的，本来就是自洽，最近跑的只是给未来一个指引
+- **仍待用户自己处理**：AI use statement；bib-audit 提交（本地 eb89474，未 push）
 
 ### 实验块 8（B8）：KIT x0 同配方重训（08-17 → 进行中）
 - **验证 Claim**：C2
@@ -119,9 +120,10 @@
 - **同节点多作业误杀**（08-17 `pkill -f` 误杀两个 seed 块）→ 只按 PID 杀；重排即可
 - **会话/tmux 重启会带走 srun 训练步**（08-14 三条 lr2e4 训练死亡，从 latest.pt 无损续跑）→ 每次训练存活判据 = GPU 占用 + 日志新鲜度，不看 epoch 数字
 - **单 seed 乐观偏差**：seed 42 在 100 seed 里偏好端（cfg10：0.0555 vs 均值 0.0678）→ 论文只用多 seed 均值
-- **论文 KIT 行**目前是 v 时代 ep350 r20 数字 → 待 B8 x0 结果替换（用户：只重填 Table 1 两行）
+- ~~论文 KIT 行待替换~~ → 08-20 取消：论文全文保持 v 时代数字
 
 ## 决策登记（已定案，不再重提）
+- **本篇论文使用 v 时代数字，全文不改**（08-20）；x0 时代结果 = 后续方向依据
 - 单一损失（x0 头、速度空间 MSE），terminal/codebook/clean 损失永久删除
 - 一个 run 只许一个文本编码器；continuous 解码焊死
 - 一行=一个检查点；报 best-FID 需附同点 R@3、报 best-R@3 需附同点 FID

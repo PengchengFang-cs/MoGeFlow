@@ -4,7 +4,7 @@
 > 数字来源：全部来自 `full_eval.jsonl` / `eval_results/*.json` / 训练日志；汇总脚本列在各条目"复现"里（**在计算节点跑**：`srun --jobid=<J> --overlap --ntasks=1 bash -lc 'python tools/…'`）。
 > 协议缩写：**训练期评测** = test split / cfg 6.0 / 96 步 / seed 42 / repeat 1 / EMA 权重 / bz 32 单卡；单次噪声底 σ_FID≈0.0064–0.0070、σ_R@3≈0.0042–0.0057；repeat-1 的 Top3 偏高 ≈0.013。
 > 前身：`CODEFLOW_EXPERIMENT_LOG.md`（2026-05-21 → 07-23）。本文件从 x0 时代（08-09）起逐条详记，之前只留指针。
-> 最后更新：2026-08-19 14:05
+> 最后更新：2026-08-20
 
 ---
 
@@ -17,6 +17,17 @@
 - [B6 区间引导（08-14）](#b6)
 - [B4 100-seed 定稿统计（08-17 → 进行中）](#b4)
 - [B8 KIT x0 重训（08-17 → 进行中）](#b8)
+
+---
+
+<a id="decision-20260820"></a>
+## 决策 · 2026-08-20：论文保持 v 时代数字
+
+用户裁定：全文保持以前的，本来就是自洽，最近跑的只是给未来一个指引。
+
+- 当天曾按 cfg10 前 20 seed（0.592/0.783/0.867/0.064/2.582/9.702）填入 Table 1 HumanML3D 行、摘要、§4.2 两句，随即 `git checkout -- iclr2027_conference.tex` 全部复原；Overleaf 工作区干净（HEAD eb89474）。
+- 触发点：`0.874/0.048` 同时出现在 tab:key_ablations 的 MoGeFlow-L 行与 tab:decode_target_ablations 的 continuous 行。只改主表 → 与『一个模型一个数字』冲突；一起改 → decode 消融结论被反转（nearest 0.058 vs x0 continuous 0.064），因为 0.058 是 v 时代同检查点的对照。保持全文 v 时代是唯一自洽解。
+- **x0 时代的全部结果（B1–B8）转为后续工作的方向依据**，不进本篇。
 
 ---
 
