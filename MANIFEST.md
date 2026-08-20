@@ -26,3 +26,6 @@
 | 2026-08-19 | 本会话 | eval_results/x0L1_seed100_20260816/（40 块 / 200 次评测） | B4 | HML3D 100-seed × cfg9/cfg10 完成 |
 | 2026-08-19 | 本会话 | checkpoints/kit/kit_x0L1_ep1000_20260818/ + tools/report_kit_x0.py | B8b | KIT x0 1000ep 完成（gate 3 个） |
 | 2026-08-20 | 本会话 | eval_results/x0L1_seed100b_20260819/（20 块 / 100 seed） + tools/{make_seedlist_batch2,report_seed100b}.py | B4b | 第二批精选 seed 统计（常用/3/4/5 位数各 25） |
+| 2026-08-19 | 本会话 | eval_results/kit_x0_cfgsweep_20260819/（32 JSON） + tools/report_kit_cfgsweep.py + tools/report_kit_curve.py | B8c | KIT x0 三检查点 cfg 全扫 |
+| 2026-08-20 | 本会话 | eval_results/kit_x0_repeat20_20260820/run.log（3 seed，已停） | B8d | KIT 多 seed 部分结果 |
+| 2026-08-20 | 论文 | overleaf-paper `4743d5a` | 论文 | 三审稿人评审后的改稿：CLIP 表述、去防御性写作、12→9 页、表 3/5 并排、定性图回正文 |
