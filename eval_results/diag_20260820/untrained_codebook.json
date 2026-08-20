@@ -1,0 +1,69 @@
+{
+  "split": "test",
+  "seed": 3407,
+  "untrained": true,
+  "checkpoint_shape_source": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/new_vq_overlap_top3_20260529_best_top3.pth",
+  "mean_spearman": 0.24080973629490088,
+  "rows": [
+    {
+      "prototype_space": "feature",
+      "part": 0,
+      "part_name": "root_lower_spine",
+      "active_codes": 20,
+      "pairs": 190,
+      "spearman": 0.2853022608878216,
+      "spearman_ci_low": 0.1444012789370326,
+      "spearman_ci_high": 0.40462044607771064
+    },
+    {
+      "prototype_space": "feature",
+      "part": 1,
+      "part_name": "upper_torso_arms",
+      "active_codes": 56,
+      "pairs": 1540,
+      "spearman": 0.21665252611664715,
+      "spearman_ci_low": 0.17185243171054443,
+      "spearman_ci_high": 0.26361863120072065
+    },
+    {
+      "prototype_space": "feature",
+      "part": 2,
+      "part_name": "right_leg",
+      "active_codes": 41,
+      "pairs": 820,
+      "spearman": 0.28360051463346075,
+      "spearman_ci_low": 0.2228038692763197,
+      "spearman_ci_high": 0.34609686542015183
+    },
+    {
+      "prototype_space": "feature",
+      "part": 3,
+      "part_name": "upper_spine_neck",
+      "active_codes": 33,
+      "pairs": 528,
+      "spearman": 0.3564936299428718,
+      "spearman_ci_low": 0.27890336299084245,
+      "spearman_ci_high": 0.43179534220362037
+    },
+    {
+      "prototype_space": "feature",
+      "part": 4,
+      "part_name": "left_leg",
+      "active_codes": 35,
+      "pairs": 595,
+      "spearman": 0.17780495155149714,
+      "spearman_ci_low": 0.09949131991687837,
+      "spearman_ci_high": 0.2544048531006672
+    },
+    {
+      "prototype_space": "feature",
+      "part": 5,
+      "part_name": "head",
+      "active_codes": 39,
+      "pairs": 741,
+      "spearman": 0.12500453463710665,
+      "spearman_ci_low": 0.05269802864332584,
+      "spearman_ci_high": 0.19447264751981125
+    }
+  ]
+}

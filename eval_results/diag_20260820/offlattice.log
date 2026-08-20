@@ -1,0 +1,26 @@
+[encode] 32 motions encoded
+[encode] 64 motions encoded
+[encode] 96 motions encoded
+[encode] 128 motions encoded
+[encode] 160 motions encoded
+[encode] 192 motions encoded
+[encode] 224 motions encoded
+[encode] 256 motions encoded
+[encode] 288 motions encoded
+[encode] 320 motions encoded
+[encode] 352 motions encoded
+[encode] 384 motions encoded
+[encode] 416 motions encoded
+[encode] 448 motions encoded
+[encode] 480 motions encoded
+[encode] 512 motions encoded
+cat   variant            code dist              whole             target              local
+--------------------------------------------------------------------------------------------
+near  lattice                13.02   0.00619±0.00048   0.01058±0.00137   0.06200±0.00654
+near  random_direction       13.02   0.00276±0.00022   0.00340±0.00035   0.01510±0.00115
+mid   lattice                64.55   0.02839±0.00263   0.06139±0.00983   0.56717±0.05357
+mid   random_direction       64.55   0.01207±0.00090   0.01657±0.00199   0.07938±0.00694
+far   lattice               195.85   0.06842±0.00561   0.15316±0.02293   1.28488±0.12723
+far   random_direction      195.85   0.03704±0.00252   0.05311±0.00575   0.30876±0.02255
+
+[done] wrote eval_results/diag_20260820/offlattice_replacement.json
