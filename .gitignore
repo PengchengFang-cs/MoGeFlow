@@ -69,3 +69,7 @@ refine-logs/*
 !refine-logs/EXPERIMENT_TRACKER.md
 EXPERIMENT_LOG_2026*_*.md
 !/MANIFEST.md
+
+# qualitative figure per-cell renders (regenerate with tools/render_smpl_qual_grid_stylematch.py)
+figures/*/cells_panel/
+figures/*/cells_panel_cropped/

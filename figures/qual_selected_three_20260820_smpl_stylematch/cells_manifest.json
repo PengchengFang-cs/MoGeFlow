@@ -1,0 +1,65 @@
+[
+  {
+    "row": 0,
+    "col": 0,
+    "stem": "pscf_p0_crawl",
+    "label": "MoGeFlow",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row00_col00_ours_ps_cf.png"
+  },
+  {
+    "row": 0,
+    "col": 1,
+    "stem": "mtransformer_p0_crawl",
+    "label": "M-Transformer",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row00_col01_m_transformer.png"
+  },
+  {
+    "row": 0,
+    "col": 2,
+    "stem": "momask_p0_crawl",
+    "label": "MoMask",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row00_col02_momask.png"
+  },
+  {
+    "row": 1,
+    "col": 0,
+    "stem": "pscf_p1_pickup",
+    "label": "MoGeFlow",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row01_col00_ours_ps_cf.png"
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "stem": "mtransformer_p1_pickup",
+    "label": "M-Transformer",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row01_col01_m_transformer.png"
+  },
+  {
+    "row": 1,
+    "col": 2,
+    "stem": "momask_p1_pickup",
+    "label": "MoMask",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row01_col02_momask.png"
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "stem": "pscf_p2_kneel",
+    "label": "MoGeFlow",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row02_col00_ours_ps_cf.png"
+  },
+  {
+    "row": 2,
+    "col": 1,
+    "stem": "mtransformer_p2_kneel",
+    "label": "M-Transformer",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row02_col01_m_transformer.png"
+  },
+  {
+    "row": 2,
+    "col": 2,
+    "stem": "momask_p2_kneel",
+    "label": "MoMask",
+    "cell": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/figures/qual_selected_three_20260820_smpl_stylematch/cells_panel/row02_col02_momask.png"
+  }
+]
