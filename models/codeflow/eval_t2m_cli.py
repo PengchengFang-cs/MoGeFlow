@@ -59,11 +59,14 @@ def parse_args(defaults: Dict[str, object] = None) -> argparse.Namespace:
     parser.add_argument("--num_workers", type=int, default=4)
     parser.add_argument("--repeat_times", type=int, default=20)
     parser.add_argument("--seed", type=int, default=10107)
+    parser.add_argument("--seed_list", type=str, default="", help="Comma-separated explicit seeds; overrides --seed/--repeat_times (one repeat per seed).")
     parser.add_argument("--gpu_id", type=int, default=-1)
     parser.add_argument("--device", type=str, default="")
 
     parser.add_argument("--steps", type=int, default=32)
     parser.add_argument("--cond_scale", type=float, default=3.0)
+    parser.add_argument("--cfg_t_lo", type=float, default=0.0, help="Guidance active only for t >= this (limited-interval CFG); 0 = always.")
+    parser.add_argument("--cfg_t_hi", type=float, default=1.0, help="Guidance active only for t <= this (limited-interval CFG); 1 = always.")
     parser.add_argument(
         "--terminal_mode",
         type=str,
@@ -283,6 +286,8 @@ def write_results(
     terminal = eval_cfg.terminal_mode or getattr(opt, "terminal_mode", "checkpoint")
     decode = DECODE_MODE
     stem = f"{checkpoint_path.stem}_{EVAL_SPLIT}_s{eval_cfg.steps}_cfg{eval_cfg.cond_scale:g}_{terminal}_{decode}"
+    if (float(eval_cfg.cfg_t_lo), float(eval_cfg.cfg_t_hi)) != (0.0, 1.0):
+        stem = f"{stem}_win{eval_cfg.cfg_t_lo:g}-{eval_cfg.cfg_t_hi:g}"
     path = eval_dir / f"{stem}.json"
     payload = {
         "checkpoint": str(checkpoint_path),
@@ -346,6 +351,8 @@ def main(
     eval_cfg = CodeFlowEvalConfig(
         steps=args.steps,
         cond_scale=args.cond_scale,
+        cfg_t_lo=args.cfg_t_lo,
+        cfg_t_hi=args.cfg_t_hi,
         terminal_mode=args.terminal_mode or None,
         unit_length=int(getattr(opt, "unit_length", 4)),
         max_batches=args.max_batches,
@@ -366,9 +373,12 @@ def main(
         f"device={device}, dataset_size={len(dataset)}, repeats={args.repeat_times}"
     )
 
+    seed_list = [int(x) for x in args.seed_list.split(",") if x.strip()]
+    if seed_list:
+        args.repeat_times = len(seed_list)
     repeat_metrics: List[Dict[str, object]] = []
     for repeat_id in range(args.repeat_times):
-        fixseed(args.seed + repeat_id)
+        fixseed(seed_list[repeat_id] if seed_list else args.seed + repeat_id)
         metrics = evaluate_codeflow_t2m(
             loader=loader,
             model=model,

@@ -874,7 +874,13 @@ class MotionCodeFlow(nn.Module):
         steps: int = 32,
         cond_scale: float = 3.0,
         use_self_condition: bool = True,
+        cfg_t_lo: float = 0.0,
+        cfg_t_hi: float = 1.0,
     ) -> torch.Tensor:
+        # Limited-interval guidance (Kynkaanniemi et al. 2024): cond_scale applies
+        # only while t is inside [cfg_t_lo, cfg_t_hi]; outside, the step uses the
+        # conditional branch alone (scale 1).  Defaults (0, 1) reproduce constant
+        # guidance exactly.
         cfg = self.config
         text_list = list(texts)
         bsz = len(text_list)
@@ -911,6 +917,7 @@ class MotionCodeFlow(nn.Module):
             z_in: torch.Tensor,
             t_in: torch.Tensor,
             x_sc: Optional[torch.Tensor],
+            step_scale: float,
         ) -> Tuple[torch.Tensor, torch.Tensor]:
             if cond_scale == 1.0:
                 v_out = self.forward(
@@ -937,7 +944,7 @@ class MotionCodeFlow(nn.Module):
                     raw_text_condition=raw_text_condition,
                 )
                 x0_uncond, x0_cond = v_all.chunk(2, dim=0)
-                v_out = x0_uncond + float(cond_scale) * (x0_cond - x0_uncond)
+                v_out = x0_uncond + float(step_scale) * (x0_cond - x0_uncond)
             clean_out = v_out  # head output is x0; CFG combined in x0 space
             v_out = self.velocity_from_clean(z_in, t_in, clean_out)
             return v_out, clean_out
@@ -956,7 +963,9 @@ class MotionCodeFlow(nn.Module):
                 dt = t_next_scalar - t_eval_scalar
 
             t_eval = t_eval_scalar.expand(bsz)
-            v, clean = forward_guided(z_eval, t_eval, x_self_cond)
+            t_val = float(t_eval_scalar)
+            step_scale = float(cond_scale) if cfg_t_lo <= t_val <= cfg_t_hi else 1.0
+            v, clean = forward_guided(z_eval, t_eval, x_self_cond, step_scale)
             z = z_eval + dt * v
             z = z * valid[:, :, None, None]
             if cfg.use_self_condition and use_self_condition:
@@ -973,12 +982,16 @@ class MotionCodeFlow(nn.Module):
         steps: int = 32,
         cond_scale: float = 3.0,
         terminal_mode: Optional[str] = None,
+        cfg_t_lo: float = 0.0,
+        cfg_t_hi: float = 1.0,
     ) -> torch.Tensor:
         clean = self.sample_embeddings(
             texts,
             token_lengths=token_lengths,
             steps=steps,
             cond_scale=cond_scale,
+            cfg_t_lo=cfg_t_lo,
+            cfg_t_hi=cfg_t_hi,
         )
         if (terminal_mode or self.config.terminal_mode) == "none":
             raise RuntimeError("generate_ids is unavailable when terminal_mode='none'")
@@ -992,6 +1005,8 @@ class MotionCodeFlow(nn.Module):
         steps: int = 32,
         cond_scale: float = 3.0,
         terminal_mode: Optional[str] = None,
+        cfg_t_lo: float = 0.0,
+        cfg_t_hi: float = 1.0,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Sample, then decode the continuous output directly -- always.
 
@@ -1003,6 +1018,8 @@ class MotionCodeFlow(nn.Module):
             token_lengths=token_lengths,
             steps=steps,
             cond_scale=cond_scale,
+            cfg_t_lo=cfg_t_lo,
+            cfg_t_hi=cfg_t_hi,
         )
         terminal = terminal_mode or self.config.terminal_mode
         ids = self.terminal_ids(clean, mode=terminal_mode) if terminal != "none" else None
