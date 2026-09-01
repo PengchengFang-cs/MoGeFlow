@@ -1,0 +1,76 @@
+{
+  "split": "test",
+  "seed": 3407,
+  "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/new_vq_overlap_top3_20260529_best_top3.pth",
+  "contexts": 16,
+  "mean_spearman_decoder_side": 0.8339834628101023,
+  "mean_spearman_encoder_side": 0.8215775451812171,
+  "rows": [
+    {
+      "part": 0,
+      "part_name": "root_lower_spine",
+      "active_codes": 123,
+      "contexts": 16,
+      "pairs": 7503,
+      "spearman_decoder_side": 0.9615290110315412,
+      "spearman_decoder_ci_low": 0.959913016144759,
+      "spearman_decoder_ci_high": 0.9629638414021318,
+      "spearman_encoder_side": 0.9624962132058147
+    },
+    {
+      "part": 1,
+      "part_name": "upper_torso_arms",
+      "active_codes": 126,
+      "contexts": 16,
+      "pairs": 7875,
+      "spearman_decoder_side": 0.9639016550379228,
+      "spearman_decoder_ci_low": 0.9597603065349938,
+      "spearman_decoder_ci_high": 0.9676283680514224,
+      "spearman_encoder_side": 0.8523066400723239
+    },
+    {
+      "part": 2,
+      "part_name": "right_leg",
+      "active_codes": 106,
+      "contexts": 16,
+      "pairs": 5565,
+      "spearman_decoder_side": 0.6033847706947028,
+      "spearman_decoder_ci_low": 0.5883643426540512,
+      "spearman_decoder_ci_high": 0.618792088520206,
+      "spearman_encoder_side": 0.7791252181472726
+    },
+    {
+      "part": 3,
+      "part_name": "upper_spine_neck",
+      "active_codes": 111,
+      "contexts": 16,
+      "pairs": 6105,
+      "spearman_decoder_side": 0.941971707272945,
+      "spearman_decoder_ci_low": 0.9388513886518682,
+      "spearman_decoder_ci_high": 0.945164098207634,
+      "spearman_encoder_side": 0.9026105789411246
+    },
+    {
+      "part": 4,
+      "part_name": "left_leg",
+      "active_codes": 113,
+      "contexts": 16,
+      "pairs": 6328,
+      "spearman_decoder_side": 0.594735101062942,
+      "spearman_decoder_ci_low": 0.5780627781577806,
+      "spearman_decoder_ci_high": 0.6101268341555259,
+      "spearman_encoder_side": 0.6294275443594607
+    },
+    {
+      "part": 5,
+      "part_name": "head",
+      "active_codes": 99,
+      "contexts": 16,
+      "pairs": 4851,
+      "spearman_decoder_side": 0.9383785317605603,
+      "spearman_decoder_ci_low": 0.9344126340080309,
+      "spearman_decoder_ci_high": 0.9421061787316325,
+      "spearman_encoder_side": 0.8034990763613065
+    }
+  ]
+}

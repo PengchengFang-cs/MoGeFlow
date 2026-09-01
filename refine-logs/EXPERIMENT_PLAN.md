@@ -131,3 +131,14 @@
 - 论文：一个模型一个数字；不做防御性写作；split 只说"on HumanML3D"；MotionMillion 只报一条标准行；cfg 不进论文；引用不擅动
 - 不 push、不跑 review/repeat 等额外流程，除非当次明确指令
 - 报告只报 best 检查点 + 进度，不报最新 epoch 快照
+- **guidance 扫描不进正文（08-30）**：审稿人要求的 guidance-scale Pareto 图不放主表/正文；数据已有（B3 HML3D 100 点、B8c KIT 32 点），如需回应 rebuttal 只以附录形式给出。理由：本领域主表惯例是各方法在自己作者选定的采样超参下发布，主表内附扫描不是惯例
+- **审稿 agent 的领域校准（08-30）**：给审稿 prompt 补 Guo et al. 2022 评测协议背景（冻结评测器、Real 行是参考行而非天花板、Diversity 是 → 列）与"判定数字异常前先扫整列"的硬性规则。首轮三人独立把"R-Precision 超过 real"当作缺陷，而 Table 1 中 11 个基线里 9 个同样高于 real（SALAD +0.060、MotionHiFlow +0.046，我们 +0.077）——论文自己的表就能否定该批评
+- **Discrete Diffusion 不做参数配平（08-31）**：跨模型族"配平参数"没有可定义的口径，且该臂已训过。问题不在实验，在 L715 把 "parameter budget fixed" 写成整张 Table 4 的统摄句。改法：该句限定到两条 generic RVQ 行（677M/694M vs 690M，本来就配平），A.4 补一句该臂的描述与引用。不跑任何实验
+- **划分类消融一律引 KV-Control（08-31）**：P/K 消融、统计划分 vs 手工划分、P=1 整身 VQ 全部不做——tokenizer 不是本文贡献，已在 KV-Control 做过。代价：L716「applying it over this lattice is [the active ingredient]」与 L717 的归因必须降级到 Table 4 实际测到的范围
+- **ρ↔下游剂量–反应不做（08-31）**：改为把 L98 / L640 的 "licenses" 降级为 "motivates"，撤掉"测量授权了设计"这条因果承诺。理由：附录自己给出 generic RVQ base ρ=0.80 ≈ PartVQ 0.822，而下游 0.854/0.094 vs 0.874/0.048——ρ 在唯一一次可检验的对比里没有区分力；不改词就欠一个预测性实验
+- **Table 3(b) 统一到 Table 1/4（08-31，作者裁定）**：codebook 参照行改为 L `0.874/0.048`、B `0.864/0.054`（即主表同一检查点）；encoder-latent / variational 两臂保持不动（各自 ~ep250，是它们自己的 best-Top3）。口径统一为"每条臂报自己的最优检查点"。连带：Intro L99 删掉 `and the training budget`；A.4 L833 改写为"固定 flow 配方 / 冻结 tokenizer / 评测协议，每条臂报自己最优检查点"
+- **decode-mode 两行都带 ±（08-31，作者裁定）**：`0.873±.002 / 0.058±.003` 与 `0.874±.002 / 0.048±.003`。留痕：nearest 那行在 docs/ 中查无 repeat-20 实测记录，作者以"同一模型同一协议"裁定照写；nearest 解码已从代码删除，无法重跑
+- **Discrete Diffusion 行按作者陈述写（08-31）**：作者在本目录早期设计阶段跑过，是 MoMask 族的 masked categorical 先验，同一 part-structured 格点。已写入 A.4。**不加 † early-experiment 脚注**——08-08 campaign doc 里那条是我们自己的会议纪要，不是作者指示，且无依据
+- **licenses → motivates（08-31）**：L98、L640 已改，撤掉"测量授权设计"的因果承诺
+- **L715 限定到 RVQ 两行（08-31）**：改为"匹配参数预算（677M/694M vs 690M）+ 同一 flow 配方"，删掉 `changing only the codebook interface`。A.4 补一句 generic RVQ 容量严格更大（6 层×512×512 vs 单层×128×128）、重建上限更高，因此"重建更差"解释不成立——**以此替代 J4 重建实验（作者裁定不跑）**
+- **B9 三条结果入论文（08-31）**：(1) Table 3(a) 增设 `ρ decoded` 列（六组 0.962/0.964/0.603/0.942/0.595/0.938，均值 **0.834**），caption 与 §3.2 原型定义相应扩写，§4.3 报出 0.834 对 0.822；(2) A.3 未训练对照段追加配平支撑句（37 码下 0.820 对全支撑 0.822）；(3) A.3 新增 `Off-lattice offset directions` 段（in-span 0.220 对随机 0.063，3.5 倍，分组 2.7–4.7 倍），§3.4 与结论相应改写。编译 0 错误/0 溢出/0 未定义引用，正文仍 9 页多（REFERENCES 在 p.10），附录 14→15 页

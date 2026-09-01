@@ -1,0 +1,79 @@
+{
+  "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/hml3d_20260807_nopool_gate/model/gate/gate_ep0300_fid0.0750_top30.8707.pt",
+  "weight_source": "ema",
+  "split": "test",
+  "num_prompts": 512,
+  "steps": 96,
+  "cond_scale": 6.0,
+  "neighbors": 8,
+  "code_dim": 128,
+  "overall": {
+    "count": 108516,
+    "inspan_fraction_mean": 0.22011472284793854,
+    "inspan_fraction_median": 0.16888263821601868,
+    "random_control_mean": 0.06260810792446136,
+    "ratio_to_random": 3.515754222869873
+  },
+  "groups": {
+    "root_lower_spine": {
+      "part": 0,
+      "count": 18086,
+      "mean_local_rank": 8.0,
+      "analytic_baseline": 0.0625,
+      "inspan_fraction_mean": 0.29522037506103516,
+      "inspan_fraction_median": 0.2208406627178192,
+      "random_control_mean": 0.06252877414226532,
+      "ratio_to_random": 4.721352577209473
+    },
+    "upper_torso_arms": {
+      "part": 1,
+      "count": 18086,
+      "mean_local_rank": 8.0,
+      "analytic_baseline": 0.0625,
+      "inspan_fraction_mean": 0.23216073215007782,
+      "inspan_fraction_median": 0.1637265980243683,
+      "random_control_mean": 0.06257212162017822,
+      "ratio_to_random": 3.7102901935577393
+    },
+    "right_leg": {
+      "part": 2,
+      "count": 18086,
+      "mean_local_rank": 8.0,
+      "analytic_baseline": 0.0625,
+      "inspan_fraction_mean": 0.1854415088891983,
+      "inspan_fraction_median": 0.15559007227420807,
+      "random_control_mean": 0.06280473619699478,
+      "ratio_to_random": 2.952667474746704
+    },
+    "upper_spine_neck": {
+      "part": 3,
+      "count": 18086,
+      "mean_local_rank": 8.0,
+      "analytic_baseline": 0.0625,
+      "inspan_fraction_mean": 0.1693173199892044,
+      "inspan_fraction_median": 0.13299475610256195,
+      "random_control_mean": 0.062136854976415634,
+      "ratio_to_random": 2.724909782409668
+    },
+    "left_leg": {
+      "part": 4,
+      "count": 18086,
+      "mean_local_rank": 8.0,
+      "analytic_baseline": 0.0625,
+      "inspan_fraction_mean": 0.2563535273075104,
+      "inspan_fraction_median": 0.23163771629333496,
+      "random_control_mean": 0.0627867579460144,
+      "ratio_to_random": 4.082923412322998
+    },
+    "head": {
+      "part": 5,
+      "count": 18086,
+      "mean_local_rank": 8.0,
+      "analytic_baseline": 0.0625,
+      "inspan_fraction_mean": 0.1821947693824768,
+      "inspan_fraction_median": 0.13292451202869415,
+      "random_control_mean": 0.06281940639019012,
+      "ratio_to_random": 2.900294303894043
+    }
+  }
+}

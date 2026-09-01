@@ -1,0 +1,35 @@
+[encode] 32 motions encoded
+[encode] 64 motions encoded
+[encode] 96 motions encoded
+[encode] 128 motions encoded
+[encode] 160 motions encoded
+[encode] 192 motions encoded
+[encode] 224 motions encoded
+[encode] 256 motions encoded
+[encode] 288 motions encoded
+[encode] 320 motions encoded
+[encode] 352 motions encoded
+[encode] 384 motions encoded
+[encode] 416 motions encoded
+[encode] 448 motions encoded
+[encode] 480 motions encoded
+[encode] 512 motions encoded
+[part 0] root_lower_spine     decoder rho=0.9615 [0.960,0.963]  encoder rho=0.9625
+[part 1] upper_torso_arms     decoder rho=0.9639 [0.960,0.968]  encoder rho=0.8523
+[part 2] right_leg            decoder rho=0.6034 [0.588,0.619]  encoder rho=0.7791
+[part 3] upper_spine_neck     decoder rho=0.9420 [0.939,0.945]  encoder rho=0.9026
+[part 4] left_leg             decoder rho=0.5947 [0.578,0.610]  encoder rho=0.6294
+[part 5] head                 decoder rho=0.9384 [0.934,0.942]  encoder rho=0.8035
+
+group                codes     rho_dec             95% CI    rho_enc
+----------------------------------------------------------------------
+root_lower_spine        123     0.9615   [0.960,0.963]     0.9625
+upper_torso_arms        126     0.9639   [0.960,0.968]     0.8523
+right_leg               106     0.6034   [0.588,0.619]     0.7791
+upper_spine_neck        111     0.9420   [0.939,0.945]     0.9026
+left_leg                113     0.5947   [0.578,0.610]     0.6294
+head                     99     0.9384   [0.934,0.942]     0.8035
+----------------------------------------------------------------------
+MEAN                            0.8340                          0.8216
+
+[done] wrote eval_results/diag_20260831/decoder_side_rho.json

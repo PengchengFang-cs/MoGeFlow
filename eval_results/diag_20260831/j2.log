@@ -1,0 +1,28 @@
+[encode] 32 motions encoded
+[encode] 64 motions encoded
+[encode] 96 motions encoded
+[encode] 128 motions encoded
+[encode] 160 motions encoded
+[encode] 192 motions encoded
+[encode] 224 motions encoded
+[encode] 256 motions encoded
+[encode] 288 motions encoded
+[encode] 320 motions encoded
+[encode] 352 motions encoded
+[encode] 384 motions encoded
+[encode] 416 motions encoded
+[encode] 448 motions encoded
+[encode] 480 motions encoded
+[encode] 512 motions encoded
+group                  act   ->n  rho_full  rho_matched   95% range
+------------------------------------------------------------------------------
+root_lower_spine       123    37    0.9625       0.9613   [0.947,0.974]
+upper_torso_arms       126    37    0.8523       0.8496   [0.759,0.911]
+right_leg              106    37    0.7791       0.7799   [0.672,0.864]
+upper_spine_neck       111    37    0.9026       0.8976   [0.848,0.935]
+left_leg               113    37    0.6294       0.6331   [0.489,0.762]
+head                    99    37    0.8035       0.7981   [0.718,0.863]
+------------------------------------------------------------------------------
+MEAN                                0.8216       0.8199
+
+[done] wrote eval_results/diag_20260831/rho_matched_active.json

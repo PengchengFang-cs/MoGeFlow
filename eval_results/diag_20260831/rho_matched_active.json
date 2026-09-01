@@ -1,0 +1,89 @@
+{
+  "split": "test",
+  "seed": 3407,
+  "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/new_vq_overlap_top3_20260529_best_top3.pth",
+  "target_active": 37,
+  "draws": 200,
+  "mean_spearman_full_support": 0.8215775451812171,
+  "mean_spearman_matched": 0.8199419959125632,
+  "rows": [
+    {
+      "prototype_space": "feature",
+      "part": 0,
+      "part_name": "root_lower_spine",
+      "active_codes": 123,
+      "subsampled_to": 37,
+      "draws": 200,
+      "spearman_full_support": 0.9624962132058147,
+      "spearman_matched_mean": 0.9612640806197186,
+      "spearman_matched_std": 0.0073423711912935985,
+      "spearman_matched_p2.5": 0.9472728063929832,
+      "spearman_matched_p97.5": 0.9738978935649022
+    },
+    {
+      "prototype_space": "feature",
+      "part": 1,
+      "part_name": "upper_torso_arms",
+      "active_codes": 126,
+      "subsampled_to": 37,
+      "draws": 200,
+      "spearman_full_support": 0.8523066400723239,
+      "spearman_matched_mean": 0.849614601356099,
+      "spearman_matched_std": 0.04160506225061842,
+      "spearman_matched_p2.5": 0.7592057131361163,
+      "spearman_matched_p97.5": 0.9110810363970626
+    },
+    {
+      "prototype_space": "feature",
+      "part": 2,
+      "part_name": "right_leg",
+      "active_codes": 106,
+      "subsampled_to": 37,
+      "draws": 200,
+      "spearman_full_support": 0.7791252181472726,
+      "spearman_matched_mean": 0.7799419038702555,
+      "spearman_matched_std": 0.05122172157164211,
+      "spearman_matched_p2.5": 0.6724875522003274,
+      "spearman_matched_p97.5": 0.8642736242120761
+    },
+    {
+      "prototype_space": "feature",
+      "part": 3,
+      "part_name": "upper_spine_neck",
+      "active_codes": 111,
+      "subsampled_to": 37,
+      "draws": 200,
+      "spearman_full_support": 0.9026105789411246,
+      "spearman_matched_mean": 0.8976389240860163,
+      "spearman_matched_std": 0.023240160888663906,
+      "spearman_matched_p2.5": 0.8484607381332704,
+      "spearman_matched_p97.5": 0.9351449889767572
+    },
+    {
+      "prototype_space": "feature",
+      "part": 4,
+      "part_name": "left_leg",
+      "active_codes": 113,
+      "subsampled_to": 37,
+      "draws": 200,
+      "spearman_full_support": 0.6294275443594607,
+      "spearman_matched_mean": 0.6330736401764572,
+      "spearman_matched_std": 0.06569581650779935,
+      "spearman_matched_p2.5": 0.48943359858376034,
+      "spearman_matched_p97.5": 0.7623606170903576
+    },
+    {
+      "prototype_space": "feature",
+      "part": 5,
+      "part_name": "head",
+      "active_codes": 99,
+      "subsampled_to": 37,
+      "draws": 200,
+      "spearman_full_support": 0.8034990763613065,
+      "spearman_matched_mean": 0.798118825366833,
+      "spearman_matched_std": 0.040395753098091576,
+      "spearman_matched_p2.5": 0.7181033137160336,
+      "spearman_matched_p97.5": 0.8632637725031002
+    }
+  ]
+}

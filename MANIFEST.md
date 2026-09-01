@@ -29,3 +29,4 @@
 | 2026-08-19 | 本会话 | eval_results/kit_x0_cfgsweep_20260819/（32 JSON） + tools/report_kit_cfgsweep.py + tools/report_kit_curve.py | B8c | KIT x0 三检查点 cfg 全扫 |
 | 2026-08-20 | 本会话 | eval_results/kit_x0_repeat20_20260820/run.log（3 seed，已停） | B8d | KIT 多 seed 部分结果 |
 | 2026-08-20 | 论文 | overleaf-paper `4743d5a` | 论文 | 三审稿人评审后的改稿：CLIP 表述、去防御性写作、12→9 页、表 3/5 并排、定性图回正文 |
+| 2026-08-20 | 本会话 | figures/qual_selected_three_20260820_smpl_stylematch/ + tools/blender_qual_cell.py + scripts/run_qual_smpl_stylematch_blender_cells.sh | 论文 | 定性图 SMPL 版：Blender/Cycles 渲染，沿用骨架版布局/相机/箭头，per_frame_up 接地消除穿模；待决定是否替换 20260610-003631.png |
