@@ -1,0 +1,704 @@
+{
+  "aggregate": {
+    "code_token_acc": {
+      "conf95": 0.0002982848837191881,
+      "mean": 0.04972589859097642,
+      "values": [
+        0.049559849208550326,
+        0.04914067747521244,
+        0.04986580750615519,
+        0.049996198788954706,
+        0.050066959976009434
+      ]
+    },
+    "code_wrong_rate": {
+      "conf95": 0.000298284883719182,
+      "mean": 0.9502741014090235,
+      "values": [
+        0.9504401507914497,
+        0.9508593225247876,
+        0.9501341924938448,
+        0.9500038012110453,
+        0.9499330400239906
+      ]
+    },
+    "diversity": {
+      "conf95": 0.16975604416392467,
+      "mean": 9.668144035339356,
+      "values": [
+        9.528818130493164,
+        9.741549491882324,
+        9.77835464477539,
+        9.919500350952148,
+        9.37249755859375
+      ]
+    },
+    "diversity_real": {
+      "conf95": 0.16759552251127136,
+      "mean": 9.57712001800537,
+      "values": [
+        9.837318420410156,
+        9.251842498779297,
+        9.66795539855957,
+        9.545551300048828,
+        9.582932472229004
+      ]
+    },
+    "fid": {
+      "conf95": 0.005171443520292135,
+      "mean": 0.07458150696221821,
+      "values": [
+        0.08033812601422596,
+        0.07929568089784311,
+        0.07692443279066197,
+        0.06423168852364824,
+        0.07211760658471178
+      ]
+    },
+    "geom_code_dist": {
+      "conf95": 0.04330204051105226,
+      "mean": 45.33085589101322,
+      "values": [
+        45.309925798383205,
+        45.33783496837751,
+        45.401612860687244,
+        45.35292864048146,
+        45.2519771871367
+      ]
+    },
+    "geom_rank_pct": {
+      "conf95": 0.000297328634307862,
+      "mean": 0.29931817081711776,
+      "values": [
+        0.2991006878840727,
+        0.2993464330640312,
+        0.2997381522651096,
+        0.29960540809796965,
+        0.2988001727744056
+      ]
+    },
+    "geom_severe_rate": {
+      "conf95": 0.00044215957007303773,
+      "mean": 0.10419620611321005,
+      "values": [
+        0.10395673476934456,
+        0.1047034222953473,
+        0.10440833122855435,
+        0.10458775352536641,
+        0.10332478874743765
+      ]
+    },
+    "geom_wrong_code_dist": {
+      "conf95": 0.04596062707389328,
+      "mean": 47.70263767397135,
+      "values": [
+        47.67227882958925,
+        47.68062089691163,
+        47.78413055999205,
+        47.739437318929525,
+        47.63672076443433
+      ]
+    },
+    "geom_wrong_rank_pct": {
+      "conf95": 0.00032479309636493803,
+      "mean": 0.31498091380778603,
+      "values": [
+        0.314697024988902,
+        0.31481674099717066,
+        0.3154692827950735,
+        0.31537285189389647,
+        0.3145486683638874
+      ]
+    },
+    "geom_wrong_severe_frac": {
+      "conf95": 0.0004495759260997525,
+      "mean": 0.10964850163122511,
+      "values": [
+        0.10937746546458268,
+        0.11011452463581209,
+        0.10988798430094467,
+        0.11009193162389465,
+        0.10877060213089144
+      ]
+    },
+    "matching_score": {
+      "conf95": 0.007762111416576513,
+      "mean": 2.5866047457990975,
+      "values": [
+        2.5936653120764372,
+        2.5812458424732605,
+        2.598771593488496,
+        2.585557860341565,
+        2.573783120615729
+      ]
+    },
+    "matching_score_real": {
+      "conf95": 0.01830752273551652,
+      "mean": 2.9758382264499006,
+      "values": [
+        2.9673116568861335,
+        2.987646387363302,
+        3.000055027008057,
+        2.9844998343237514,
+        2.939678226668259
+      ]
+    },
+    "multimodality": {
+      "conf95": 0.0,
+      "mean": 0.0,
+      "values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "nb_sample": {
+      "conf95": 0.0,
+      "mean": 4640.0,
+      "values": [
+        4640.0,
+        4640.0,
+        4640.0,
+        4640.0,
+        4640.0
+      ]
+    },
+    "r_precision": {
+      "conf95": [
+        0.0013000466469267498,
+        0.0016555172054672567,
+        0.0016399232892938033
+      ],
+      "mean": [
+        0.5929310344827586,
+        0.7840517241379311,
+        0.8662068965517241
+      ],
+      "values": [
+        [
+          0.5913793103448276,
+          0.7816810344827586,
+          0.8631465517241379
+        ],
+        [
+          0.593103448275862,
+          0.7862068965517242,
+          0.8683189655172414
+        ],
+        [
+          0.5922413793103448,
+          0.7842672413793104,
+          0.8678879310344828
+        ],
+        [
+          0.5922413793103448,
+          0.7821120689655172,
+          0.865301724137931
+        ],
+        [
+          0.5956896551724138,
+          0.7859913793103448,
+          0.8663793103448276
+        ]
+      ]
+    },
+    "r_precision_real": {
+      "conf95": [
+        0.003665811938716409,
+        0.00418441320999844,
+        0.0022498442276636804
+      ],
+      "mean": [
+        0.510301724137931,
+        0.7024568965517243,
+        0.7973275862068967
+      ],
+      "values": [
+        [
+          0.5086206896551724,
+          0.7015086206896551,
+          0.7952586206896551
+        ],
+        [
+          0.5129310344827587,
+          0.7094827586206897,
+          0.7948275862068965
+        ],
+        [
+          0.502801724137931,
+          0.6954741379310345,
+          0.7965517241379311
+        ],
+        [
+          0.5135775862068965,
+          0.7002155172413793,
+          0.7980603448275863
+        ],
+        [
+          0.5135775862068965,
+          0.7056034482758621,
+          0.8019396551724138
+        ]
+      ]
+    },
+    "top1": {
+      "conf95": 0.0013000466469267498,
+      "mean": 0.5929310344827586,
+      "values": [
+        0.5913793103448276,
+        0.593103448275862,
+        0.5922413793103448,
+        0.5922413793103448,
+        0.5956896551724138
+      ]
+    },
+    "top2": {
+      "conf95": 0.0016555172054672567,
+      "mean": 0.7840517241379311,
+      "values": [
+        0.7816810344827586,
+        0.7862068965517242,
+        0.7842672413793104,
+        0.7821120689655172,
+        0.7859913793103448
+      ]
+    },
+    "top3": {
+      "conf95": 0.0016399232892938033,
+      "mean": 0.8662068965517241,
+      "values": [
+        0.8631465517241379,
+        0.8683189655172414,
+        0.8678879310344828,
+        0.865301724137931,
+        0.8663793103448276
+      ]
+    }
+  },
+  "args": {
+    "allow_small_eval": false,
+    "batch_size": 32,
+    "cfg_t_hi": 1.0,
+    "cfg_t_lo": 0.0,
+    "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/hml3d_x0L1_e1_nopool_20260810/model/best_fid.pt",
+    "checkpoints_dir": "./checkpoints",
+    "clip_path": "",
+    "cond_scale": 10.0,
+    "data_root": "",
+    "dataset_opt_path": "./checkpoints/t2m/Comp_v6_KLD005/opt.txt",
+    "device": "",
+    "disable_code_metrics": false,
+    "disable_mm": true,
+    "eval_dir": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/x0L1_seed100_20260816/cfg10/s092",
+    "geometry_severe_quantile": 0.75,
+    "glove_dir": "./glove",
+    "gpu_id": 1,
+    "kv_root": "",
+    "max_batches": 0,
+    "mean_path": "",
+    "mm_num_batches": 3,
+    "mm_num_samples": 30,
+    "multimodality_times": 10,
+    "no_ema": false,
+    "num_workers": 4,
+    "output_dir": "./checkpoints/t2m/codeflow_part_structured_pscf",
+    "repeat_times": 5,
+    "seed": 92,
+    "std_path": "",
+    "steps": 96,
+    "terminal_mode": "",
+    "text_cache_path": "",
+    "unit_length": 0,
+    "vq_checkpoint": "",
+    "vq_partition": "",
+    "which_epoch": "latest"
+  },
+  "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/hml3d_x0L1_e1_nopool_20260810/model/best_fid.pt",
+  "eval_config": {
+    "allow_small_eval": false,
+    "cal_mm": false,
+    "cfg_t_hi": 1.0,
+    "cfg_t_lo": 0.0,
+    "cond_scale": 10.0,
+    "geometry_severe_quantile": 0.75,
+    "include_code_metrics": true,
+    "max_batches": 0,
+    "mm_num_batches": 3,
+    "mm_num_samples": 30,
+    "multimodality_times": 10,
+    "steps": 96,
+    "terminal_mode": null,
+    "unit_length": 4
+  },
+  "repeat_metrics": [
+    {
+      "code_token_acc": 0.049559849208550326,
+      "code_wrong_rate": 0.9504401507914497,
+      "diversity": 9.528818130493164,
+      "diversity_real": 9.837318420410156,
+      "embedding_shapes": {
+        "motion_pred": [
+          4640,
+          512
+        ],
+        "motion_real": [
+          4640,
+          512
+        ],
+        "text": [
+          4640,
+          512
+        ]
+      },
+      "fid": 0.08033812601422596,
+      "geom_code_dist": 45.309925798383205,
+      "geom_rank_pct": 0.2991006878840727,
+      "geom_severe_rate": 0.10395673476934456,
+      "geom_wrong_code_dist": 47.67227882958925,
+      "geom_wrong_rank_pct": 0.314697024988902,
+      "geom_wrong_severe_frac": 0.10937746546458268,
+      "matching_score": 2.5936653120764372,
+      "matching_score_real": 2.9673116568861335,
+      "multimodality": 0.0,
+      "nb_sample": 4640,
+      "r_precision": [
+        0.5913793103448276,
+        0.7816810344827586,
+        0.8631465517241379
+      ],
+      "r_precision_real": [
+        0.5086206896551724,
+        0.7015086206896551,
+        0.7952586206896551
+      ],
+      "top1": 0.5913793103448276,
+      "top2": 0.7816810344827586,
+      "top3": 0.8631465517241379
+    },
+    {
+      "code_token_acc": 0.04914067747521244,
+      "code_wrong_rate": 0.9508593225247876,
+      "diversity": 9.741549491882324,
+      "diversity_real": 9.251842498779297,
+      "embedding_shapes": {
+        "motion_pred": [
+          4640,
+          512
+        ],
+        "motion_real": [
+          4640,
+          512
+        ],
+        "text": [
+          4640,
+          512
+        ]
+      },
+      "fid": 0.07929568089784311,
+      "geom_code_dist": 45.33783496837751,
+      "geom_rank_pct": 0.2993464330640312,
+      "geom_severe_rate": 0.1047034222953473,
+      "geom_wrong_code_dist": 47.68062089691163,
+      "geom_wrong_rank_pct": 0.31481674099717066,
+      "geom_wrong_severe_frac": 0.11011452463581209,
+      "matching_score": 2.5812458424732605,
+      "matching_score_real": 2.987646387363302,
+      "multimodality": 0.0,
+      "nb_sample": 4640,
+      "r_precision": [
+        0.593103448275862,
+        0.7862068965517242,
+        0.8683189655172414
+      ],
+      "r_precision_real": [
+        0.5129310344827587,
+        0.7094827586206897,
+        0.7948275862068965
+      ],
+      "top1": 0.593103448275862,
+      "top2": 0.7862068965517242,
+      "top3": 0.8683189655172414
+    },
+    {
+      "code_token_acc": 0.04986580750615519,
+      "code_wrong_rate": 0.9501341924938448,
+      "diversity": 9.77835464477539,
+      "diversity_real": 9.66795539855957,
+      "embedding_shapes": {
+        "motion_pred": [
+          4640,
+          512
+        ],
+        "motion_real": [
+          4640,
+          512
+        ],
+        "text": [
+          4640,
+          512
+        ]
+      },
+      "fid": 0.07692443279066197,
+      "geom_code_dist": 45.401612860687244,
+      "geom_rank_pct": 0.2997381522651096,
+      "geom_severe_rate": 0.10440833122855435,
+      "geom_wrong_code_dist": 47.78413055999205,
+      "geom_wrong_rank_pct": 0.3154692827950735,
+      "geom_wrong_severe_frac": 0.10988798430094467,
+      "matching_score": 2.598771593488496,
+      "matching_score_real": 3.000055027008057,
+      "multimodality": 0.0,
+      "nb_sample": 4640,
+      "r_precision": [
+        0.5922413793103448,
+        0.7842672413793104,
+        0.8678879310344828
+      ],
+      "r_precision_real": [
+        0.502801724137931,
+        0.6954741379310345,
+        0.7965517241379311
+      ],
+      "top1": 0.5922413793103448,
+      "top2": 0.7842672413793104,
+      "top3": 0.8678879310344828
+    },
+    {
+      "code_token_acc": 0.049996198788954706,
+      "code_wrong_rate": 0.9500038012110453,
+      "diversity": 9.919500350952148,
+      "diversity_real": 9.545551300048828,
+      "embedding_shapes": {
+        "motion_pred": [
+          4640,
+          512
+        ],
+        "motion_real": [
+          4640,
+          512
+        ],
+        "text": [
+          4640,
+          512
+        ]
+      },
+      "fid": 0.06423168852364824,
+      "geom_code_dist": 45.35292864048146,
+      "geom_rank_pct": 0.29960540809796965,
+      "geom_severe_rate": 0.10458775352536641,
+      "geom_wrong_code_dist": 47.739437318929525,
+      "geom_wrong_rank_pct": 0.31537285189389647,
+      "geom_wrong_severe_frac": 0.11009193162389465,
+      "matching_score": 2.585557860341565,
+      "matching_score_real": 2.9844998343237514,
+      "multimodality": 0.0,
+      "nb_sample": 4640,
+      "r_precision": [
+        0.5922413793103448,
+        0.7821120689655172,
+        0.865301724137931
+      ],
+      "r_precision_real": [
+        0.5135775862068965,
+        0.7002155172413793,
+        0.7980603448275863
+      ],
+      "top1": 0.5922413793103448,
+      "top2": 0.7821120689655172,
+      "top3": 0.865301724137931
+    },
+    {
+      "code_token_acc": 0.050066959976009434,
+      "code_wrong_rate": 0.9499330400239906,
+      "diversity": 9.37249755859375,
+      "diversity_real": 9.582932472229004,
+      "embedding_shapes": {
+        "motion_pred": [
+          4640,
+          512
+        ],
+        "motion_real": [
+          4640,
+          512
+        ],
+        "text": [
+          4640,
+          512
+        ]
+      },
+      "fid": 0.07211760658471178,
+      "geom_code_dist": 45.2519771871367,
+      "geom_rank_pct": 0.2988001727744056,
+      "geom_severe_rate": 0.10332478874743765,
+      "geom_wrong_code_dist": 47.63672076443433,
+      "geom_wrong_rank_pct": 0.3145486683638874,
+      "geom_wrong_severe_frac": 0.10877060213089144,
+      "matching_score": 2.573783120615729,
+      "matching_score_real": 2.939678226668259,
+      "multimodality": 0.0,
+      "nb_sample": 4640,
+      "r_precision": [
+        0.5956896551724138,
+        0.7859913793103448,
+        0.8663793103448276
+      ],
+      "r_precision_real": [
+        0.5135775862068965,
+        0.7056034482758621,
+        0.8019396551724138
+      ],
+      "top1": 0.5956896551724138,
+      "top2": 0.7859913793103448,
+      "top3": 0.8663793103448276
+    }
+  ],
+  "repeat_times": 5,
+  "split": "test",
+  "train_options": {
+    "allow_non_vq_stats": false,
+    "amp": false,
+    "amp_dtype": "fp16",
+    "batch_size": 64,
+    "best_checkpoint_limit": 1,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "clean_loss_weight": 0.0,
+    "clip_hf_path": "/scratch/pf2m24/hf-models/clip-vit-large-patch14",
+    "clip_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/clip/ViT-B-32.pt",
+    "clip_version": "ViT-B/32",
+    "code_ce_gamma": 2.0,
+    "code_ce_normalize": true,
+    "code_ce_t_max": 0.9,
+    "code_ce_t_min": 0.35,
+    "code_dim": 128,
+    "cond_drop_prob": 0.1,
+    "coupling_mode": "frame_grouped",
+    "data_root": "/scratch/pf2m24/data/HumanML3D/HumanML3D",
+    "dataset_name": "t2m",
+    "dataset_opt_path": "",
+    "ddp_timeout_minutes": 10,
+    "decode_mode": "continuous",
+    "denoiser_p_mean": -1.5,
+    "denoiser_p_std": 0.8,
+    "depth_double": 6,
+    "depth_single": 12,
+    "disable_full_eval_ema": false,
+    "disable_grad_health_check": false,
+    "disable_self_condition": true,
+    "disable_vq_contract_check": false,
+    "dropout": 0.05,
+    "eta_min_ratio": 0.1,
+    "flow_loss_weight": 1.0,
+    "full_eval_batch_size": 32,
+    "full_eval_cond_scale": 6.0,
+    "full_eval_every_epoch": 10,
+    "full_eval_num_workers": 4,
+    "full_eval_repeat_times": 1,
+    "full_eval_seed": 42,
+    "full_eval_split": "test",
+    "full_eval_start_epoch": 100,
+    "full_eval_steps": 96,
+    "gamma": 0.5,
+    "gate_save_fid": 0.08,
+    "gate_save_top3": 0.87,
+    "geometry_severe_quantile": 0.75,
+    "gpu_id": 1,
+    "grad_clip": 1.0,
+    "grad_health_check_steps": 20,
+    "grad_health_min_abs": 0.0,
+    "hidden_size": 1152,
+    "holder_depth": 2,
+    "holder_mlp_ratio": 4.0,
+    "init_checkpoint": "",
+    "init_checkpoint_use_ema": false,
+    "iters_per_epoch": 383,
+    "kv_part_target_mode": "codebook",
+    "kv_root": "/scratch/pf2m24/projects/Umdd/KV-Control",
+    "latent_norm_eps": 1e-06,
+    "latent_norm_mode": "codebook",
+    "latent_offset": 0.0,
+    "log_every": 50,
+    "lr": 0.0001,
+    "lr_scheduler": "multistep",
+    "max_epoch": 600,
+    "max_steps": 0,
+    "mean_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/stats/mean.npy",
+    "milestone_unit": "auto",
+    "milestones": [
+      0.8,
+      0.9,
+      0.95
+    ],
+    "mlp_ratio": 4.0,
+    "motion_length": 196,
+    "name": "hml3d_x0L1_e1_nopool_20260810",
+    "noise_scale": 1.0,
+    "num_codes": 128,
+    "num_heads": 12,
+    "num_parts": 6,
+    "num_workers": 4,
+    "output_dir": "checkpoints/t2m/hml3d_x0L1_e1_nopool_20260810",
+    "part_hidden_dim": 192,
+    "qwen_max_length": 128,
+    "qwen_path": "/scratch/pf2m24/hf-models/Qwen3-8B",
+    "reachable_milestones": [
+      183840,
+      206820,
+      218310
+    ],
+    "representation": "part_structured",
+    "resolved_milestone_epochs": [
+      480.0,
+      540.0,
+      570.0
+    ],
+    "resolved_milestones": [
+      183840,
+      206820,
+      218310
+    ],
+    "resume": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/t2m/hml3d_x0L1_e1_nopool_20260810/model/latest.pt",
+    "rvq_target_mode": "stage",
+    "sampling_method": "ode",
+    "sampling_schedule": "uniform",
+    "save_every": 0,
+    "sde_gamma": 0.0,
+    "seed": 42,
+    "self_cond_prob": 0.5,
+    "std_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/stats/std.npy",
+    "t_eps": 0.0001,
+    "terminal_loss_weight": 1.0,
+    "terminal_mode": "tied_logits",
+    "terminal_tau": 1.0,
+    "terminal_tau_floor": 1e-06,
+    "terminal_tau_mode": "codebook_nn",
+    "text_cache_captions_sha256": "db132cfb802cb30365307888e05b2c573b3546fcf708f5a0a8659d04953ed1b4",
+    "text_cache_clip_revision": "",
+    "text_cache_content_fingerprint": "8991a73d264cecab98509db4bd10f3294a9e6fa3c564faaf6428c5502a9320b0",
+    "text_cache_fingerprint": "1aed6980002f16fc0f37e085d4a7011b1e395dabff5fb3f9b536fa914a2f8713",
+    "text_cache_path": "/scratch/pf2m24/text-caches/humanml3d_qwen3_l2v_normavg_v2_20260802",
+    "text_cache_qwen_revision": "",
+    "text_encoder_type": "llm2vec_cache",
+    "text_pooled_mode": "modulation",
+    "text_refiner_depth": 0,
+    "text_refiner_mlp_ratio": 4.0,
+    "text_refiner_pool": "all_tokens",
+    "time_patch": 1,
+    "time_schedule": "uniform",
+    "total_train_steps": 229800,
+    "unit_length": 4,
+    "vq_backend": "kv_part",
+    "vq_checkpoint": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/new_vq_overlap_top3_20260529_best_top3.pth",
+    "vq_contract_samples": 2,
+    "vq_opt_path": "",
+    "vq_partition": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_overlap_top3_20260529_hf/config/skeleton_partition.json",
+    "warmup_epochs": 5.221932114882507,
+    "warmup_steps": 2000,
+    "weight_decay": 0.01
+  },
+  "weight_source": "ema"
+}

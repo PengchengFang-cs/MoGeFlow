@@ -1,0 +1,417 @@
+{
+  "aggregate": {
+    "code_token_acc": {
+      "conf95": 0.0,
+      "mean": 0.049002720986544845,
+      "values": [
+        0.049002720986544845
+      ]
+    },
+    "code_wrong_rate": {
+      "conf95": 0.0,
+      "mean": 0.9509972790134551,
+      "values": [
+        0.9509972790134551
+      ]
+    },
+    "diversity": {
+      "conf95": 0.0,
+      "mean": 10.723980903625488,
+      "values": [
+        10.723980903625488
+      ]
+    },
+    "diversity_real": {
+      "conf95": 0.0,
+      "mean": 11.117657661437988,
+      "values": [
+        11.117657661437988
+      ]
+    },
+    "fid": {
+      "conf95": 0.0,
+      "mean": 0.14541255793295704,
+      "values": [
+        0.14541255793295704
+      ]
+    },
+    "geom_code_dist": {
+      "conf95": 0.0,
+      "mean": 39.1975696199668,
+      "values": [
+        39.1975696199668
+      ]
+    },
+    "geom_rank_pct": {
+      "conf95": 0.0,
+      "mean": 0.30513672904974926,
+      "values": [
+        0.30513672904974926
+      ]
+    },
+    "geom_severe_rate": {
+      "conf95": 0.0,
+      "mean": 0.09447315210065153,
+      "values": [
+        0.09447315210065153
+      ]
+    },
+    "geom_wrong_code_dist": {
+      "conf95": 0.0,
+      "mean": 41.2165579637626,
+      "values": [
+        41.2165579637626
+      ]
+    },
+    "geom_wrong_rank_pct": {
+      "conf95": 0.0,
+      "mean": 0.3208597288167762,
+      "values": [
+        0.3208597288167762
+      ]
+    },
+    "geom_wrong_severe_frac": {
+      "conf95": 0.0,
+      "mean": 0.09934113817723646,
+      "values": [
+        0.09934113817723646
+      ]
+    },
+    "matching_score": {
+      "conf95": 0.0,
+      "mean": 2.4986684647473423,
+      "values": [
+        2.4986684647473423
+      ]
+    },
+    "matching_score_real": {
+      "conf95": 0.0,
+      "mean": 2.7675526358864526,
+      "values": [
+        2.7675526358864526
+      ]
+    },
+    "multimodality": {
+      "conf95": 0.0,
+      "mean": 0.0,
+      "values": [
+        0.0
+      ]
+    },
+    "nb_sample": {
+      "conf95": 0.0,
+      "mean": 704.0,
+      "values": [
+        704.0
+      ]
+    },
+    "r_precision": {
+      "conf95": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean": [
+        0.4786931818181818,
+        0.7116477272727273,
+        0.8423295454545454
+      ],
+      "values": [
+        [
+          0.4786931818181818,
+          0.7116477272727273,
+          0.8423295454545454
+        ]
+      ]
+    },
+    "r_precision_real": {
+      "conf95": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean": [
+        0.4119318181818182,
+        0.6420454545454546,
+        0.7755681818181818
+      ],
+      "values": [
+        [
+          0.4119318181818182,
+          0.6420454545454546,
+          0.7755681818181818
+        ]
+      ]
+    },
+    "top1": {
+      "conf95": 0.0,
+      "mean": 0.4786931818181818,
+      "values": [
+        0.4786931818181818
+      ]
+    },
+    "top2": {
+      "conf95": 0.0,
+      "mean": 0.7116477272727273,
+      "values": [
+        0.7116477272727273
+      ]
+    },
+    "top3": {
+      "conf95": 0.0,
+      "mean": 0.8423295454545454,
+      "values": [
+        0.8423295454545454
+      ]
+    }
+  },
+  "args": {
+    "allow_small_eval": false,
+    "batch_size": 32,
+    "cfg_t_hi": 1.0,
+    "cfg_t_lo": 0.0,
+    "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/kit/kit_x0L1_ep1000_20260818/model/gate/gate_ep0960_fid0.1332_top30.8338.pt",
+    "checkpoints_dir": "./checkpoints",
+    "clip_path": "",
+    "cond_scale": 5.0,
+    "data_root": "/scratch/pf2m24/data/KIT-ML",
+    "dataset_opt_path": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/kit/Comp_v6_KLD005/opt.txt",
+    "device": "",
+    "disable_code_metrics": false,
+    "disable_mm": true,
+    "eval_dir": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/eval_results/kit_x0_cfgsweep_20260819/gate/gate_ep0960_fid0.1332_top30.8338",
+    "geometry_severe_quantile": 0.75,
+    "glove_dir": "./glove",
+    "gpu_id": 0,
+    "kv_root": "/scratch/pf2m24/projects/Umdd/KV-Control",
+    "max_batches": 0,
+    "mean_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/meta/mean.npy",
+    "mm_num_batches": 3,
+    "mm_num_samples": 30,
+    "multimodality_times": 10,
+    "no_ema": false,
+    "num_workers": 4,
+    "output_dir": "./checkpoints/t2m/codeflow_part_structured_pscf",
+    "repeat_times": 1,
+    "seed": 42,
+    "seed_list": "",
+    "std_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/meta/std.npy",
+    "steps": 96,
+    "terminal_mode": "",
+    "text_cache_path": "",
+    "unit_length": 0,
+    "vq_checkpoint": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/model/net_best_fid.tar",
+    "vq_partition": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/config/kit_skeleton_partition_partaware_datadriven_seed3407.json",
+    "which_epoch": "latest"
+  },
+  "checkpoint": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/kit/kit_x0L1_ep1000_20260818/model/gate/gate_ep0960_fid0.1332_top30.8338.pt",
+  "eval_config": {
+    "allow_small_eval": false,
+    "cal_mm": false,
+    "cfg_t_hi": 1.0,
+    "cfg_t_lo": 0.0,
+    "cond_scale": 5.0,
+    "geometry_severe_quantile": 0.75,
+    "include_code_metrics": true,
+    "max_batches": 0,
+    "mm_num_batches": 3,
+    "mm_num_samples": 30,
+    "multimodality_times": 10,
+    "steps": 96,
+    "terminal_mode": null,
+    "unit_length": 4
+  },
+  "repeat_metrics": [
+    {
+      "code_token_acc": 0.049002720986544845,
+      "code_wrong_rate": 0.9509972790134551,
+      "diversity": 10.723980903625488,
+      "diversity_real": 11.117657661437988,
+      "embedding_shapes": {
+        "motion_pred": [
+          704,
+          512
+        ],
+        "motion_real": [
+          704,
+          512
+        ],
+        "text": [
+          704,
+          512
+        ]
+      },
+      "fid": 0.14541255793295704,
+      "geom_code_dist": 39.1975696199668,
+      "geom_rank_pct": 0.30513672904974926,
+      "geom_severe_rate": 0.09447315210065153,
+      "geom_wrong_code_dist": 41.2165579637626,
+      "geom_wrong_rank_pct": 0.3208597288167762,
+      "geom_wrong_severe_frac": 0.09934113817723646,
+      "matching_score": 2.4986684647473423,
+      "matching_score_real": 2.7675526358864526,
+      "multimodality": 0.0,
+      "nb_sample": 704,
+      "r_precision": [
+        0.4786931818181818,
+        0.7116477272727273,
+        0.8423295454545454
+      ],
+      "r_precision_real": [
+        0.4119318181818182,
+        0.6420454545454546,
+        0.7755681818181818
+      ],
+      "top1": 0.4786931818181818,
+      "top2": 0.7116477272727273,
+      "top3": 0.8423295454545454
+    }
+  ],
+  "repeat_times": 1,
+  "split": "test",
+  "train_options": {
+    "allow_non_vq_stats": true,
+    "amp": false,
+    "amp_dtype": "fp16",
+    "batch_size": 64,
+    "best_checkpoint_limit": 1,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "clean_loss_weight": 0.0,
+    "clip_hf_path": "/scratch/pf2m24/hf-models/clip-vit-large-patch14",
+    "clip_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/clip/ViT-B-32.pt",
+    "clip_version": "ViT-B/32",
+    "code_ce_gamma": 2.0,
+    "code_ce_normalize": true,
+    "code_ce_t_max": 0.9,
+    "code_ce_t_min": 0.35,
+    "code_dim": 128,
+    "cond_drop_prob": 0.1,
+    "coupling_mode": "frame_grouped",
+    "data_root": "/scratch/pf2m24/data/KIT-ML",
+    "dataset_name": "kit",
+    "dataset_opt_path": "",
+    "ddp_timeout_minutes": 10,
+    "decode_mode": "continuous",
+    "denoiser_p_mean": -1.5,
+    "denoiser_p_std": 0.8,
+    "depth_double": 6,
+    "depth_single": 12,
+    "disable_full_eval_ema": false,
+    "disable_grad_health_check": false,
+    "disable_self_condition": true,
+    "disable_vq_contract_check": false,
+    "dropout": 0.05,
+    "eta_min_ratio": 0.1,
+    "flow_loss_weight": 1.0,
+    "full_eval_batch_size": 32,
+    "full_eval_cond_scale": 6.0,
+    "full_eval_every_epoch": 10,
+    "full_eval_num_workers": 4,
+    "full_eval_repeat_times": 1,
+    "full_eval_seed": 42,
+    "full_eval_split": "test",
+    "full_eval_start_epoch": 100,
+    "full_eval_steps": 96,
+    "gamma": 0.5,
+    "gate_save_fid": 0.25,
+    "gate_save_top3": 0.83,
+    "geometry_severe_quantile": 0.75,
+    "gpu_id": 0,
+    "grad_clip": 1.0,
+    "grad_health_check_steps": 20,
+    "grad_health_min_abs": 0.0,
+    "hidden_size": 1152,
+    "holder_depth": 2,
+    "holder_mlp_ratio": 4.0,
+    "init_checkpoint": "",
+    "init_checkpoint_use_ema": false,
+    "iters_per_epoch": 68,
+    "kv_part_target_mode": "codebook",
+    "kv_root": "/scratch/pf2m24/projects/Umdd/KV-Control",
+    "latent_norm_eps": 1e-06,
+    "latent_norm_mode": "codebook",
+    "latent_offset": 0.0,
+    "log_every": 50,
+    "lr": 0.0001,
+    "lr_scheduler": "multistep",
+    "max_epoch": 1000,
+    "max_steps": 0,
+    "mean_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/meta/mean.npy",
+    "milestone_unit": "auto",
+    "milestones": [
+      0.8,
+      0.9,
+      0.95
+    ],
+    "mlp_ratio": 4.0,
+    "motion_length": 196,
+    "name": "kit_x0L1_ep1000_20260818",
+    "noise_scale": 1.0,
+    "num_codes": 128,
+    "num_heads": 12,
+    "num_parts": 6,
+    "num_workers": 4,
+    "output_dir": "checkpoints/kit/kit_x0L1_ep1000_20260818",
+    "part_hidden_dim": 192,
+    "qwen_max_length": 128,
+    "qwen_path": "/scratch/pf2m24/hf-models/Qwen3-8B",
+    "reachable_milestones": [
+      54400,
+      61200,
+      64600
+    ],
+    "representation": "part_structured",
+    "resolved_milestone_epochs": [
+      800.0,
+      900.0,
+      950.0
+    ],
+    "resolved_milestones": [
+      54400,
+      61200,
+      64600
+    ],
+    "resume": "/iridisfs/scratch/pf2m24/projects/Umdd/momask-codes/checkpoints/kit/kit_x0L1_ep1000_20260818/model/latest.pt",
+    "rvq_target_mode": "stage",
+    "sampling_method": "ode",
+    "sampling_schedule": "uniform",
+    "save_every": 0,
+    "sde_gamma": 0.0,
+    "seed": 42,
+    "self_cond_prob": 0.5,
+    "std_path": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/meta/std.npy",
+    "t_eps": 0.0001,
+    "terminal_loss_weight": 1.0,
+    "terminal_mode": "tied_logits",
+    "terminal_tau": 1.0,
+    "terminal_tau_floor": 1e-06,
+    "terminal_tau_mode": "codebook_nn",
+    "text_cache_captions_sha256": "0622fd5d2a08245c98c98282753d5f8dce95706280eac0391b6103baaf091afa",
+    "text_cache_clip_revision": "",
+    "text_cache_content_fingerprint": "71243a1f469c8a35172cb66a50bf03efdda760e8c5832bf7b7ee5fa6a465c43e",
+    "text_cache_fingerprint": "1aed6980002f16fc0f37e085d4a7011b1e395dabff5fb3f9b536fa914a2f8713",
+    "text_cache_path": "/scratch/pf2m24/text-caches/kit_qwen3_l2v_normavg_v2_20260807",
+    "text_cache_qwen_revision": "",
+    "text_encoder_type": "llm2vec_cache",
+    "text_pooled_mode": "modulation",
+    "text_refiner_depth": 0,
+    "text_refiner_mlp_ratio": 4.0,
+    "text_refiner_pool": "all_tokens",
+    "time_patch": 1,
+    "time_schedule": "uniform",
+    "total_train_steps": 68000,
+    "unit_length": 4,
+    "vq_backend": "kv_part",
+    "vq_checkpoint": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/model/net_best_fid.tar",
+    "vq_contract_samples": 2,
+    "vq_opt_path": "",
+    "vq_partition": "/scratch/pf2m24/projects/Umdd/KV-Control/checkpoints/vqvae_kit_partaware_datadriven_300k_seed3407_h200_20260722/config/kit_skeleton_partition_partaware_datadriven_seed3407.json",
+    "warmup_epochs": 29.41176470588235,
+    "warmup_steps": 2000,
+    "weight_decay": 0.01
+  },
+  "weight_source": "ema"
+}
