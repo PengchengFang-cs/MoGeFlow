@@ -945,6 +945,15 @@ class MotionCodeFlow(nn.Module):
                 )
                 x0_uncond, x0_cond = v_all.chunk(2, dim=0)
                 v_out = x0_uncond + float(step_scale) * (x0_cond - x0_uncond)
+            if getattr(self, "eval_head_is_velocity", False):
+                # Evaluation-only path for pre-x0 checkpoints, whose head emits
+                # the velocity field directly; the x0 conversion below would
+                # misread it.  Training remains x0-hardwired.
+                tt = t_in
+                while tt.ndim < z_in.ndim:
+                    tt = tt[..., None]
+                clean_out = z_in + (1.0 - tt).clamp_min(self.config.t_eps) * v_out
+                return v_out, clean_out
             clean_out = v_out  # head output is x0; CFG combined in x0 space
             v_out = self.velocity_from_clean(z_in, t_in, clean_out)
             return v_out, clean_out

@@ -75,6 +75,8 @@ def parse_args(defaults: Dict[str, object] = None) -> argparse.Namespace:
     )
     parser.add_argument("--unit_length", type=int, default=0)
     parser.add_argument("--max_batches", type=int, default=0)
+    parser.add_argument("--head_is_velocity", action="store_true",
+                        help="Evaluation-only: the checkpoint predicts velocity rather than x0 (pre-x0-era weights).")
     parser.add_argument("--disable_mm", action="store_true")
     parser.add_argument("--mm_num_batches", type=int, default=3)
     parser.add_argument("--mm_num_samples", type=int, default=30)
@@ -337,6 +339,9 @@ def main(
     checkpoint_path = resolve_checkpoint(args)
     device = make_device(args)
     model, opt, _ckpt, weight_source = load_codeflow_model(checkpoint_path, args, device, model_cls=model_cls)
+    if getattr(args, "head_is_velocity", False):
+        model.eval_head_is_velocity = True
+        print("[eval] velocity-head checkpoint: skipping the x0 conversion in the sampler", flush=True)
     tokenizer_downsample = getattr(model.tokenizer, "downsample_factor", None)
     if tokenizer_downsample is not None and int(getattr(opt, "unit_length", 4)) != int(tokenizer_downsample):
         raise ValueError(

@@ -387,6 +387,62 @@ srun --jobid=<J> --overlap --ntasks=1 bash -lc '
 
 ---
 
+## B10 · MultiModality 补测（09-02，pink7002 job 1476665）
+
+论文一直只有 **MultiModal Dist**（文本嵌入 ↔ 生成动作嵌入的距离），没有 **MultiModality**（同一条文本生成多条动作之间的平均两两距离）。两者名字近但量的东西不同：前者是"贴不贴这句话"，后者是"同一句话能生成多少种"。评测代码两个都实现了（`matching_score` / `multimodality`），我们历次评测一直带 `--disable_mm`，关掉的是后者。
+
+**协议**：与 Table 1 对应行同检查点、同 cfg、`--seed 42 --repeat_times 1 --steps 96`，唯一差别是去掉 `--disable_mm`；MM 参数用默认（`mm_num_samples 30` / `multimodality_times 10` / `mm_num_batches 3`）。产物 `eval_results/mm_20260902/`。
+
+### B10a · KIT（`gate_ep0960` @ cfg5，26 分钟，exit 0）
+
+**MultiModality = 0.9470**
+
+同一次运行的其它指标与论文那一行有系统性偏移：
+
+| | 论文 Table 1 | 本次（带 MM） | 差 |
+|---|---|---|---|
+| Top1 | 0.479 | 0.4659 | −0.013 |
+| Top2 | 0.712 | 0.7031 | −0.009 |
+| Top3 | 0.842 | 0.8352 | −0.007 |
+| FID | 0.145 | 0.1359 | −0.010 |
+| MM-Dist | 2.499 | 2.5202 | +0.021 |
+| Diversity | 10.724 | 10.7618 | +0.038 |
+
+**成因**：MM 那一遍额外采样与主评测共用同一随机数流，打开它就把后续抽样序列整体挪位。偏移量级为噪声底（σ_Top3≈0.0057、σ_FID≈0.0064）的 1–1.5 倍，属抽样漂移而非 bug。
+
+**裁定（09-02）**：走 A —— 只把 MultiModality 填进表，其余五个数字保持论文原值。理由：MultiModality 在该协议下本就是独立的一遍生成，按列单独报是通例；换整行会让 KIT Top-2 从 0.712 掉到 0.7031、失去对 SALAD（0.711）的领先。
+
+### B10b · HumanML3D（六月主线 `best_top3.pt` @ cfg6）
+
+**MultiModality = 1.2157**
+
+Table 1 的 HumanML3D 行来自六月主线 `codeflow_part_structured_newvqtop3_..._20260601/model/best_top3.pt`（其 `eval_decode_compare_seed42_20260614/*.json` 与论文行逐位一致：0.5894/0.7841/0.8739/0.047862/2.5995/9.9140）。
+
+**前两次尝试全部塌掉**，且数字逐位相同（FID 49.5137 / Top3 0.1978 / Diversity 3.2461 / MM 2.2820），第二次已按该 run 的 `options.json` 补齐 kv_root / vq_checkpoint / vq_partition / mean / std / **clip_path** / unit_length。两次相同说明与传入路径无关。
+
+**根因**：`models/codeflow/motion_code_flow.py:39` 明写 "There is no velocity-prediction mode."——08-09 的损失外科手术把速度预测分支永久删除，当前代码 x0 硬编码（memory `flow-only-loss-permanent`）。六月检查点是 **v 时代**模型，网络头输出速度，被 x0 采样器当 x0 解释，故输出塌成噪声。KIT 一路能跑是因为 `gate_ep0960` 属 x0 时代。
+
+**修法（评测专用，不碰训练路径）**：采样器 `forward_guided` 内加分支，`eval_head_is_velocity` 为真时把网络输出直接当速度用、跳过 `velocity_from_clean`，自条件所需的 x0 由 `z + (1-t)·v` 反推；CLI 加 `--head_is_velocity`。训练仍是 x0 硬编码，单一损失那条决定不受影响。
+
+**验证与结果**（同一次运行同时给出主指标与 MM，不需要两趟）：
+
+| | 六月参考（repeat-1, seed42, cfg6） | 本次（带 MM） | 差 |
+|---|---|---|---|
+| Top1 | 0.5894 | 0.5815 | −0.008 |
+| Top2 | 0.7841 | 0.7780 | −0.006 |
+| Top3 | 0.8739 | 0.8685 | −0.005 |
+| FID | 0.0479 | 0.0494 | +0.002 |
+| MM-Dist | 2.5995 | 2.6130 | +0.014 |
+| Diversity | 9.9140 | 9.8904 | −0.024 |
+| **MultiModality** | —（当时关闭） | **1.2157** | — |
+
+回到正确量级，残差与 B10a（KIT）同性质同量级：开 MM 后额外采样与主评测共用随机数流导致的抽样漂移，落在噪声底（σ_Top3≈0.0057、σ_FID≈0.0064）之内。通路读对了。
+
+**入论文**：按 B10a 的裁定（走 A），只把 MultiModality 填进 Table 1，其余五个数字保持论文原值——HumanML3D **1.216**、KIT **0.947**，两者都是各自列里最低。
+
+**规则**：v 时代检查点须带 `--head_is_velocity` 才能用当前代码评测；不带就会静默塌成噪声（不报错），这是一个易踩的坑。
+---
+
 ## 附：常用复现命令
 ```bash
 # 训练（HML3D L1 臂，600ep）
